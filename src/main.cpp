@@ -1,9 +1,10 @@
-#include "EchoServer.cpp"
 #include <iostream>
+
+#include "Server.hpp"
 
 int main(int argc, char **argv)
 {
     std::cout << "Starting leves..." << std::endl;
-    EchoServer app;
-    return app.run(argc, argv);
+    Server server;
+    return server.run(argc, argv);
 }

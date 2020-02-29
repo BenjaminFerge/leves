@@ -12,7 +12,13 @@ project(leves)
 set(CMAKE_CXX_STANDARD 17)
 
 enable_testing()
-add_executable(leves src/main.cpp src/EchoServer.cpp)
+add_executable(leves 
+	src/main.cpp
+	src/Server.hpp
+	src/Server.cpp
+	src/ServiceHandler.hpp
+	src/ServiceHandler.cpp
+)
 
 add_subdirectory(test)
 
