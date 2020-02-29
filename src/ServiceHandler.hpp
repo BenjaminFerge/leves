@@ -1,20 +1,31 @@
-#include <iostream>
-
 #include <Poco/AutoPtr.h>
 #include <Poco/Delegate.h>
-#include <Poco/Exception.h>
 #include <Poco/FIFOBuffer.h>
-#include <Poco/NObserver.h>
-#include <Poco/Net/ServerSocket.h>
-#include <Poco/Net/SocketAcceptor.h>
-#include <Poco/Net/SocketNotification.h>
-#include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/StreamSocket.h>
-#include <Poco/Thread.h>
-#include <Poco/Util/HelpFormatter.h>
-#include <Poco/Util/Option.h>
-#include <Poco/Util/OptionSet.h>
-#include <Poco/Util/ServerApplication.h>
+
+namespace Poco
+{
+class Thread;
+
+namespace Net
+{
+class ReadableNotification;
+class ServerSocket;
+class ShutdownNotification;
+class SocketReactor;
+class WritableNotification;
+template <class ServiceHandler> class SocketAcceptor;
+} // namespace Net
+namespace Util
+{
+class Application;
+class HelpFormatter;
+class Option;
+class OptionSet;
+class ServerApplication;
+} // namespace Util
+template <class C, class N> class NObserver;
+} // namespace Poco
 
 using Poco::AutoPtr;
 using Poco::delegate;

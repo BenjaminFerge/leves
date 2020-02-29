@@ -1,5 +1,3 @@
-#include <string>
-
 #include <Poco/AbstractDelegate.h>
 #include <Poco/AbstractEvent.h>
 #include <Poco/BasicEvent.h>
@@ -12,8 +10,23 @@
 #include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Util/Application.h>
+#include <string>
 
 #include "ServiceHandler.hpp"
+
+namespace Poco {
+class Thread;
+namespace Net {
+class ServerSocket;
+template <class ServiceHandler> class SocketAcceptor;
+}  // namespace Net
+namespace Util {
+class HelpFormatter;
+class Option;
+class OptionSet;
+class ServerApplication;
+}  // namespace Util
+}  // namespace Poco
 
 using Poco::AutoPtr;
 using Poco::delegate;

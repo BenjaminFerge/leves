@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <Poco/Delegate.h>
 #include <Poco/FIFOBuffer.h>
 #include <Poco/Net/ServerSocket.h>
@@ -12,9 +10,21 @@
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/ServerApplication.h>
+#include <iostream>
 
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
+
+namespace Poco {
+namespace Net {
+class ReadableNotification;
+class ShutdownNotification;
+class StreamSocket;
+class WritableNotification;
+}  // namespace Net
+template <class C, class N> class NObserver;
+template <class C> class AutoPtr;
+}  // namespace Poco
 
 using Poco::AutoPtr;
 using Poco::delegate;
