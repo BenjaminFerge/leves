@@ -14,19 +14,22 @@
 
 #include "ServiceHandler.hpp"
 
-namespace Poco {
+namespace Poco
+{
 class Thread;
-namespace Net {
+namespace Net
+{
 class ServerSocket;
 template <class ServiceHandler> class SocketAcceptor;
-}  // namespace Net
-namespace Util {
+} // namespace Net
+namespace Util
+{
 class HelpFormatter;
 class Option;
 class OptionSet;
 class ServerApplication;
-}  // namespace Util
-}  // namespace Poco
+} // namespace Util
+} // namespace Poco
 
 using Poco::AutoPtr;
 using Poco::delegate;
@@ -45,6 +48,8 @@ using Poco::Util::HelpFormatter;
 using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
+
+using namespace Leves;
 
 ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
     : m_socket(socket), m_reactor(reactor), m_fifoIn(BUFFER_SIZE, true),

@@ -47,6 +47,8 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
+namespace Leves
+{
 class ServiceHandler
 /// I/O handler class. This class (un)registers handlers for I/O based on
 /// data availability. To ensure non-blocking behavior and alleviate spurious
@@ -73,3 +75,4 @@ class ServiceHandler
     FIFOBuffer m_fifoIn;
     FIFOBuffer m_fifoOut;
 };
+} // namespace Leves

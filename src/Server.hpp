@@ -49,6 +49,8 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
+namespace Leves
+{
 class Server : public Poco::Util::ServerApplication
 /// The main application class.
 ///
@@ -84,3 +86,4 @@ class Server : public Poco::Util::ServerApplication
   private:
     bool m_helpRequested;
 };
+} // namespace Leves

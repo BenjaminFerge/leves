@@ -15,16 +15,18 @@
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
 
-namespace Poco {
-namespace Net {
+namespace Poco
+{
+namespace Net
+{
 class ReadableNotification;
 class ShutdownNotification;
 class StreamSocket;
 class WritableNotification;
-}  // namespace Net
+} // namespace Net
 template <class C, class N> class NObserver;
 template <class C> class AutoPtr;
-}  // namespace Poco
+} // namespace Poco
 
 using Poco::AutoPtr;
 using Poco::delegate;
@@ -43,6 +45,8 @@ using Poco::Util::HelpFormatter;
 using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
+
+using namespace Leves;
 
 Server::Server() : m_helpRequested(false) {}
 
