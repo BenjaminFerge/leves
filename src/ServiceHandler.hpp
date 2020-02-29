@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Poco/AutoPtr.h>
 #include <Poco/Delegate.h>
 #include <Poco/FIFOBuffer.h>

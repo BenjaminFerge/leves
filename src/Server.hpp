@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Poco/Delegate.h>
 #include <Poco/FIFOBuffer.h>
 #include <Poco/Util/ServerApplication.h>
