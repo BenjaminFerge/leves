@@ -116,7 +116,7 @@ int Server::main(const std::vector<std::string> &args)
         displayVersion();
         return Application::EXIT_OK;
         break;
-    default:
+    case CLInfoOption::none:
         break;
     }
     // get parameters from configuration file
