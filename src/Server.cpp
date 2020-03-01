@@ -48,14 +48,14 @@ using Poco::Util::ServerApplication;
 
 using namespace Leves;
 
-Server::Server() : m_helpRequested(false) {}
+Server::Server() : m_helpRequested(false), m_isConfigLoaded(false) {}
 
 Server::~Server() {}
 
 void Server::initialize(Application &self)
 {
-    loadConfiguration(); // load default configuration files, if
-                         // present
+    // load default configuration files, if present
+    m_isConfigLoaded = loadConfiguration();
     ServerApplication::initialize(self);
 }
 

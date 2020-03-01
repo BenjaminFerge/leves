@@ -85,5 +85,6 @@ class Server : public Poco::Util::ServerApplication
 
   private:
     bool m_helpRequested;
+    bool m_isConfigLoaded;
 };
 } // namespace Leves
