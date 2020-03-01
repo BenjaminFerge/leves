@@ -51,6 +51,12 @@ using Poco::Util::ServerApplication;
 
 namespace Leves
 {
+enum CLInfoOption {
+    none,
+    help,
+    version,
+};
+static constexpr const char *s_aboutString = "Leves application!";
 class Server : public Poco::Util::ServerApplication
 /// The main application class.
 ///
@@ -81,10 +87,11 @@ class Server : public Poco::Util::ServerApplication
     void defineOptions(OptionSet &options);
     void handleOption(const std::string &name, const std::string &value);
     void displayHelp();
+    void displayVersion();
     int main(const std::vector<std::string> &args);
 
   private:
-    bool m_helpRequested;
+    CLInfoOption m_requestedInfo;
     bool m_isConfigLoaded;
 };
 } // namespace Leves

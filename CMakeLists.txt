@@ -8,7 +8,14 @@ if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
  ${CMAKE_TOOLCHAIN_FILE}")
 endif()
 
-project(leves)
+project(Leves VERSION 0.1.0)
+
+set(LEVES_VERSION_TWEAK "pre-alpha")
+configure_file(
+        src/Version.h.in
+	include/Version.h
+)
+
 set(CMAKE_CXX_STANDARD 17)
 
 enable_testing()
@@ -19,6 +26,7 @@ add_executable(leves
 	src/ServiceHandler.hpp
 	src/ServiceHandler.cpp
 )
+target_include_directories(leves PRIVATE "${CMAKE_BINARY_DIR}/include")
 
 add_subdirectory(test)
 

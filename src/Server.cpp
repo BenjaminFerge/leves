@@ -14,6 +14,7 @@
 
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
+#include "Version.h"
 
 namespace Poco
 {
@@ -48,7 +49,9 @@ using Poco::Util::ServerApplication;
 
 using namespace Leves;
 
-Server::Server() : m_helpRequested(false), m_isConfigLoaded(false) {}
+Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
+{
+}
 
 Server::~Server() {}
 
@@ -65,11 +68,16 @@ void Server::defineOptions(OptionSet &options)
 {
     ServerApplication::defineOptions(options);
 
-    options.addOption(
-        Option(
-            "help", "h", "display help information on command line arguments")
-            .required(false)
-            .repeatable(false));
+    auto help = Option("help",
+                       "h",
+                       "Display help information on command line arguments")
+                    .required(false)
+                    .repeatable(false);
+    options.addOption(help);
+    auto version = Option("version", "v", "Print version information")
+                       .required(false)
+                       .repeatable(false);
+    options.addOption(version);
 }
 
 void Server::handleOption(const std::string &name, const std::string &value)
@@ -77,7 +85,10 @@ void Server::handleOption(const std::string &name, const std::string &value)
     ServerApplication::handleOption(name, value);
 
     if (name == "help")
-        m_helpRequested = true;
+        m_requestedInfo = CLInfoOption::help;
+    else if (name == "version") {
+        m_requestedInfo = CLInfoOption::version;
+    }
 }
 
 void Server::displayHelp()
@@ -85,36 +96,46 @@ void Server::displayHelp()
     HelpFormatter helpFormatter(options());
     helpFormatter.setCommand(commandName());
     helpFormatter.setUsage("OPTIONS");
-    helpFormatter.setHeader(
-        "An echo server implemented using the Reactor and Acceptor "
-        "patterns.");
+    helpFormatter.setHeader(s_aboutString);
     helpFormatter.format(std::cout);
+}
+
+void Server::displayVersion()
+{
+    std::cout << LEVES_NAME << " v" << LEVES_VER << std::endl;
 }
 
 int Server::main(const std::vector<std::string> &args)
 {
-    if (m_helpRequested) {
+    switch (m_requestedInfo) {
+    case CLInfoOption::help:
         displayHelp();
-    } else {
-        // get parameters from configuration file
-        unsigned short port =
-            (unsigned short)config().getInt("Server.port", 9977);
-
-        // set-up a server socket
-        ServerSocket svs(port);
-        // set-up a SocketReactor...
-        SocketReactor reactor;
-        // ... and a SocketAcceptor
-        SocketAcceptor<ServiceHandler> acceptor(svs, reactor);
-        // run the reactor in its own thread so that we can wait
-        // for a termination request
-        Thread thread;
-        thread.start(reactor);
-        // wait for CTRL-C or kill
-        waitForTerminationRequest();
-        // Stop the SocketReactor
-        reactor.stop();
-        thread.join();
+        return Application::EXIT_OK;
+        break;
+    case CLInfoOption::version:
+        displayVersion();
+        return Application::EXIT_OK;
+        break;
+    default:
+        break;
     }
+    // get parameters from configuration file
+    unsigned short port = (unsigned short)config().getInt("Server.port", 9977);
+
+    // set-up a server socket
+    ServerSocket svs(port);
+    // set-up a SocketReactor...
+    SocketReactor reactor;
+    // ... and a SocketAcceptor
+    SocketAcceptor<ServiceHandler> acceptor(svs, reactor);
+    // run the reactor in its own thread so that we can wait
+    // for a termination request
+    Thread thread;
+    thread.start(reactor);
+    // wait for CTRL-C or kill
+    waitForTerminationRequest();
+    // Stop the SocketReactor
+    reactor.stop();
+    thread.join();
     return Application::EXIT_OK;
 }
