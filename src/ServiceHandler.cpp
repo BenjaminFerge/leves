@@ -3,6 +3,7 @@
 #include <Poco/BasicEvent.h>
 #include <Poco/Delegate.h>
 #include <Poco/FIFOBuffer.h>
+#include <Poco/JSON/Parser.h>
 #include <Poco/Logger.h>
 #include <Poco/NObserver.h>
 #include <Poco/Net/SocketAddress.h>
@@ -13,6 +14,8 @@
 #include <iostream>
 #include <string>
 
+#include "Poco/Dynamic/Var.h"
+#include "Poco/JSON/Object.h"
 #include "ServiceHandler.hpp"
 
 namespace Poco
@@ -124,7 +127,22 @@ void ServiceHandler::onFIFOInWritable(bool &b)
                 *this, &ServiceHandler::onSocketReadable));
 }
 
-std::string generateResponse(std::string req) { return "[RESPONSE] " + req; }
+std::string generateResponse(std::string req)
+{
+    Poco::JSON::Parser parser;
+    Poco::Dynamic::Var result;
+    try {
+        result = parser.parse(req);
+    } catch (Poco::Exception &exc) {
+        return exc.displayText() + "\n";
+        std::cerr << exc.displayText() << std::endl;
+    }
+    Poco::JSON::Object::Ptr object = result.extract<Poco::JSON::Object::Ptr>();
+    if (object.isNull()) {
+    }
+    std::string action = object->getValue<std::string>("action");
+    return "ACTION: " + action + "\n";
+}
 
 void ServiceHandler::onSocketReadable(const AutoPtr<ReadableNotification> &pNf)
 {
