@@ -119,6 +119,8 @@ int Server::main(const std::vector<std::string> &args)
     case CLInfoOption::none:
         break;
     }
+    std::cout << "Starting leves..." << std::endl;
+
     // get parameters from configuration file
     unsigned short port = (unsigned short)config().getInt("Server.port", 9977);
 
