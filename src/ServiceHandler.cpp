@@ -10,6 +10,7 @@
 #include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Util/Application.h>
+#include <iostream>
 #include <string>
 
 #include "ServiceHandler.hpp"
@@ -123,13 +124,19 @@ void ServiceHandler::onFIFOInWritable(bool &b)
                 *this, &ServiceHandler::onSocketReadable));
 }
 
+std::string generateResponse(std::string req) { return "[RESPONSE] " + req; }
+
 void ServiceHandler::onSocketReadable(const AutoPtr<ReadableNotification> &pNf)
 {
     // some socket implementations (windows) report available
     // bytes on client disconnect, so we  double-check here
     if (m_socket.available()) {
         int len = m_socket.receiveBytes(m_fifoIn);
-        m_fifoIn.drain(m_fifoOut.write(m_fifoIn.buffer()));
+        std::string req(m_fifoIn.begin());
+        req.resize(len);
+        std::string msg = generateResponse(req);
+        m_fifoOut.copy(msg.c_str(), msg.length());
+        m_fifoIn.drain(m_fifoIn.size());
     }
 }
 
