@@ -1,14 +1,9 @@
 cmake_minimum_required(VERSION 3.9)
 
-if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  set(CMAKE_TOOLCHAIN_FILE
-      "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-      CACHE STRING "")
-  message(" [INFO] VCPKG CMAKE_TOOLCHAIN_FILE =
- ${CMAKE_TOOLCHAIN_FILE}")
-endif()
-
 project(Leves VERSION 0.1.0)
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
 set(LEVES_VERSION_TWEAK "pre-alpha")
 configure_file(
@@ -30,8 +25,7 @@ target_include_directories(leves PRIVATE "${CMAKE_BINARY_DIR}/include")
 
 add_subdirectory(test)
 
-find_package(Poco CONFIG REQUIRED COMPONENTS Net Util)
-target_link_libraries(leves PRIVATE Poco::Net Poco::Util)
+target_link_libraries(leves PRIVATE ${CONAN_LIBS})
 
 add_custom_target(
   run
