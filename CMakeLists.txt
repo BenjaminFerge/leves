@@ -20,6 +20,10 @@ add_executable(leves
 	src/Server.cpp
 	src/ServiceHandler.hpp
 	src/ServiceHandler.cpp
+	src/Response.hpp
+	src/Response.cpp
+	src/ActionHandler.hpp
+	src/ActionHandler.cpp
 )
 target_include_directories(leves PRIVATE "${CMAKE_BINARY_DIR}/include")
 

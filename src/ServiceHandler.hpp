@@ -1,9 +1,12 @@
 #pragma once
 
+#include "ActionHandler.hpp"
+#include "Response.hpp"
 #include <Poco/AutoPtr.h>
 #include <Poco/Delegate.h>
 #include <Poco/FIFOBuffer.h>
 #include <Poco/Net/StreamSocket.h>
+#include <string>
 
 namespace Poco
 {
@@ -67,6 +70,7 @@ class ServiceHandler
     void onSocketReadable(const AutoPtr<ReadableNotification> &pNf);
     void onSocketWritable(const AutoPtr<WritableNotification> &pNf);
     void onSocketShutdown(const AutoPtr<ShutdownNotification> &pNf);
+    Response generateResponse(std::string req);
 
   private:
     enum { BUFFER_SIZE = 1024 };
@@ -74,5 +78,6 @@ class ServiceHandler
     SocketReactor &m_reactor;
     FIFOBuffer m_fifoIn;
     FIFOBuffer m_fifoOut;
+    ActionHandler m_actionHandler;
 };
 } // namespace Leves

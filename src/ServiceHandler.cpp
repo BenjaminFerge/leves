@@ -14,8 +14,10 @@
 #include <iostream>
 #include <string>
 
+#include "ActionHandler.hpp"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/JSON/Object.h"
+#include "Response.hpp"
 #include "ServiceHandler.hpp"
 
 namespace Poco
@@ -72,6 +74,8 @@ ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
 
     m_fifoOut.readable += delegate(this, &ServiceHandler::onFIFOOutReadable);
     m_fifoIn.writable += delegate(this, &ServiceHandler::onFIFOInWritable);
+
+    m_actionHandler = ActionHandler();
 }
 
 ServiceHandler::~ServiceHandler()
@@ -127,21 +131,17 @@ void ServiceHandler::onFIFOInWritable(bool &b)
                 *this, &ServiceHandler::onSocketReadable));
 }
 
-std::string generateResponse(std::string req)
+Response ServiceHandler::generateResponse(std::string req)
 {
     Poco::JSON::Parser parser;
     Poco::Dynamic::Var result;
     try {
         result = parser.parse(req);
     } catch (Poco::Exception &exc) {
-        return exc.displayText() + "\n";
-        std::cerr << exc.displayText() << std::endl;
+        return Response(ResponseStatus::Error, exc.displayText());
     }
     Poco::JSON::Object::Ptr object = result.extract<Poco::JSON::Object::Ptr>();
-    if (object.isNull()) {
-    }
-    std::string action = object->getValue<std::string>("action");
-    return "ACTION: " + action + "\n";
+    return m_actionHandler.handle(object);
 }
 
 void ServiceHandler::onSocketReadable(const AutoPtr<ReadableNotification> &pNf)
@@ -152,7 +152,8 @@ void ServiceHandler::onSocketReadable(const AutoPtr<ReadableNotification> &pNf)
         int len = m_socket.receiveBytes(m_fifoIn);
         std::string req(m_fifoIn.begin());
         req.resize(len);
-        std::string msg = generateResponse(req);
+        Response resp = generateResponse(req);
+        std::string msg = resp.getMessage();
         m_fifoOut.copy(msg.c_str(), msg.length());
         m_fifoIn.drain(m_fifoIn.size());
     }
