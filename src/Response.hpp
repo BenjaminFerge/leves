@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Poco/JSON/Object.h"
 #include <string>
+
+#include "Poco/JSON/Object.h"
 
 namespace Leves
 {

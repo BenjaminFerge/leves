@@ -11,7 +11,6 @@
 #include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Util/Application.h>
-#include <iostream>
 #include <string>
 
 #include "ActionHandler.hpp"
@@ -19,10 +18,13 @@
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "ServiceHandler.hpp"
+#include "Poco/AutoPtr.h"
+#include "Poco/Exception.h"
 
 namespace Poco
 {
 class Thread;
+
 namespace Net
 {
 class ServerSocket;

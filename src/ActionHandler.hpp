@@ -1,8 +1,9 @@
 #pragma once
 
+#include <string>
+
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
-#include <string>
 
 namespace Leves
 {
