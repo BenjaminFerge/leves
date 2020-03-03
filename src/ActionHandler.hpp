@@ -7,6 +7,10 @@
 
 namespace Leves
 {
+enum Action { None, CreateStream, PushEvent };
+std::string actionToString(Action action);
+Action actionFromString(std::string action);
+
 class ActionHandler
 {
   public:
