@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "Persistance/Repositories/StreamRepository.hpp"
@@ -8,13 +9,22 @@
 
 namespace Leves
 {
-namespace Persistance {
-namespace Entities {
+namespace Persistance
+{
+namespace Entities
+{
 struct Stream;
-}  // namespace Entities
-}  // namespace Persistance
+} // namespace Entities
+} // namespace Persistance
 
-enum Action { None, CreateStream, PushEvent };
+enum Action {
+    None,
+    CreateStream,
+    PushEvent,
+    GetAllStreams,
+    GetStreamsByType,
+    GetStream
+};
 std::string actionToString(Action action);
 Action actionFromString(std::string action);
 

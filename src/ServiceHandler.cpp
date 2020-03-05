@@ -11,16 +11,18 @@
 #include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Util/Application.h>
+#include <memory>
 #include <string>
 
 #include "ActionHandler.hpp"
+#include "Persistance/Repositories/../Entities/Stream.hpp"
+#include "Persistance/Repositories/StreamRepository.hpp"
 #include "Poco/AutoPtr.h"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/Exception.h"
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "ServiceHandler.hpp"
-#include "Persistance/Repositories/../Entities/Stream.hpp"
 
 namespace Poco
 {
@@ -59,6 +61,7 @@ using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
 using namespace Leves;
+using namespace Persistance::Repositories;
 
 ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
     : m_socket(socket), m_reactor(reactor), m_fifoIn(BUFFER_SIZE, true),
@@ -77,8 +80,6 @@ ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
 
     m_fifoOut.readable += delegate(this, &ServiceHandler::onFIFOOutReadable);
     m_fifoIn.writable += delegate(this, &ServiceHandler::onFIFOInWritable);
-
-    Action m_actionHandler;
 }
 
 ServiceHandler::~ServiceHandler()

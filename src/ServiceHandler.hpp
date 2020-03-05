@@ -1,12 +1,23 @@
 #pragma once
 
-#include "ActionHandler.hpp"
-#include "Response.hpp"
 #include <Poco/AutoPtr.h>
 #include <Poco/Delegate.h>
 #include <Poco/FIFOBuffer.h>
 #include <Poco/Net/StreamSocket.h>
+#include <memory>
 #include <string>
+
+#include "ActionHandler.hpp"
+#include "Persistance/Repositories/StreamRepository.hpp"
+#include "Response.hpp"
+
+namespace Leves {
+namespace Persistance {
+namespace Repositories {
+class StreamRepository;
+}  // namespace Repositories
+}  // namespace Persistance
+}  // namespace Leves
 
 namespace Poco
 {
@@ -79,5 +90,7 @@ class ServiceHandler
     FIFOBuffer m_fifoIn;
     FIFOBuffer m_fifoOut;
     ActionHandler m_actionHandler;
+    std::unique_ptr<Persistance::Repositories::StreamRepository>
+        m_streamRepository;
 };
 } // namespace Leves

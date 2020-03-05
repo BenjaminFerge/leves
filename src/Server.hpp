@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "Persistance/Repositories/StreamRepository.hpp"
+
 namespace Poco
 {
 class Thread;

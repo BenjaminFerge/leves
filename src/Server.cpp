@@ -12,9 +12,11 @@
 #include <Poco/Util/ServerApplication.h>
 #include <iostream>
 
+#include "Persistance/Repositories/StreamRepository.hpp"
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
 #include "Version.h"
+#include "Persistance/Repositories/../Entities/Stream.hpp"
 
 namespace Poco
 {
@@ -48,9 +50,11 @@ using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
 using namespace Leves;
+using namespace Persistance::Repositories;
 
 Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
 {
+    StreamRepository streamRepository;
 }
 
 Server::~Server() {}
