@@ -24,6 +24,9 @@ add_executable(leves
 	src/Response.cpp
 	src/ActionHandler.hpp
 	src/ActionHandler.cpp
+	src/Persistance/Entities/Stream.hpp
+	src/Persistance/Repositories/StreamRepository.hpp
+	src/Persistance/Repositories/StreamRepository.cpp
 )
 target_include_directories(leves PRIVATE "${CMAKE_BINARY_DIR}/include")
 

@@ -1,16 +1,11 @@
-#include "ActionHandler.hpp"
-#include "Persistance/Entities/Stream.hpp"
-#include "Poco/Data/SQLite/Connector.h"
-#include "Poco/Data/Session.h"
-#include "Poco/JSON/Object.h"
-#include "Response.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <string>
 
-using namespace Poco::Data::Keywords;
-using Poco::Data::Session;
-using Poco::Data::Statement;
+#include "ActionHandler.hpp"
+#include "Persistance/Repositories/StreamRepository.hpp"
+#include "Response.hpp"
+#include "Persistance/Repositories/../Entities/Stream.hpp"
 
 namespace Leves
 {
@@ -38,30 +33,19 @@ Action actionFromString(std::string action)
     throw std::runtime_error("Invalid action: " + action);
 }
 
-void saveStream(Leves::Persistance::Entities::Stream stream)
+void ActionHandler::saveStream(Leves::Persistance::Entities::Stream stream)
 {
-    // register SQLite connector
-    Poco::Data::SQLite::Connector::registerConnector();
-
-    // create a session
-    Session session("SQLite", "leves.db");
-
-    // drop sample table, if it exists
-    session << "DROP TABLE IF EXISTS streams", now;
-
-    // (re)create table
-    session << "CREATE TABLE streams (id INTEGER PRIMARY KEY, type "
-               "VARCHAR(30), version INTEGER(3))",
-        now;
-
-    // insert some rows
-    Statement insert(session);
-    insert << "INSERT INTO streams(type, version) VALUES(?, ?)",
-        use(stream.type), use(stream.version);
-
-    insert.execute();
+    m_streamRepository.create(stream);
 }
 
+ActionHandler::ActionHandler()
+{
+    Persistance::Repositories::StreamRepository m_streamRepository;
+
+    m_streamRepository.initDB();
+}
+
+ActionHandler::~ActionHandler() {}
 Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
 {
     std::string actionStr = object->getValue<std::string>("action");

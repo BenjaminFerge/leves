@@ -14,12 +14,13 @@
 #include <string>
 
 #include "ActionHandler.hpp"
+#include "Poco/AutoPtr.h"
 #include "Poco/Dynamic/Var.h"
+#include "Poco/Exception.h"
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "ServiceHandler.hpp"
-#include "Poco/AutoPtr.h"
-#include "Poco/Exception.h"
+#include "Persistance/Repositories/../Entities/Stream.hpp"
 
 namespace Poco
 {
@@ -77,7 +78,7 @@ ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
     m_fifoOut.readable += delegate(this, &ServiceHandler::onFIFOOutReadable);
     m_fifoIn.writable += delegate(this, &ServiceHandler::onFIFOInWritable);
 
-    m_actionHandler = ActionHandler();
+    Action m_actionHandler;
 }
 
 ServiceHandler::~ServiceHandler()
