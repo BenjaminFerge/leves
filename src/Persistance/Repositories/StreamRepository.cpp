@@ -31,7 +31,9 @@ StreamRepository::~StreamRepository() {}
 
 Session StreamRepository::makeSession()
 {
-    return Session(m_connectorKey, m_connetctionString);
+    auto session = Session(m_connectorKey, m_connetctionString);
+    session << "PRAGMA foreign_keys = ON", now;
+    return session;
 }
 
 std::vector<Entities::Stream> StreamRepository::all()
@@ -124,7 +126,7 @@ std::vector<Entities::Event> StreamRepository::getEvents(std::string streamType)
 
 void StreamRepository::initDB()
 {
-    Session session = Session(m_connectorKey, m_connetctionString);
+    Session session = makeSession();
     std::cout << "Database initialized" << std::endl;
     session << "DROP TABLE IF EXISTS streams", now;
     session << "DROP TABLE IF EXISTS events", now;
@@ -133,7 +135,8 @@ void StreamRepository::initDB()
         now;
     session
         << "CREATE TABLE events (id INTEGER PRIMARY KEY, "
-           "streamId INTEGER, type VARCHAR, payload VARCHAR, version INTEGER)",
+           "streamId INTEGER, type VARCHAR, payload VARCHAR, version INTEGER, "
+           "FOREIGN KEY(streamId) REFERENCES streams(id))",
         now;
 }
 } // namespace Leves::Persistance::Repositories
