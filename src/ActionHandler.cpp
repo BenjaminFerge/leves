@@ -120,11 +120,19 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         json.set("status", "Error");
         json.set("message", "Action 'GetStream' is not implemented");
         break;
-    case Action::PushEvent:
-        status = ResponseStatus::Error;
-        json.set("status", "Error");
-        json.set("message", "Action 'PushEvent' is not implemented");
+    case Action::PushEvent: {
+        // TODO: Validation
+        std::string type = object->getValue<std::string>("type");
+        int streamId = object->getValue<int>("streamId");
+        std::string payload = object->getValue<std::string>("payload");
+        int version = object->getValue<int>("version");
+        Leves::Persistance::Entities::Event event = {
+            0, streamId, type, payload, version};
+        m_streamRepository->attachEvent(event);
+        json.set("status", "OK");
+        status = ResponseStatus::OK;
         break;
+    }
     case Action::GetEventsByStreamId:
         status = ResponseStatus::Error;
         json.set("status", "Error");
