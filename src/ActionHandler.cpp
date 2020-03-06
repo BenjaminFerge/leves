@@ -7,6 +7,7 @@
 #include "ActionHandler.hpp"
 #include "Persistance/Repositories/../Entities/Stream.hpp"
 #include "Persistance/Repositories/StreamRepository.hpp"
+#include "Poco/Exception.h"
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "Server.hpp"
@@ -128,9 +129,16 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         int version = object->getValue<int>("version");
         Leves::Persistance::Entities::Event event = {
             0, streamId, type, payload, version};
-        m_streamRepository->attachEvent(event);
-        json.set("status", "OK");
-        status = ResponseStatus::OK;
+        try {
+            m_streamRepository->attachEvent(event);
+            json.set("status", "OK");
+            status = ResponseStatus::OK;
+        } catch (const Poco::Exception &ex) {
+            std::cerr << "DB ERROR: " << ex.what() << std::endl;
+            json.set("status", "Error");
+            json.set("message", ex.what());
+            status = ResponseStatus::Error;
+        }
         break;
     }
     case Action::GetEventsByStreamId:
