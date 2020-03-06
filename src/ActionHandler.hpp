@@ -39,6 +39,6 @@ class ActionHandler
 
   private:
     Server *m_pServer;
-    Persistance::Repositories::StreamRepository *m_pStreamRepository;
+    std::unique_ptr<Persistance::Repositories::StreamRepository> m_streamRepository;
 };
 } // namespace Leves

@@ -25,7 +25,6 @@ StreamRepository::StreamRepository(std::string connectorKey,
     : m_connectorKey(connectorKey), m_connetctionString(connectionString)
 {
     Poco::Data::SQLite::Connector::registerConnector();
-    initDB();
 }
 
 StreamRepository::~StreamRepository() {}
@@ -33,7 +32,6 @@ StreamRepository::~StreamRepository() {}
 Session StreamRepository::makeSession()
 {
     return Session(m_connectorKey, m_connetctionString);
-    // return Session("SQLite", "leves.db");
 }
 
 std::vector<Entities::Stream> StreamRepository::all()

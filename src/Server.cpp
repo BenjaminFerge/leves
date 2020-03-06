@@ -54,26 +54,15 @@ using namespace Persistance::Repositories;
 
 Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
 {
-    /*
-StreamRepository streamRepository;
-m_streamRepository = std::make_unique<StreamRepository>(streamRepository);
-*/
-    // Működik, ha a StreamRepository-ban lévő member stringeket nem
-    // piszkálom...
-    m_streamRepository = new StreamRepository("SQLite", "leves.db");
+    std::string connectorKey = (std::string)config().getString(
+        "EventStore.ConnectorKey", "SQLite");
+    std::string connectionString = (std::string)config().getString(
+        "EventStore.ConnectionString", "leves.db");
+    auto streamRepository = StreamRepository(connectorKey, connectionString);
+    streamRepository.initDB();
 }
 
-Server::~Server()
-{
-    //
-    delete m_streamRepository;
-}
-
-StreamRepository *Server::getStreamRepository()
-{
-    // return m_streamRepository.get();
-    return m_streamRepository;
-}
+Server::~Server() {}
 
 void Server::initialize(Application &self)
 {
