@@ -136,7 +136,8 @@ void StreamRepository::initDB()
     session
         << "CREATE TABLE events (id INTEGER PRIMARY KEY, "
            "streamId INTEGER, type VARCHAR, payload VARCHAR, version INTEGER, "
-           "FOREIGN KEY(streamId) REFERENCES streams(id))",
+           "FOREIGN KEY(streamId) REFERENCES streams(id), "
+           "UNIQUE(streamId, version))",
         now;
 }
 } // namespace Leves::Persistance::Repositories
