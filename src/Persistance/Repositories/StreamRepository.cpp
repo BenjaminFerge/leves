@@ -1,18 +1,18 @@
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 #include "../Entities/Stream.hpp"
 #include "Poco/Data/AbstractBinder.h"
 #include "Poco/Data/Binding.h"
+#include "Poco/Data/Extraction.h"
+#include "Poco/Data/Range.h"
 #include "Poco/Data/SQLite/Connector.h"
 #include "Poco/Data/Session.h"
 #include "Poco/Data/Statement.h"
 #include "StreamRepository.hpp"
-#include "Poco/Data/Extraction.h"
-#include "Poco/Data/Range.h"
 
 using namespace Poco::Data::Keywords;
 using Poco::Data::Session;
@@ -20,20 +20,26 @@ using Poco::Data::Statement;
 
 namespace Leves::Persistance::Repositories
 {
-StreamRepository::StreamRepository()
+StreamRepository::StreamRepository(std::string connectorKey,
+                                   std::string connectionString)
+    : m_connectorKey(connectorKey), m_connetctionString(connectionString)
 {
     Poco::Data::SQLite::Connector::registerConnector();
-
-    Session session("SQLite", "leves.db");
-    m_session = std::make_unique<Session>(session);
     initDB();
 }
 
 StreamRepository::~StreamRepository() {}
 
+Session StreamRepository::makeSession()
+{
+    return Session(m_connectorKey, m_connetctionString);
+    // return Session("SQLite", "leves.db");
+}
+
 std::vector<Entities::Stream> StreamRepository::all()
 {
-    Statement select(*m_session);
+    Session session = Session(m_connectorKey, m_connetctionString);
+    Statement select(session);
     Entities::Stream stream;
     select << "SELECT id, type, version FROM streams", into(stream.id),
         into(stream.type), into(stream.version),
@@ -52,7 +58,8 @@ std::vector<Entities::Stream> StreamRepository::all()
 
 void StreamRepository::create(Entities::Stream stream)
 {
-    Statement insert(*m_session);
+    Session session = makeSession();
+    Statement insert(session);
     insert << "INSERT INTO streams(type, version) VALUES(?, ?)",
         use(stream.type), use(stream.version);
 
@@ -62,10 +69,11 @@ void StreamRepository::create(Entities::Stream stream)
 
 void StreamRepository::initDB()
 {
+    Session session = Session(m_connectorKey, m_connetctionString);
     std::cout << "Database initialized" << std::endl;
-    *m_session << "DROP TABLE IF EXISTS streams", now;
-    *m_session << "CREATE TABLE streams (id INTEGER PRIMARY KEY, "
-                  "type VARCHAR, version INTEGER)",
+    session << "DROP TABLE IF EXISTS streams", now;
+    session << "CREATE TABLE streams (id INTEGER PRIMARY KEY, "
+               "type VARCHAR, version INTEGER)",
         now;
 }
 } // namespace Leves::Persistance::Repositories

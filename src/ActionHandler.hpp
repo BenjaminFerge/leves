@@ -6,6 +6,7 @@
 #include "Persistance/Repositories/StreamRepository.hpp"
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
+#include "Server.hpp"
 
 namespace Leves
 {
@@ -34,9 +35,10 @@ class ActionHandler
     ActionHandler();
     ~ActionHandler();
     Response handle(Poco::JSON::Object::Ptr action);
-    void saveStream(Leves::Persistance::Entities::Stream stream);
+    void saveStream(const Leves::Persistance::Entities::Stream &stream);
 
   private:
-    Persistance::Repositories::StreamRepository m_streamRepository;
+    Server *m_pServer;
+    Persistance::Repositories::StreamRepository *m_pStreamRepository;
 };
 } // namespace Leves

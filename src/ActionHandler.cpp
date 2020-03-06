@@ -9,6 +9,7 @@
 #include "Persistance/Repositories/StreamRepository.hpp"
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
+#include "Server.hpp"
 
 namespace Leves
 {
@@ -48,15 +49,19 @@ Action actionFromString(std::string action)
     throw std::runtime_error("Invalid action: " + action);
 }
 
-void ActionHandler::saveStream(Leves::Persistance::Entities::Stream stream)
+void ActionHandler::saveStream(
+    const Leves::Persistance::Entities::Stream &stream)
 {
-    m_streamRepository.create(stream);
+    m_pStreamRepository->create(std::move(stream));
 }
 
 ActionHandler::ActionHandler()
 {
     std::cout << "Action handler created" << std::endl;
-    Persistance::Repositories::StreamRepository m_streamRepository;
+    // Application &app = Server::instance();
+    // Server &server = dynamic_cast<Server &>(app);
+    // m_pServer = &server;
+    // m_pStreamRepository = server.getStreamRepository();
 }
 
 ActionHandler::~ActionHandler() {}
@@ -72,7 +77,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
     case Action::CreateStream: {
         std::string type = object->getValue<std::string>("type");
         Leves::Persistance::Entities::Stream stream = {0, type, 0};
-        saveStream(stream);
+        saveStream(std::move(stream));
         json.set("status", "OK");
         status = ResponseStatus::OK;
         break;
@@ -81,7 +86,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         json.set("status", "OK");
         json.set("action", "getallstreams");
         std::cout << "Querying database..." << std::endl;
-        auto streams = m_streamRepository.all();
+        auto streams = m_pStreamRepository->all();
         std::cout << "OK, length:" << streams.size() << std::endl;
         for (const auto &stream : streams) {
             std::cout << "stream: " << stream.type << std::endl;

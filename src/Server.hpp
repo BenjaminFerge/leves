@@ -3,6 +3,7 @@
 #include <Poco/Delegate.h>
 #include <Poco/FIFOBuffer.h>
 #include <Poco/Util/ServerApplication.h>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -82,6 +83,7 @@ class Server : public Poco::Util::ServerApplication
   public:
     Server();
     ~Server();
+    Persistance::Repositories::StreamRepository *getStreamRepository();
 
   protected:
     void initialize(Application &self);
@@ -95,5 +97,8 @@ class Server : public Poco::Util::ServerApplication
   private:
     CLInfoOption m_requestedInfo;
     bool m_isConfigLoaded;
+    /*std::unique_ptr<Persistance::Repositories::StreamRepository>
+        m_streamRepository;*/
+    Persistance::Repositories::StreamRepository *m_streamRepository;
 };
 } // namespace Leves

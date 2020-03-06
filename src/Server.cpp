@@ -12,11 +12,11 @@
 #include <Poco/Util/ServerApplication.h>
 #include <iostream>
 
+#include "Persistance/Repositories/../Entities/Stream.hpp"
 #include "Persistance/Repositories/StreamRepository.hpp"
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
 #include "Version.h"
-#include "Persistance/Repositories/../Entities/Stream.hpp"
 
 namespace Poco
 {
@@ -54,10 +54,26 @@ using namespace Persistance::Repositories;
 
 Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
 {
-    StreamRepository streamRepository;
+    /*
+StreamRepository streamRepository;
+m_streamRepository = std::make_unique<StreamRepository>(streamRepository);
+*/
+    // Működik, ha a StreamRepository-ban lévő member stringeket nem
+    // piszkálom...
+    m_streamRepository = new StreamRepository("SQLite", "leves.db");
 }
 
-Server::~Server() {}
+Server::~Server()
+{
+    //
+    delete m_streamRepository;
+}
+
+StreamRepository *Server::getStreamRepository()
+{
+    // return m_streamRepository.get();
+    return m_streamRepository;
+}
 
 void Server::initialize(Application &self)
 {
