@@ -65,7 +65,7 @@ void StreamRepository::create(Entities::Stream stream)
     std::cout << "CREATED SUCCESSFULLY" << std::endl;
 }
 
-void StreamRepository::attachEvent(const Entities::Event &event)
+void StreamRepository::attachEvent(Entities::Event event)
 {
     Session session = makeSession();
     Statement insert(session);

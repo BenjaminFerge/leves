@@ -24,7 +24,9 @@ enum Action {
     PushEvent,
     GetAllStreams,
     GetStreamsByType,
-    GetStream
+    GetStream,
+    GetEventsByStreamId,
+    GetEventsByStreamType,
 };
 std::string actionToString(Action action);
 Action actionFromString(std::string action);
@@ -39,6 +41,7 @@ class ActionHandler
 
   private:
     Server *m_pServer;
-    std::unique_ptr<Persistance::Repositories::StreamRepository> m_streamRepository;
+    std::unique_ptr<Persistance::Repositories::StreamRepository>
+        m_streamRepository;
 };
 } // namespace Leves

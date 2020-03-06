@@ -26,6 +26,10 @@ std::string actionToString(Action action)
         return "GetStream";
     case Action::PushEvent:
         return "PushEvent";
+    case Action::GetEventsByStreamId:
+        return "GetEventsByStreamId";
+    case Action::GetEventsByStreamType:
+        return "GetEventsByStreamType";
     case Action::None:
         return "None";
     }
@@ -43,6 +47,10 @@ Action actionFromString(std::string action)
         return Action::GetStream;
     } else if (action == actionToString(Action::PushEvent)) {
         return Action::PushEvent;
+    } else if (action == actionToString(Action::GetEventsByStreamId)) {
+        return Action::GetEventsByStreamId;
+    } else if (action == actionToString(Action::GetEventsByStreamType)) {
+        return Action::GetEventsByStreamType;
     } else if (action == actionToString(Action::None)) {
         return Action::None;
     }
@@ -59,12 +67,13 @@ ActionHandler::ActionHandler()
 {
     std::cout << "Action handler created" << std::endl;
     Application &app = Server::instance();
-    std::string connectorKey =
-        (std::string)app.config().getString("EventStore.ConnectorKey", "SQLite");
-    std::string connectionString =
-        (std::string)app.config().getString("EventStore.ConnectionString", "leves.db");
+    std::string connectorKey = (std::string)app.config().getString(
+        "EventStore.ConnectorKey", "SQLite");
+    std::string connectionString = (std::string)app.config().getString(
+        "EventStore.ConnectionString", "leves.db");
 
-    auto streamRepository = Leves::Persistance::Repositories::StreamRepository(connectorKey, connectionString);
+    auto streamRepository = Leves::Persistance::Repositories::StreamRepository(
+        connectorKey, connectionString);
     m_streamRepository =
         std::make_unique<Leves::Persistance::Repositories::StreamRepository>(
             streamRepository);
@@ -115,10 +124,23 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         status = ResponseStatus::Error;
         json.set("status", "Error");
         json.set("message", "Action 'PushEvent' is not implemented");
+        break;
+    case Action::GetEventsByStreamId:
+        status = ResponseStatus::Error;
+        json.set("status", "Error");
+        json.set("message", "Action 'GetEventsByStreamId' is not implemented");
+        break;
+    case Action::GetEventsByStreamType:
+        status = ResponseStatus::Error;
+        json.set("status", "Error");
+        json.set("message",
+                 "Action 'GetEventsByStreamType' is not implemented");
+        break;
     case Action::None:
         status = ResponseStatus::Error;
         json.set("status", "Error");
         json.set("message", "Action 'None' is not implemented");
+        break;
     }
     std::ostringstream oss;
     json.stringify(oss);

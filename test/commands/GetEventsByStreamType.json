@@ -1,0 +1,4 @@
+{
+    "action": "GetEventsByStreamType",
+    "type": "User"
+}
