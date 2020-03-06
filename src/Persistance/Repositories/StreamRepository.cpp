@@ -48,7 +48,7 @@ std::vector<Entities::Stream> StreamRepository::all()
         select.execute();
         result.push_back(stream);
     }
-    std::cout << "RETRIEVED SUCCESFULLY" << std::endl;
+    std::cout << "RETRIEVED SUCCESSFULLY" << std::endl;
     return result;
 }
 
@@ -62,7 +62,64 @@ void StreamRepository::create(Entities::Stream stream)
         use(stream.type), use(stream.version);
 
     insert.execute();
-    std::cout << "CREATED SUCCESFULLY" << std::endl;
+    std::cout << "CREATED SUCCESSFULLY" << std::endl;
+}
+
+void StreamRepository::attachEvent(const Entities::Event &event)
+{
+    Session session = makeSession();
+    Statement insert(session);
+    insert << "INSERT INTO events(streamId, type, payload, version)"
+              "VALUES(?, ?, ?, ?)",
+        use(event.streamId), use(event.type), use(event.payload),
+        use(event.version);
+
+    insert.execute();
+    std::cout << "ATTACHED SUCCESSFULLY" << std::endl;
+}
+
+std::vector<Entities::Event> StreamRepository::getEvents(int streamId)
+{
+    Session session = makeSession();
+    Statement select(session);
+    Entities::Event event;
+    select << "SELECT id, streamId, type, payload, version "
+              "FROM events e "
+              "INNER JOIN streams s on s.id = e.streamId "
+              "WHERE streamId = ?",
+        use(streamId), into(event.id), into(event.streamId), into(event.type),
+        into(event.payload), into(event.version),
+        range(0, 1); //  iterate over result set one row at a time
+
+    std::vector<Entities::Event> result;
+    while (!select.done()) {
+        select.execute();
+        result.push_back(event);
+    }
+    std::cout << "RETRIEVED SUCCESSFULLY" << std::endl;
+    return result;
+}
+
+std::vector<Entities::Event> StreamRepository::getEvents(std::string streamType)
+{
+    Session session = makeSession();
+    Statement select(session);
+    Entities::Event event;
+    select << "SELECT id, streamId, type, payload, version "
+              "FROM events e "
+              "INNER JOIN streams s on s.id = e.streamId "
+              "WHERE s.type = ?",
+        use(streamType), into(event.id), into(event.streamId), into(event.type),
+        into(event.payload), into(event.version),
+        range(0, 1); //  iterate over result set one row at a time
+
+    std::vector<Entities::Event> result;
+    while (!select.done()) {
+        select.execute();
+        result.push_back(event);
+    }
+    std::cout << "RETRIEVED SUCCESSFULLY" << std::endl;
+    return result;
 }
 
 void StreamRepository::initDB()
@@ -70,8 +127,13 @@ void StreamRepository::initDB()
     Session session = Session(m_connectorKey, m_connetctionString);
     std::cout << "Database initialized" << std::endl;
     session << "DROP TABLE IF EXISTS streams", now;
+    session << "DROP TABLE IF EXISTS events", now;
     session << "CREATE TABLE streams (id INTEGER PRIMARY KEY, "
                "type VARCHAR, version INTEGER)",
+        now;
+    session
+        << "CREATE TABLE events (id INTEGER PRIMARY KEY, "
+           "streamId INTEGER, type VARCHAR, payload VARCHAR, version INTEGER)",
         now;
 }
 } // namespace Leves::Persistance::Repositories

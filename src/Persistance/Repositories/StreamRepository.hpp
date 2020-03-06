@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "../Entities/Event.hpp"
 #include "../Entities/Stream.hpp"
 #include "Poco/Data/Session.h"
 
@@ -25,6 +26,9 @@ class StreamRepository
     Entities::Stream get(int id);
     void create(Entities::Stream stream);
     void initDB();
+    void attachEvent(const Entities::Event &event);
+    std::vector<Entities::Event> getEvents(int streamId);
+    std::vector<Entities::Event> getEvents(std::string streamType);
     Poco::Data::Session makeSession();
 
   private:
