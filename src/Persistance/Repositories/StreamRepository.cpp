@@ -85,13 +85,12 @@ std::vector<Entities::Event> StreamRepository::getEvents(int streamId)
     Session session = makeSession();
     Statement select(session);
     Entities::Event event;
-    select << "SELECT id, streamId, type, payload, version "
-              "FROM events e "
-              "INNER JOIN streams s on s.id = e.streamId "
+    select << "SELECT e.id, e.streamId, e.type, e.payload, e.version "
+              "FROM events AS e "
+              "INNER JOIN streams AS s ON s.id = e.streamId "
               "WHERE streamId = ?",
         use(streamId), into(event.id), into(event.streamId), into(event.type),
-        into(event.payload), into(event.version),
-        range(0, 1); //  iterate over result set one row at a time
+        into(event.payload), into(event.version), range(0, 1);
 
     std::vector<Entities::Event> result;
     while (!select.done()) {
@@ -107,13 +106,12 @@ std::vector<Entities::Event> StreamRepository::getEvents(std::string streamType)
     Session session = makeSession();
     Statement select(session);
     Entities::Event event;
-    select << "SELECT id, streamId, type, payload, version "
-              "FROM events e "
-              "INNER JOIN streams s on s.id = e.streamId "
+    select << "SELECT e.id, e.streamId, e.type, e.payload, e.version "
+              "FROM events AS e "
+              "INNER JOIN streams AS s ON s.id = e.streamId "
               "WHERE s.type = ?",
         use(streamType), into(event.id), into(event.streamId), into(event.type),
-        into(event.payload), into(event.version),
-        range(0, 1); //  iterate over result set one row at a time
+        into(event.payload), into(event.version), range(0, 1);
 
     std::vector<Entities::Event> result;
     while (!select.done()) {

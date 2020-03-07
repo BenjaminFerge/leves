@@ -141,17 +141,38 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         }
         break;
     }
-    case Action::GetEventsByStreamId:
-        status = ResponseStatus::Error;
-        json.set("status", "Error");
-        json.set("message", "Action 'GetEventsByStreamId' is not implemented");
+    case Action::GetEventsByStreamId: {
+        int streamId = object->getValue<int>("id");
+        try {
+            auto events = m_streamRepository->getEvents(streamId);
+            json.set("status", "OK");
+            std::string serialized = "data";
+            json.set("data", "events...");
+            status = ResponseStatus::OK;
+        } catch (const Poco::Exception &ex) {
+            std::cerr << "DB ERROR: " << ex.what() << std::endl;
+            json.set("status", "Error");
+            json.set("message", ex.what());
+            status = ResponseStatus::Error;
+        }
         break;
-    case Action::GetEventsByStreamType:
-        status = ResponseStatus::Error;
-        json.set("status", "Error");
-        json.set("message",
-                 "Action 'GetEventsByStreamType' is not implemented");
+    }
+    case Action::GetEventsByStreamType: {
+        std::string type = object->getValue<std::string>("type");
+        try {
+            auto events = m_streamRepository->getEvents(type);
+            json.set("status", "OK");
+            std::string serialized = "data";
+            json.set("data", "events...");
+            status = ResponseStatus::OK;
+        } catch (const Poco::Exception &ex) {
+            std::cerr << "DB ERROR: " << ex.what() << std::endl;
+            json.set("status", "Error");
+            json.set("message", ex.what());
+            status = ResponseStatus::Error;
+        }
         break;
+    }
     case Action::None:
         status = ResponseStatus::Error;
         json.set("status", "Error");
