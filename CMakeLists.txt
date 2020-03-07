@@ -27,6 +27,8 @@ add_executable(leves
 	src/Persistance/Entities/Stream.hpp
 	src/Persistance/Repositories/StreamRepository.hpp
 	src/Persistance/Repositories/StreamRepository.cpp
+	src/Messaging/Serializer.hpp
+	src/Messaging/Serializer.cpp
 )
 target_include_directories(leves PRIVATE "${CMAKE_BINARY_DIR}/include")
 

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ActionHandler.hpp"
+#include "Messaging/Serializer.hpp"
 #include "Persistance/Repositories/../Entities/Stream.hpp"
 #include "Persistance/Repositories/StreamRepository.hpp"
 #include "Poco/Exception.h"
@@ -146,7 +147,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         try {
             auto events = m_streamRepository->getEvents(streamId);
             json.set("status", "OK");
-            std::string serialized = "data";
+            std::string serialized = Messaging::serialize(events);
             json.set("data", "events...");
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
@@ -162,7 +163,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         try {
             auto events = m_streamRepository->getEvents(type);
             json.set("status", "OK");
-            std::string serialized = "data";
+            std::string serialized = Messaging::serialize(events);
             json.set("data", "events...");
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
