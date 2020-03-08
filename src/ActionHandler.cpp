@@ -147,8 +147,9 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         try {
             auto events = m_streamRepository->getEvents(streamId);
             json.set("status", "OK");
+            // FIXME: Double serialization escaping nested json
             std::string serialized = Messaging::serialize(events);
-            json.set("data", "events...");
+            json.set("data", serialized);
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
             std::cerr << "DB ERROR: " << ex.what() << std::endl;
@@ -164,7 +165,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
             auto events = m_streamRepository->getEvents(type);
             json.set("status", "OK");
             std::string serialized = Messaging::serialize(events);
-            json.set("data", "events...");
+            json.set("data", serialized);
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
             std::cerr << "DB ERROR: " << ex.what() << std::endl;

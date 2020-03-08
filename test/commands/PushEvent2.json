@@ -1,0 +1,10 @@
+{
+    "action": "PushEvent",
+    "streamId": 1,
+    "type": "UserCreated",
+    "payload": {
+	    "username": "MZ/X",
+	    "dob": 3001
+    },
+    "version": 2
+}
