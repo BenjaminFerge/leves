@@ -14,30 +14,34 @@ configure_file(
 set(CMAKE_CXX_STANDARD 17)
 
 enable_testing()
-add_executable(leves 
-	src/main.cpp
-	src/Server.hpp
+set(MAIN_FILE src/main.cpp)
+set(SRC_FILES 
 	src/Server.cpp
-	src/ServiceHandler.hpp
 	src/ServiceHandler.cpp
-	src/Response.hpp
 	src/Response.cpp
-	src/ActionHandler.hpp
 	src/ActionHandler.cpp
-	src/Persistance/Entities/Stream.hpp
 	src/Persistance/Entities/Stream.cpp
-	src/Persistance/Entities/Event.hpp
 	src/Persistance/Entities/Event.cpp
-	src/Persistance/Repositories/StreamRepository.hpp
 	src/Persistance/Repositories/StreamRepository.cpp
-	src/Messaging/Serializer.hpp
 	src/Messaging/Serializer.cpp
 )
-target_include_directories(leves PRIVATE "${CMAKE_BINARY_DIR}/include")
+set(INC_FILES
+	src/Server.hpp
+	src/ServiceHandler.hpp
+	src/Response.hpp
+	src/ActionHandler.hpp
+	src/Persistance/Entities/Stream.hpp
+	src/Persistance/Entities/Event.hpp
+	src/Persistance/Repositories/StreamRepository.hpp
+	src/Messaging/Serializer.hpp
+)
+add_library(${PROJECT_NAME}_objects OBJECT ${SRC_FILES} ${INCL_FILES})
+target_include_directories(${PROJECT_NAME}_objects PRIVATE "${CMAKE_BINARY_DIR}/include")
+add_executable(${PROJECT_NAME} ${MAIN_FILE} $<TARGET_OBJECTS:${PROJECT_NAME}_objects>)
 
 add_subdirectory(test)
 
-target_link_libraries(leves PRIVATE ${CONAN_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
 
 add_custom_target(
   run
@@ -46,7 +50,7 @@ add_custom_target(
   WORKING_DIRECTORY ${CMAKE_PROJECT_DIR})
 
 set_target_properties(
-  leves
+  ${PROJECT_NAME}
   PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
              LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
              RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
