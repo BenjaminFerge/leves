@@ -25,6 +25,9 @@ add_executable(leves
 	src/ActionHandler.hpp
 	src/ActionHandler.cpp
 	src/Persistance/Entities/Stream.hpp
+	src/Persistance/Entities/Stream.cpp
+	src/Persistance/Entities/Event.hpp
+	src/Persistance/Entities/Event.cpp
 	src/Persistance/Repositories/StreamRepository.hpp
 	src/Persistance/Repositories/StreamRepository.cpp
 	src/Messaging/Serializer.hpp

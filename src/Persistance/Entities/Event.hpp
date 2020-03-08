@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Poco/JSON/Object.h"
 #include <cstdint>
 #include <string>
 
@@ -11,5 +12,7 @@ struct Event {
     std::string type;
     std::string payload; // JSON
     int version = 0;
+
+    Poco::JSON::Object toObject();
 };
 } // namespace Leves::Persistance::Entities
