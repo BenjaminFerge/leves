@@ -4,8 +4,8 @@
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
 #include "gtest/gtest.h"
-#include <cassert>
 #include <iostream>
+#include <memory>
 
 std::string readFile(const std::string &path)
 {
@@ -19,20 +19,34 @@ std::string readFile(const std::string &path)
     return read;
 }
 
-void testActionHandler()
+using namespace Leves;
+
+class ActionHandlerTest : public testing::Test
 {
-    Leves::Server server;
-    Leves::ActionHandler handler;
+  public:
+    std::unique_ptr<Server> m_server;
+    std::unique_ptr<ActionHandler> m_handler;
+
+    void SetUp()
+    {
+        m_server = std::make_unique<Server>();
+        m_handler = std::make_unique<ActionHandler>();
+    }
+
+    void TearDown()
+    {
+        // TODO: cleanup database
+    }
+};
+
+TEST_F(ActionHandlerTest, CreateStream)
+{
     auto createStreamJson = readFile("../test/commands/CreateStream.json");
     std::cout << createStreamJson << std::endl;
     Poco::JSON::Parser parser;
     Poco::Dynamic::Var parsed = parser.parse(createStreamJson);
     Poco::JSON::Object::Ptr cmdObj = parsed.extract<Poco::JSON::Object::Ptr>();
-    handler.handle(cmdObj);
-}
-
-TEST(ActionHandlerTest, ReadFile)
-{
-    testActionHandler();
-    EXPECT_TRUE(true);
+    auto resp = m_handler->handle(cmdObj);
+    ASSERT_EQ(resp.getMessage(), "{\"status\":\"OK\"}");
+    ASSERT_EQ(resp.getStatus(), ResponseStatus::OK);
 }
