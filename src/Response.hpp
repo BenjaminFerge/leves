@@ -13,6 +13,7 @@ class Response
     Response(ResponseStatus status, std::string message);
     std::string getMessage();
     ResponseStatus getStatus();
+    bool operator==(const Response &resp) const;
 
   private:
     ResponseStatus m_status;

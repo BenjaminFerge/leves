@@ -47,6 +47,6 @@ TEST_F(ActionHandlerTest, CreateStream)
     Poco::Dynamic::Var parsed = parser.parse(createStreamJson);
     Poco::JSON::Object::Ptr cmdObj = parsed.extract<Poco::JSON::Object::Ptr>();
     auto resp = m_handler->handle(cmdObj);
-    ASSERT_EQ(resp.getMessage(), "{\"status\":\"OK\"}");
-    ASSERT_EQ(resp.getStatus(), ResponseStatus::OK);
+    Response expResp(ResponseStatus::OK, "{\"status\":\"OK\"}");
+    ASSERT_EQ(resp, expResp);
 }

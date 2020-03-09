@@ -8,19 +8,10 @@ Response::Response(ResponseStatus status, std::string message)
     : m_status(status), m_message(message)
 {
 }
-std::string Response::getMessage()
-{
-    std::string resp;
-    switch (m_status) {
-    case ResponseStatus::OK:
-        resp += "[OK] ";
-        break;
-    case ResponseStatus::Error:
-        resp += "[Error] ";
-        break;
-    }
-    resp += m_message + "\n";
-    return resp;
-}
+std::string Response::getMessage() { return m_message; }
 ResponseStatus Response::getStatus() { return m_status; }
+bool Response::operator==(const Response &resp) const
+{
+    return m_message == resp.m_message && m_status == resp.m_status;
+}
 } // namespace Leves
