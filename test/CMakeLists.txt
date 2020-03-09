@@ -11,4 +11,4 @@ file(COPY ${CMAKE_SOURCE_DIR}/test/commands
 
 target_link_libraries(testleves PRIVATE ${CONAN_LIBS})
 
-add_test(AllTestsInMain testleves)
+add_test(NAME AllTestsInMain COMMAND testleves)
