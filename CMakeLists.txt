@@ -24,6 +24,7 @@ set(SRC_FILES
 	src/Persistance/Entities/Event.cpp
 	src/Persistance/Repositories/StreamRepository.cpp
 	src/Messaging/Serializer.cpp
+	inc_duktape/duktape.c
 )
 set(INC_FILES
 	src/Server.hpp
@@ -36,8 +37,9 @@ set(INC_FILES
 	src/Messaging/Serializer.hpp
 )
 add_library(${PROJECT_NAME}_objects OBJECT ${SRC_FILES} ${INCL_FILES})
-target_include_directories(${PROJECT_NAME}_objects PRIVATE "${CMAKE_BINARY_DIR}/include")
+target_include_directories(${PROJECT_NAME}_objects PRIVATE "${CMAKE_BINARY_DIR}/include" inc_duktape)
 add_executable(${PROJECT_NAME} ${MAIN_FILE} $<TARGET_OBJECTS:${PROJECT_NAME}_objects>)
+target_include_directories(${PROJECT_NAME} PRIVATE inc_duktape)
 
 add_subdirectory(test)
 

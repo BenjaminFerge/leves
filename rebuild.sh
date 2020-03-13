@@ -1,5 +1,8 @@
 #!/bin/bash -xe
 rm -rf build
+rm -rf inc_duktape
+mkdir inc_duktape
+python duktape/tools/configure.py --output-directory=inc_duktape
 mkdir build
 pushd build
 conan install ..
