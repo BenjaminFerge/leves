@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(Leves VERSION 0.1.0)
+project(leves VERSION 0.1.0)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
@@ -45,8 +45,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
 
 add_custom_target(
   run
-  COMMAND leves
-  DEPENDS leves
+  COMMAND ${PROJECT_NAME}
+  DEPENDS ${PROJECT_NAME}
   WORKING_DIRECTORY ${CMAKE_PROJECT_DIR})
 
 set_target_properties(
