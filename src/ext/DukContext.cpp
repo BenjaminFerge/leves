@@ -25,26 +25,13 @@ DukContext::~DukContext()
 
 void DukContext::read(const std::string &body)
 {
-    /*
-duk_push_string(m_pCtx, body.c_str());
-if (duk_peval(m_pCtx) != 0) {
-    duk_get_prop_string(m_pCtx, -1, "stack");
-    throw std::runtime_error(duk_safe_to_string(m_pCtx, -1));
-}
-duk_pop(m_pCtx); // ignore result
-duk_push_global_object(m_pCtx);
-*/
-
-    // Compile the JS into bytecode
-    if (duk_pcompile_string(m_pCtx, 0, body.c_str()) != 0) {
-        auto err = duk_safe_to_string(m_pCtx, -1);
-        duk_pop(m_pCtx);
-        throw std::runtime_error(err);
+    duk_push_string(m_pCtx, body.c_str());
+    if (duk_peval(m_pCtx) != 0) {
+        duk_get_prop_string(m_pCtx, -1, "stack");
+        throw std::runtime_error(duk_safe_to_string(m_pCtx, -1));
     }
-    // Actually evaluate it - this will push the compiled code into the
-    // global scope
-    duk_pcall(m_pCtx, 0);
-    duk_pop(m_pCtx);
+    duk_pop(m_pCtx); // ignore result
+    duk_push_global_object(m_pCtx);
 } // namespace Leves::ext
 
 Poco::JSON::Object::Ptr DukContext::callProjection(const std::string &fnName,
@@ -53,51 +40,26 @@ Poco::JSON::Object::Ptr DukContext::callProjection(const std::string &fnName,
     duk_idx_t objIdx = 0;
     duk_idx_t fnIdx = 0;
 
-    if (!duk_get_global_string(m_pCtx, fnName.c_str())) {
-        throw std::runtime_error("Function '" + fnName + "' is not found!");
-    }
-    /*
     if (!duk_is_valid_index(m_pCtx, objIdx)) {
         throw std::runtime_error("Invalid index!");
     }
+    if (duk_get_prop_string(m_pCtx, objIdx, fnName.c_str()) == 0) {
+        throw std::runtime_error("Function '" + fnName + "' is not found!");
+    }
+    if (duk_get_prop_string(m_pCtx, objIdx, fnName.c_str()) == 0) {
+        throw std::runtime_error("Function '" + fnName + "' is not found!");
+    }
 
-    if (duk_get_prop_string(m_pCtx, objIdx, fnName.c_str()) == 0) {
-        throw std::runtime_error("Function '" + fnName + "' is not found!");
-    }
-    duk_push_int(m_pCtx, 10);
-    // duk_push_int(m_pCtx, 20);
-    if (duk_get_prop_string(m_pCtx, objIdx, fnName.c_str()) == 0) {
-        throw std::runtime_error("Function '" + fnName + "' is not found!");
-    }
-    */
-    /*
-    if (duk_is_function(m_pCtx, fnIdx) == 0) {
-        throw std::runtime_error("Defined '" + fnName +
-                                 "' object is not a function!");
-    }
-    if (duk_is_callable(m_pCtx, fnIdx) == 0) {
-        throw std::runtime_error("Defined '" + fnName +
-                                 "' object is not callable!");
-    }
-    */
-    // Fill parameter
-    // duk_push_int(m_pCtx, 30);
-    /*
-    if (duk_get_prop_string(m_pCtx, objIdx, fnName.c_str()) == 0) {
-        throw std::runtime_error("Function '" + fnName + "' is not found!");
-    }
-    */
+    // Fill parameters
     duk_push_int(m_pCtx, 10);
     duk_push_int(m_pCtx, 20);
 
     Poco::JSON::Object::Ptr result;
-    if (duk_pcall(m_pCtx, 3 != DUK_EXEC_SUCCESS)) {
+    if (duk_pcall(m_pCtx, 2) != DUK_EXEC_SUCCESS) {
         // Display a stack trace
         duk_get_prop_string(m_pCtx, -1, "stack");
         throw std::runtime_error(duk_safe_to_string(m_pCtx, -1));
     } else {
-        // std::cout << "Result: " << duk_safe_to_string(m_pCtx, -1) <<
-        // std::endl;
         duk_idx_t resultIdx = -1;
         std::string json = duk_json_encode(m_pCtx, resultIdx);
         std::cout << "JSON: " << json << std::endl;
