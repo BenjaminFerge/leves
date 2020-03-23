@@ -10,7 +10,7 @@ file(COPY ${CMAKE_SOURCE_DIR}/test/projections
 	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_link_libraries(testleves PRIVATE ${CONAN_LIBS})
+target_link_libraries(testleves PRIVATE ${CONAN_LIBS} LevesUtils)
 target_include_directories(testleves PRIVATE ../inc_duktape)
 
 add_test(NAME AllTestsInMain COMMAND testleves)

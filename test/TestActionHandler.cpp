@@ -1,23 +1,14 @@
 #include "../src/ActionHandler.hpp"
+#include "../utils/files.hpp"
+
 #include "Poco/Dynamic/Var.h"
 #include "Poco/FileStream.h"
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
+#include "Poco/StreamCopier.h"
 #include "gtest/gtest.h"
 #include <iostream>
 #include <memory>
-
-std::string readFile(const std::string &path)
-{
-    Poco::FileInputStream fis(path);
-    assert(fis.good());
-    std::string read;
-    while (!fis.eof()) {
-        read += fis.get();
-    }
-    assert(!read.empty());
-    return read;
-}
 
 using namespace Leves;
 
