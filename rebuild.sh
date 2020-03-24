@@ -2,7 +2,7 @@
 rm -rf build
 rm -rf inc_duktape
 mkdir inc_duktape
-python duktape/tools/configure.py --output-directory=inc_duktape
+python duktape/tools/configure.py --output-directory=inc_duktape -DDUK_USE_DEBUGGER_SUPPORT -DDUK_USE_INTERRUPT_COUNTER -DDUK_USE_DEBUGGER_DUMPHEAP
 mkdir build
 pushd build
 conan install ..

@@ -19,6 +19,7 @@ class DukContext : public IContext
                    const std::vector<Persistance::Entities::Event> &events,
                    Poco::Dynamic::Var initState);
     void read(const std::string &body);
+    duk_context *getDukContext();
 
   private:
     duk_context *m_pCtx;

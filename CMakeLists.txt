@@ -41,6 +41,7 @@ set(INC_FILES
 )
 add_library(${PROJECT_NAME}_objects OBJECT ${SRC_FILES} ${INCL_FILES})
 add_subdirectory(utils)
+add_subdirectory(debug)
 
 target_include_directories(${PROJECT_NAME}_objects PRIVATE "${CMAKE_BINARY_DIR}/include" inc_duktape)
 add_executable(${PROJECT_NAME} ${MAIN_FILE} $<TARGET_OBJECTS:${PROJECT_NAME}_objects>)

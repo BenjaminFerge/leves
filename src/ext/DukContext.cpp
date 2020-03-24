@@ -21,9 +21,11 @@ DukContext::DukContext()
 
 DukContext::~DukContext()
 {
-    //
-    duk_destroy_heap(m_pCtx);
+    // FIXME: causes segfault
+    // duk_destroy_heap(m_pCtx);
 }
+
+duk_context *DukContext::getDukContext() { return m_pCtx; }
 
 void DukContext::read(const std::string &body)
 {
@@ -87,6 +89,7 @@ Poco::JSON::Object::Ptr DukContext::callProjection(
         duk_push_string(m_pCtx, jsonState.c_str());
         duk_json_decode(m_pCtx, -1);
 
+        std::cout << "event iter START" << std::endl;
         if (duk_pcall(m_pCtx, 2) != DUK_EXEC_SUCCESS) {
             // Display a stack trace
             duk_get_prop_string(m_pCtx, -1, "stack");
