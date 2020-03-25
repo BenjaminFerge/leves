@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Poco/JSON/Object.h"
 #include <cstdint>
 #include <string>
+
+#include "Poco/JSON/Object.h"
 
 namespace leves::db
 {

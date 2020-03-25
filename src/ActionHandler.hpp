@@ -7,13 +7,16 @@
 #include "Response.hpp"
 #include "Server.hpp"
 #include "db/Repositories/StreamRepository.hpp"
+#include "db/Entities/Stream.hpp"
 
 namespace leves
 {
-namespace db
-{
+class Server;
+
+namespace db {
+class StreamRepository;
 struct Stream;
-} // namespace db
+}  // namespace db
 
 enum Action {
     None,

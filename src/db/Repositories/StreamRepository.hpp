@@ -7,14 +7,6 @@
 #include "../Entities/Stream.hpp"
 #include "Poco/Data/Session.h"
 
-namespace Poco
-{
-namespace Data
-{
-class Session;
-} // namespace Data
-} // namespace Poco
-
 namespace leves::db
 {
 class StreamRepository

@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <iostream>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -13,6 +12,7 @@
 #include "Poco/Data/Session.h"
 #include "Poco/Data/Statement.h"
 #include "StreamRepository.hpp"
+#include "../Entities/Event.hpp"
 
 using namespace Poco::Data::Keywords;
 using Poco::Data::Session;

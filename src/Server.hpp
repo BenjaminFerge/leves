@@ -8,6 +8,8 @@
 #include <vector>
 
 #include "db/Repositories/StreamRepository.hpp"
+#include "Poco/Util/Application.h"
+#include "Poco/Util/OptionSet.h"
 
 namespace Poco
 {

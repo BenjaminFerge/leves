@@ -10,6 +10,9 @@
 #include "ActionHandler.hpp"
 #include "Response.hpp"
 #include "db/Repositories/StreamRepository.hpp"
+#include "Server.hpp"
+#include "Poco/Net/SocketNotification.h"
+#include "Poco/Net/SocketReactor.h"
 
 namespace leves
 {

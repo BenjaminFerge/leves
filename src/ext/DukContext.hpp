@@ -1,11 +1,19 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "../db/Entities/Event.hpp"
 #include "IContext.hpp"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/JSON/Object.h"
 #include "duktape.h"
-#include <string>
+
+namespace leves {
+namespace db {
+struct Event;
+}  // namespace db
+}  // namespace leves
 
 namespace leves::ext
 {

@@ -1,7 +1,8 @@
+#include <string>
+
 #include "Stream.hpp"
 #include "Poco/JSON/Object.h"
-#include <cstdint>
-#include <string>
+#include "Poco/JSON/Array.h"
 
 using namespace Poco::JSON;
 

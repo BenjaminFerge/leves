@@ -11,12 +11,13 @@
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/ServerApplication.h>
 #include <iostream>
+#include <memory>
 
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
 #include "Version.h"
-#include "db/Repositories/../Entities/Stream.hpp"
 #include "db/Repositories/StreamRepository.hpp"
+#include "db/Repositories/../Entities/Event.hpp"
 
 namespace Poco
 {

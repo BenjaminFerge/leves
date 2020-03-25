@@ -1,20 +1,23 @@
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <algorithm>
+
 #include "../debug/duk_trans_socket.h"
 #include "../src/ActionHandler.hpp"
 #include "../src/ext/DukContext.hpp"
 #include "../utils/files.hpp"
-
 #include "Poco/Dynamic/Var.h"
-#include "Poco/FileStream.h"
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
-#include "Poco/StreamCopier.h"
 #include "duktape.h"
-#include "gtest/gtest.h"
-#include <iostream>
-#include <memory>
-#include <sstream>
-#include <string>
-#include <vector>
+#include "../src/Response.hpp"
+#include "../src/Server.hpp"
+#include "../src/ext/../db/Entities/Event.hpp"
+#include "gtest/gtest-message.h"
+#include "gtest/gtest-test-part.h"
+#include "gtest/gtest_pred_impl.h"
 
 using namespace leves;
 

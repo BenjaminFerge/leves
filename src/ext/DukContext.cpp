@@ -1,15 +1,15 @@
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
 #include "DukContext.hpp"
 #include "../db/Entities/Event.hpp"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/Exception.h"
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
-#include "duk_config.h"
 #include "duktape.h"
-#include <iostream>
-#include <stdexcept>
-#include <string>
-#include <vector>
 
 namespace leves::ext
 {

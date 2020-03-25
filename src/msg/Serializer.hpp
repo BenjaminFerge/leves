@@ -1,10 +1,17 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "../db/Entities/Event.hpp"
 #include "../db/Entities/Stream.hpp"
 
-#include <string>
-#include <vector>
+namespace leves {
+namespace db {
+struct Event;
+struct Stream;
+}  // namespace db
+}  // namespace leves
 
 namespace leves::msg
 {

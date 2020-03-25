@@ -1,9 +1,10 @@
+#include <string>
+
 #include "Event.hpp"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
-#include <cstdint>
-#include <string>
+#include "Poco/JSON/Array.h"
 
 using namespace Poco::JSON;
 

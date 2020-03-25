@@ -1,5 +1,4 @@
-#include <gtest/gtest.h>
-#include <iostream>
+#include "gtest/gtest.h" // IWYU pragma: export
 
 int main(int argc, char **argv)
 {

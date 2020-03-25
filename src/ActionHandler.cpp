@@ -12,6 +12,9 @@
 #include "Server.hpp"
 #include "db/Entities/Stream.hpp"
 #include "db/Repositories/StreamRepository.hpp"
+#include "Poco/Util/Application.h"
+#include "Poco/Util/LayeredConfiguration.h"
+#include "db/Repositories/../Entities/Event.hpp"
 
 namespace leves
 {

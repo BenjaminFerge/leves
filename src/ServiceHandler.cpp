@@ -21,8 +21,8 @@
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "ServiceHandler.hpp"
-#include "db/Repositories/../Entities/Stream.hpp"
 #include "db/Repositories/StreamRepository.hpp"
+#include "db/Repositories/../Entities/Event.hpp"
 
 namespace Poco
 {
