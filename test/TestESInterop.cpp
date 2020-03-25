@@ -102,7 +102,7 @@ TEST_F(TestESInterop, StreamProjection)
     };
 
     events.push_back(e1);
-    events.push_back(e2);
+    // events.push_back(e2);
 
     std::string read = readFile("test/projections/userproj.js");
 

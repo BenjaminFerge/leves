@@ -66,6 +66,7 @@ Poco::JSON::Object::Ptr DukContext::callProjection(
     // Fill parameters
     Poco::JSON::Parser parser;
     for (const auto &event : events) {
+        // param 1: event
         duk_idx_t evIdx = duk_push_object(m_pCtx);
 
         duk_push_int(m_pCtx, event.id);
@@ -84,12 +85,11 @@ Poco::JSON::Object::Ptr DukContext::callProjection(
         duk_push_string(m_pCtx, event.type.c_str());
         duk_put_prop_string(m_pCtx, evIdx, "type");
 
-        duk_idx_t stIdx = duk_push_object(m_pCtx);
+        // param 2: state
         std::string jsonState = parser.parse(state);
         duk_push_string(m_pCtx, jsonState.c_str());
         duk_json_decode(m_pCtx, -1);
 
-        std::cout << "event iter START" << std::endl;
         if (duk_pcall(m_pCtx, 2) != DUK_EXEC_SUCCESS) {
             // Display a stack trace
             duk_get_prop_string(m_pCtx, -1, "stack");
@@ -98,7 +98,6 @@ Poco::JSON::Object::Ptr DukContext::callProjection(
         } else {
             duk_idx_t resultIdx = -1;
             std::string json = duk_json_encode(m_pCtx, resultIdx);
-            Poco::Dynamic::Var state;
             try {
                 state = parser.parse(json);
             } catch (Poco::Exception &exc) {
@@ -108,6 +107,7 @@ Poco::JSON::Object::Ptr DukContext::callProjection(
             }
         }
         // duk_pop(m_pCtx);
+        std::cout << state.toString() << std::endl;
     }
     duk_pop(m_pCtx);
     result = state.extract<Poco::JSON::Object::Ptr>();
