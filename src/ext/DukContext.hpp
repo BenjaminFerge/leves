@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../Persistance/Entities/Event.hpp"
+#include "../db/Entities/Event.hpp"
 #include "IContext.hpp"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/JSON/Object.h"
 #include "duktape.h"
 #include <string>
 
-namespace Leves::ext
+namespace leves::ext
 {
 class DukContext : public IContext
 {
@@ -16,7 +16,7 @@ class DukContext : public IContext
     ~DukContext();
     virtual Poco::JSON::Object::Ptr
     callProjection(const std::string &fnName,
-                   const std::vector<Persistance::Entities::Event> &events,
+                   const std::vector<db::Event> &events,
                    Poco::Dynamic::Var initState);
     void read(const std::string &body);
     duk_context *getDukContext();
@@ -24,4 +24,4 @@ class DukContext : public IContext
   private:
     duk_context *m_pCtx;
 };
-} // namespace Leves::ext
+} // namespace leves::ext

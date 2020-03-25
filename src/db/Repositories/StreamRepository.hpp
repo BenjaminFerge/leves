@@ -15,24 +15,24 @@ class Session;
 } // namespace Data
 } // namespace Poco
 
-namespace Leves::Persistance::Repositories
+namespace leves::db
 {
 class StreamRepository
 {
   public:
     StreamRepository(std::string connectorKey, std::string connectionString);
     ~StreamRepository();
-    std::vector<Entities::Stream> all();
-    Entities::Stream get(int id);
-    void create(Entities::Stream stream);
+    std::vector<Stream> all();
+    Stream get(int id);
+    void create(Stream stream);
     void initDB();
-    void attachEvent(Entities::Event event);
-    std::vector<Entities::Event> getEvents(int streamId);
-    std::vector<Entities::Event> getEvents(std::string streamType);
+    void attachEvent(Event event);
+    std::vector<Event> getEvents(int streamId);
+    std::vector<Event> getEvents(std::string streamType);
     Poco::Data::Session makeSession();
 
   private:
     std::string m_connectorKey;
     std::string m_connetctionString;
 };
-} // namespace Leves::Persistance::Repositories
+} // namespace leves::db

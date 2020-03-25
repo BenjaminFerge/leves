@@ -15,14 +15,14 @@
 #include <string>
 
 #include "ActionHandler.hpp"
-#include "Persistance/Repositories/../Entities/Stream.hpp"
-#include "Persistance/Repositories/StreamRepository.hpp"
 #include "Poco/AutoPtr.h"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/Exception.h"
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "ServiceHandler.hpp"
+#include "db/Repositories/../Entities/Stream.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
 namespace Poco
 {
@@ -60,8 +60,8 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-using namespace Leves;
-using namespace Persistance::Repositories;
+using namespace leves;
+using namespace db;
 
 ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
     : m_socket(socket), m_reactor(reactor), m_fifoIn(BUFFER_SIZE, true),

@@ -12,11 +12,11 @@
 #include <Poco/Util/ServerApplication.h>
 #include <iostream>
 
-#include "Persistance/Repositories/../Entities/Stream.hpp"
-#include "Persistance/Repositories/StreamRepository.hpp"
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
 #include "Version.h"
+#include "db/Repositories/../Entities/Stream.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
 namespace Poco
 {
@@ -49,13 +49,13 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-using namespace Leves;
-using namespace Persistance::Repositories;
+using namespace leves;
+using namespace db;
 
 Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
 {
-    std::string connectorKey = (std::string)config().getString(
-        "EventStore.ConnectorKey", "SQLite");
+    std::string connectorKey =
+        (std::string)config().getString("EventStore.ConnectorKey", "SQLite");
     std::string connectionString = (std::string)config().getString(
         "EventStore.ConnectionString", "leves.db");
     auto streamRepository = StreamRepository(connectorKey, connectionString);

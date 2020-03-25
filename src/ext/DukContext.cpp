@@ -1,5 +1,5 @@
 #include "DukContext.hpp"
-#include "../Persistance/Entities/Event.hpp"
+#include "../db/Entities/Event.hpp"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/Exception.h"
 #include "Poco/JSON/Object.h"
@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace Leves::ext
+namespace leves::ext
 {
 DukContext::DukContext()
 {
@@ -38,10 +38,10 @@ void DukContext::read(const std::string &body)
     duk_push_global_object(m_pCtx);
 } // namespace Leves::ext
 
-Poco::JSON::Object::Ptr DukContext::callProjection(
-    const std::string &fnName,
-    const std::vector<Persistance::Entities::Event> &events,
-    Poco::Dynamic::Var initState)
+Poco::JSON::Object::Ptr
+DukContext::callProjection(const std::string &fnName,
+                           const std::vector<db::Event> &events,
+                           Poco::Dynamic::Var initState)
 {
     Poco::Dynamic::Var state = initState;
     Poco::JSON::Object::Ptr result;
@@ -112,4 +112,4 @@ Poco::JSON::Object::Ptr DukContext::callProjection(
     result = state.extract<Poco::JSON::Object::Ptr>();
     return result;
 }
-} // namespace Leves::ext
+} // namespace leves::ext

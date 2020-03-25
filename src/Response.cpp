@@ -2,7 +2,7 @@
 
 #include "Response.hpp"
 
-namespace Leves
+namespace leves
 {
 Response::Response(ResponseStatus status, std::string message)
     : m_status(status), m_message(message)
@@ -14,4 +14,4 @@ bool Response::operator==(const Response &resp) const
 {
     return m_message == resp.m_message && m_status == resp.m_status;
 }
-} // namespace Leves
+} // namespace leves

@@ -7,7 +7,7 @@
 
 using namespace Poco::JSON;
 
-namespace Leves::Persistance::Entities
+namespace leves::db
 {
 Object Event::toObject()
 {
@@ -21,4 +21,4 @@ Object Event::toObject()
     obj.set("version", version);
     return obj;
 }
-} // namespace Leves::Persistance::Entities
+} // namespace leves::db

@@ -3,20 +3,17 @@
 #include <memory>
 #include <string>
 
-#include "Persistance/Repositories/StreamRepository.hpp"
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "Server.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
-namespace Leves
+namespace leves
 {
-namespace Persistance
-{
-namespace Entities
+namespace db
 {
 struct Stream;
-} // namespace Entities
-} // namespace Persistance
+} // namespace db
 
 enum Action {
     None,
@@ -37,11 +34,10 @@ class ActionHandler
     ActionHandler();
     ~ActionHandler();
     Response handle(Poco::JSON::Object::Ptr action);
-    void saveStream(const Leves::Persistance::Entities::Stream &stream);
+    void saveStream(const db::Stream &stream);
 
   private:
     Server *m_pServer;
-    std::unique_ptr<Persistance::Repositories::StreamRepository>
-        m_streamRepository;
+    std::unique_ptr<db::StreamRepository> m_streamRepository;
 };
-} // namespace Leves
+} // namespace leves

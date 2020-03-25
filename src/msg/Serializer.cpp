@@ -1,6 +1,6 @@
 #include "Serializer.hpp"
-#include "../Persistance/Entities/Event.hpp"
-#include "../Persistance/Entities/Stream.hpp"
+#include "../db/Entities/Event.hpp"
+#include "../db/Entities/Stream.hpp"
 #include "Poco/Dynamic/Struct.h"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/JSON/Object.h"
@@ -10,12 +10,12 @@
 #include <string>
 #include <vector>
 
-using namespace Leves::Persistance;
+using namespace leves::db;
 using namespace Poco::JSON;
 
-namespace Leves::Messaging
+namespace leves::msg
 {
-std::string serialize(const std::vector<Entities::Event> &events)
+std::string serialize(const std::vector<Event> &events)
 {
     std::string result = "[";
     std::string delim = "";
@@ -28,7 +28,7 @@ std::string serialize(const std::vector<Entities::Event> &events)
     return result;
 }
 
-std::string serialize(const std::vector<Entities::Stream> &streams)
+std::string serialize(const std::vector<Stream> &streams)
 {
     std::string result = "[";
     std::string delim = "";
@@ -41,7 +41,7 @@ std::string serialize(const std::vector<Entities::Stream> &streams)
     return result;
 }
 
-std::string serialize(const Entities::Event &event)
+std::string serialize(const Event &event)
 {
     Object obj;
     obj.set("id", event.id);
@@ -58,7 +58,7 @@ std::string serialize(const Entities::Event &event)
     return serialized;
 }
 
-std::string serialize(const Entities::Stream &stream)
+std::string serialize(const Stream &stream)
 {
     Object obj;
     obj.set("id", stream.id);
@@ -70,4 +70,4 @@ std::string serialize(const Entities::Stream &stream)
     serialized = oss.str();
     return serialized;
 }
-} // namespace Leves::Messaging
+} // namespace leves::msg

@@ -8,16 +8,16 @@
 #include <string>
 
 #include "ActionHandler.hpp"
-#include "Persistance/Repositories/StreamRepository.hpp"
 #include "Response.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
-namespace Leves {
-namespace Persistance {
-namespace Repositories {
+namespace leves
+{
+namespace db
+{
 class StreamRepository;
-}  // namespace Repositories
-}  // namespace Persistance
-}  // namespace Leves
+} // namespace db
+} // namespace leves
 
 namespace Poco
 {
@@ -61,7 +61,7 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-namespace Leves
+namespace leves
 {
 class ServiceHandler
 /// I/O handler class. This class (un)registers handlers for I/O based on
@@ -90,7 +90,6 @@ class ServiceHandler
     FIFOBuffer m_fifoIn;
     FIFOBuffer m_fifoOut;
     ActionHandler m_actionHandler;
-    std::unique_ptr<Persistance::Repositories::StreamRepository>
-        m_streamRepository;
+    std::unique_ptr<db::StreamRepository> m_streamRepository;
 };
-} // namespace Leves
+} // namespace leves

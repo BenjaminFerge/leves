@@ -20,10 +20,10 @@ set(SRC_FILES
 	src/ServiceHandler.cpp
 	src/Response.cpp
 	src/ActionHandler.cpp
-	src/Persistance/Entities/Stream.cpp
-	src/Persistance/Entities/Event.cpp
-	src/Persistance/Repositories/StreamRepository.cpp
-	src/Messaging/Serializer.cpp
+	src/db/Entities/Stream.cpp
+	src/db/Entities/Event.cpp
+	src/db/Repositories/StreamRepository.cpp
+	src/msg/Serializer.cpp
 	inc_duktape/duktape.c
 	src/ext/DukContext.cpp
 )
@@ -32,10 +32,10 @@ set(INC_FILES
 	src/ServiceHandler.hpp
 	src/Response.hpp
 	src/ActionHandler.hpp
-	src/Persistance/Entities/Stream.hpp
-	src/Persistance/Entities/Event.hpp
-	src/Persistance/Repositories/StreamRepository.hpp
-	src/Messaging/Serializer.hpp
+	src/db/Entities/Stream.hpp
+	src/db/Entities/Event.hpp
+	src/db/Repositories/StreamRepository.hpp
+	src/msg/Serializer.hpp
 	src/ext/IContext.hpp
 	src/ext/DukContext.hpp
 )

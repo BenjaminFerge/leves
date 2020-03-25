@@ -10,7 +10,7 @@
 #include <iostream>
 #include <memory>
 
-using namespace Leves;
+using namespace leves;
 
 class ActionHandlerTest : public testing::Test
 {

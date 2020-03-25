@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-namespace Leves::Persistance::Entities
+namespace leves::db
 {
 struct Event {
     int id;
@@ -15,4 +15,4 @@ struct Event {
 
     Poco::JSON::Object toObject();
 };
-} // namespace Leves::Persistance::Entities
+} // namespace leves::db

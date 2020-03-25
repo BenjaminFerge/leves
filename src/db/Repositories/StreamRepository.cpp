@@ -18,7 +18,7 @@ using namespace Poco::Data::Keywords;
 using Poco::Data::Session;
 using Poco::Data::Statement;
 
-namespace Leves::Persistance::Repositories
+namespace leves::db
 {
 StreamRepository::StreamRepository(std::string connectorKey,
                                    std::string connectionString)
@@ -36,16 +36,16 @@ Session StreamRepository::makeSession()
     return session;
 }
 
-std::vector<Entities::Stream> StreamRepository::all()
+std::vector<Stream> StreamRepository::all()
 {
     Session session = Session(m_connectorKey, m_connetctionString);
     Statement select(session);
-    Entities::Stream stream;
+    Stream stream;
     select << "SELECT id, type, version FROM streams", into(stream.id),
         into(stream.type), into(stream.version),
         range(0, 1); //  iterate over result set one row at a time
 
-    std::vector<Entities::Stream> result;
+    std::vector<Stream> result;
     while (!select.done()) {
         select.execute();
         result.push_back(stream);
@@ -54,9 +54,9 @@ std::vector<Entities::Stream> StreamRepository::all()
     return result;
 }
 
-// Entities::Stream StreamRepository::get(int id) {}
+// Stream StreamRepository::get(int id) {}
 
-void StreamRepository::create(Entities::Stream stream)
+void StreamRepository::create(Stream stream)
 {
     Session session = makeSession();
     Statement insert(session);
@@ -67,7 +67,7 @@ void StreamRepository::create(Entities::Stream stream)
     std::cout << "CREATED SUCCESSFULLY" << std::endl;
 }
 
-void StreamRepository::attachEvent(Entities::Event event)
+void StreamRepository::attachEvent(Event event)
 {
     Session session = makeSession();
     Statement insert(session);
@@ -80,11 +80,11 @@ void StreamRepository::attachEvent(Entities::Event event)
     std::cout << "ATTACHED SUCCESSFULLY" << std::endl;
 }
 
-std::vector<Entities::Event> StreamRepository::getEvents(int streamId)
+std::vector<Event> StreamRepository::getEvents(int streamId)
 {
     Session session = makeSession();
     Statement select(session);
-    Entities::Event event;
+    Event event;
     select << "SELECT e.id, e.streamId, e.type, e.payload, e.version "
               "FROM events AS e "
               "INNER JOIN streams AS s ON s.id = e.streamId "
@@ -92,7 +92,7 @@ std::vector<Entities::Event> StreamRepository::getEvents(int streamId)
         use(streamId), into(event.id), into(event.streamId), into(event.type),
         into(event.payload), into(event.version), range(0, 1);
 
-    std::vector<Entities::Event> result;
+    std::vector<Event> result;
     while (!select.done()) {
         select.execute();
         result.push_back(event);
@@ -101,11 +101,11 @@ std::vector<Entities::Event> StreamRepository::getEvents(int streamId)
     return result;
 }
 
-std::vector<Entities::Event> StreamRepository::getEvents(std::string streamType)
+std::vector<Event> StreamRepository::getEvents(std::string streamType)
 {
     Session session = makeSession();
     Statement select(session);
-    Entities::Event event;
+    Event event;
     select << "SELECT e.id, e.streamId, e.type, e.payload, e.version "
               "FROM events AS e "
               "INNER JOIN streams AS s ON s.id = e.streamId "
@@ -113,7 +113,7 @@ std::vector<Entities::Event> StreamRepository::getEvents(std::string streamType)
         use(streamType), into(event.id), into(event.streamId), into(event.type),
         into(event.payload), into(event.version), range(0, 1);
 
-    std::vector<Entities::Event> result;
+    std::vector<Event> result;
     while (!select.done()) {
         select.execute();
         result.push_back(event);
@@ -138,4 +138,4 @@ void StreamRepository::initDB()
            "UNIQUE(streamId, version))",
         now;
 }
-} // namespace Leves::Persistance::Repositories
+} // namespace leves::db

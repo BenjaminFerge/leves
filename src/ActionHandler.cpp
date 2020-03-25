@@ -5,15 +5,15 @@
 #include <vector>
 
 #include "ActionHandler.hpp"
-#include "Persistance/Entities/Stream.hpp"
-#include "Persistance/Repositories/StreamRepository.hpp"
 #include "Poco/Exception.h"
 #include "Poco/JSON/Array.h"
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "Server.hpp"
+#include "db/Entities/Stream.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
-namespace Leves
+namespace leves
 {
 std::string actionToString(Action action)
 {
@@ -59,8 +59,7 @@ Action actionFromString(std::string action)
     throw std::runtime_error("Invalid action: " + action);
 }
 
-void ActionHandler::saveStream(
-    const Leves::Persistance::Entities::Stream &stream)
+void ActionHandler::saveStream(const leves::db::Stream &stream)
 {
     m_streamRepository->create(stream);
 }
@@ -74,11 +73,10 @@ ActionHandler::ActionHandler()
     std::string connectionString = (std::string)app.config().getString(
         "EventStore.ConnectionString", "leves.db");
 
-    auto streamRepository = Leves::Persistance::Repositories::StreamRepository(
-        connectorKey, connectionString);
+    auto streamRepository =
+        db::StreamRepository(connectorKey, connectionString);
     m_streamRepository =
-        std::make_unique<Leves::Persistance::Repositories::StreamRepository>(
-            streamRepository);
+        std::make_unique<db::StreamRepository>(streamRepository);
 }
 
 ActionHandler::~ActionHandler() {}
@@ -93,7 +91,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
     switch (action) {
     case Action::CreateStream: {
         std::string type = object->getValue<std::string>("type");
-        Leves::Persistance::Entities::Stream stream = {0, type, 0};
+        leves::db::Stream stream = {0, type, 0};
         saveStream(stream);
         json.set("status", "OK");
         status = ResponseStatus::OK;
@@ -128,8 +126,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         int streamId = object->getValue<int>("streamId");
         std::string payload = object->getValue<std::string>("payload");
         int version = object->getValue<int>("version");
-        Leves::Persistance::Entities::Event event = {
-            0, streamId, type, payload, version};
+        leves::db::Event event = {0, streamId, type, payload, version};
         try {
             m_streamRepository->attachEvent(event);
             json.set("status", "OK");
@@ -191,4 +188,4 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
     msg = oss.str();
     return Response(status, msg);
 }
-} // namespace Leves
+} // namespace leves

@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-using namespace Leves;
+using namespace leves;
 
 class TestESInterop : public testing::Test
 {
@@ -55,10 +55,10 @@ class TestESInterop : public testing::Test
 
 TEST_F(TestESInterop, EmptyStreamProjection)
 {
-    std::vector<Persistance::Entities::Event> events;
+    std::vector<db::Event> events;
     std::string read = readFile("test/projections/proj1.js");
 
-    Leves::ext::DukContext ctx = *m_context.get();
+    ext::DukContext ctx = *m_context.get();
     ctx.read(read);
 
     std::string initJson = "{}";
@@ -78,9 +78,9 @@ TEST_F(TestESInterop, EmptyStreamProjection)
 
 TEST_F(TestESInterop, StreamProjection)
 {
-    std::vector<Persistance::Entities::Event> events;
+    std::vector<db::Event> events;
 
-    Persistance::Entities::Event e1 = {
+    db::Event e1 = {
         1,             // id
         1,             // streamId
         "UserCreated", // type
@@ -91,7 +91,7 @@ TEST_F(TestESInterop, StreamProjection)
         0    // version
     };
 
-    Persistance::Entities::Event e2 = {
+    db::Event e2 = {
         2,                  // id
         1,                  // streamId
         "UserEmailChanged", // type
@@ -106,7 +106,7 @@ TEST_F(TestESInterop, StreamProjection)
 
     std::string read = readFile("test/projections/userproj.js");
 
-    Leves::ext::DukContext ctx = *m_context.get();
+    ext::DukContext ctx = *m_context.get();
     ctx.read(read);
 
     std::string initJson = "{}";

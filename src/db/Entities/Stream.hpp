@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-namespace Leves::Persistance::Entities
+namespace leves::db
 {
 struct Stream {
     int id;
@@ -13,4 +13,4 @@ struct Stream {
 
     Poco::JSON::Object toObject();
 };
-} // namespace Leves::Persistance::Entities
+} // namespace leves::db

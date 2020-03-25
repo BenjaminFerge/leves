@@ -5,7 +5,7 @@
 
 using namespace Poco::JSON;
 
-namespace Leves::Persistance::Entities
+namespace leves::db
 {
 Object Stream::toObject()
 {
@@ -15,4 +15,4 @@ Object Stream::toObject()
     obj.set("version", version);
     return obj;
 }
-} // namespace Leves::Persistance::Entities
+} // namespace leves::db
