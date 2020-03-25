@@ -8,19 +8,19 @@
 #include <string>
 
 #include "ActionHandler.hpp"
-#include "Response.hpp"
-#include "db/Repositories/StreamRepository.hpp"
-#include "Server.hpp"
 #include "Poco/Net/SocketNotification.h"
 #include "Poco/Net/SocketReactor.h"
+#include "Response.hpp"
+#include "Server.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
-namespace leves
+namespace yess
 {
 namespace db
 {
 class StreamRepository;
 } // namespace db
-} // namespace leves
+} // namespace yess
 
 namespace Poco
 {
@@ -64,7 +64,7 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-namespace leves
+namespace yess
 {
 class ServiceHandler
 /// I/O handler class. This class (un)registers handlers for I/O based on
@@ -95,4 +95,4 @@ class ServiceHandler
     ActionHandler m_actionHandler;
     std::unique_ptr<db::StreamRepository> m_streamRepository;
 };
-} // namespace leves
+} // namespace yess

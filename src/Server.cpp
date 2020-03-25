@@ -16,8 +16,8 @@
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
 #include "Version.h"
-#include "db/Repositories/StreamRepository.hpp"
 #include "db/Repositories/../Entities/Event.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
 namespace Poco
 {
@@ -50,7 +50,7 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-using namespace leves;
+using namespace yess;
 using namespace db;
 
 Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
@@ -58,7 +58,7 @@ Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
     std::string connectorKey =
         (std::string)config().getString("EventStore.ConnectorKey", "SQLite");
     std::string connectionString = (std::string)config().getString(
-        "EventStore.ConnectionString", "leves.db");
+        "EventStore.ConnectionString", "yess.db");
     auto streamRepository = StreamRepository(connectorKey, connectionString);
     streamRepository.initDB();
 }
@@ -112,7 +112,7 @@ void Server::displayHelp()
 
 void Server::displayVersion()
 {
-    std::cout << LEVES_NAME << " v" << LEVES_VER << std::endl;
+    std::cout << YESS_NAME << " v" << YESS_VER << std::endl;
 }
 
 int Server::main(const std::vector<std::string> &args)
@@ -129,7 +129,7 @@ int Server::main(const std::vector<std::string> &args)
     case CLInfoOption::none:
         break;
     }
-    std::cout << "Starting leves..." << std::endl;
+    std::cout << "Starting yess..." << std::endl;
 
     // get parameters from configuration file
     unsigned short port = (unsigned short)config().getInt("Server.port", 9977);

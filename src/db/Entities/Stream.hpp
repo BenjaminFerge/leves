@@ -5,7 +5,7 @@
 
 #include "Poco/JSON/Object.h"
 
-namespace leves::db
+namespace yess::db
 {
 struct Stream {
     int id;
@@ -14,4 +14,4 @@ struct Stream {
 
     Poco::JSON::Object toObject();
 };
-} // namespace leves::db
+} // namespace yess::db

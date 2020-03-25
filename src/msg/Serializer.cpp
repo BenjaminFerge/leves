@@ -2,18 +2,18 @@
 #include <string>
 #include <vector>
 
-#include "Serializer.hpp"
 #include "../db/Entities/Event.hpp"
 #include "../db/Entities/Stream.hpp"
 #include "Poco/Dynamic/Var.h"
+#include "Poco/JSON/Array.h"
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
-#include "Poco/JSON/Array.h"
+#include "Serializer.hpp"
 
-using namespace leves::db;
+using namespace yess::db;
 using namespace Poco::JSON;
 
-namespace leves::msg
+namespace yess::msg
 {
 std::string serialize(const std::vector<Event> &events)
 {
@@ -70,4 +70,4 @@ std::string serialize(const Stream &stream)
     serialized = oss.str();
     return serialized;
 }
-} // namespace leves::msg
+} // namespace yess::msg

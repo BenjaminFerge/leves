@@ -6,17 +6,18 @@
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "Server.hpp"
-#include "db/Repositories/StreamRepository.hpp"
 #include "db/Entities/Stream.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
-namespace leves
+namespace yess
 {
 class Server;
 
-namespace db {
+namespace db
+{
 class StreamRepository;
 struct Stream;
-}  // namespace db
+} // namespace db
 
 enum Action {
     None,
@@ -43,4 +44,4 @@ class ActionHandler
     Server *m_pServer;
     std::unique_ptr<db::StreamRepository> m_streamRepository;
 };
-} // namespace leves
+} // namespace yess

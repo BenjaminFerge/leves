@@ -3,15 +3,15 @@
 #include <string>
 #include <vector>
 
-#include "DukContext.hpp"
 #include "../db/Entities/Event.hpp"
+#include "DukContext.hpp"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/Exception.h"
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
 #include "duktape.h"
 
-namespace leves::ext
+namespace yess::ext
 {
 DukContext::DukContext()
 {
@@ -36,7 +36,7 @@ void DukContext::read(const std::string &body)
     }
     duk_pop(m_pCtx); // ignore result
     duk_push_global_object(m_pCtx);
-} // namespace Leves::ext
+}
 
 Poco::JSON::Object::Ptr
 DukContext::callProjection(const std::string &fnName,
@@ -112,4 +112,4 @@ DukContext::callProjection(const std::string &fnName,
     result = state.extract<Poco::JSON::Object::Ptr>();
     return result;
 }
-} // namespace leves::ext
+} // namespace yess::ext

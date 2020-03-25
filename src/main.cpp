@@ -2,6 +2,6 @@
 
 int main(int argc, char **argv)
 {
-    leves::Server server;
+    yess::Server server;
     return server.run(argc, argv);
 }

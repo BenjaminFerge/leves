@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "../Entities/Event.hpp"
 #include "../Entities/Stream.hpp"
 #include "Poco/Data/AbstractBinder.h"
 #include "Poco/Data/Binding.h"
@@ -12,13 +13,12 @@
 #include "Poco/Data/Session.h"
 #include "Poco/Data/Statement.h"
 #include "StreamRepository.hpp"
-#include "../Entities/Event.hpp"
 
 using namespace Poco::Data::Keywords;
 using Poco::Data::Session;
 using Poco::Data::Statement;
 
-namespace leves::db
+namespace yess::db
 {
 StreamRepository::StreamRepository(std::string connectorKey,
                                    std::string connectionString)
@@ -138,4 +138,4 @@ void StreamRepository::initDB()
            "UNIQUE(streamId, version))",
         now;
 }
-} // namespace leves::db
+} // namespace yess::db

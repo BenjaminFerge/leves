@@ -7,7 +7,7 @@
 #include "../Entities/Stream.hpp"
 #include "Poco/Data/Session.h"
 
-namespace leves::db
+namespace yess::db
 {
 class StreamRepository
 {
@@ -27,4 +27,4 @@ class StreamRepository
     std::string m_connectorKey;
     std::string m_connetctionString;
 };
-} // namespace leves::db
+} // namespace yess::db

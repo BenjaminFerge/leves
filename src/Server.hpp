@@ -7,9 +7,9 @@
 #include <string>
 #include <vector>
 
-#include "db/Repositories/StreamRepository.hpp"
 #include "Poco/Util/Application.h"
 #include "Poco/Util/OptionSet.h"
+#include "db/Repositories/StreamRepository.hpp"
 
 namespace Poco
 {
@@ -54,7 +54,7 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-namespace leves
+namespace yess
 {
 enum CLInfoOption {
     none,
@@ -81,4 +81,4 @@ class Server : public Poco::Util::ServerApplication
     CLInfoOption m_requestedInfo;
     bool m_isConfigLoaded;
 };
-} // namespace leves
+} // namespace yess

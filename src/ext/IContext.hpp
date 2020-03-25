@@ -5,7 +5,7 @@
 #include "Poco/JSON/Object.h"
 #include <string>
 
-namespace leves::ext
+namespace yess::ext
 {
 class IContext
 {
@@ -15,4 +15,4 @@ class IContext
                    const std::vector<db::Event> &events,
                    Poco::Dynamic::Var initState) = 0;
 };
-} // namespace leves::ext
+} // namespace yess::ext

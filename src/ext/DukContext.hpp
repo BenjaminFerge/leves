@@ -9,13 +9,15 @@
 #include "Poco/JSON/Object.h"
 #include "duktape.h"
 
-namespace leves {
-namespace db {
+namespace yess
+{
+namespace db
+{
 struct Event;
-}  // namespace db
-}  // namespace leves
+} // namespace db
+} // namespace yess
 
-namespace leves::ext
+namespace yess::ext
 {
 class DukContext : public IContext
 {
@@ -32,4 +34,4 @@ class DukContext : public IContext
   private:
     duk_context *m_pCtx;
 };
-} // namespace leves::ext
+} // namespace yess::ext

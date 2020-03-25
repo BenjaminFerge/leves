@@ -4,7 +4,7 @@
 
 #include "Poco/JSON/Object.h"
 
-namespace leves
+namespace yess
 {
 enum ResponseStatus { OK, Error };
 class Response
@@ -19,4 +19,4 @@ class Response
     ResponseStatus m_status;
     std::string m_message;
 };
-} // namespace leves
+} // namespace yess

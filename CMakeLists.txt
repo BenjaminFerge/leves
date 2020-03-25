@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(leves VERSION 0.1.0)
+project(yess VERSION 0.1.0)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-set(LEVES_VERSION_TWEAK "pre-alpha")
+set(YESS_VERSION_TWEAK "pre-alpha")
 configure_file(
         src/Version.h.in
 	include/Version.h

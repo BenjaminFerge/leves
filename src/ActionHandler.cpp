@@ -8,15 +8,15 @@
 #include "Poco/Exception.h"
 #include "Poco/JSON/Array.h"
 #include "Poco/JSON/Object.h"
+#include "Poco/Util/Application.h"
+#include "Poco/Util/LayeredConfiguration.h"
 #include "Response.hpp"
 #include "Server.hpp"
 #include "db/Entities/Stream.hpp"
-#include "db/Repositories/StreamRepository.hpp"
-#include "Poco/Util/Application.h"
-#include "Poco/Util/LayeredConfiguration.h"
 #include "db/Repositories/../Entities/Event.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
-namespace leves
+namespace yess
 {
 std::string actionToString(Action action)
 {
@@ -62,7 +62,7 @@ Action actionFromString(std::string action)
     throw std::runtime_error("Invalid action: " + action);
 }
 
-void ActionHandler::saveStream(const leves::db::Stream &stream)
+void ActionHandler::saveStream(const yess::db::Stream &stream)
 {
     m_streamRepository->create(stream);
 }
@@ -74,7 +74,7 @@ ActionHandler::ActionHandler()
     std::string connectorKey = (std::string)app.config().getString(
         "EventStore.ConnectorKey", "SQLite");
     std::string connectionString = (std::string)app.config().getString(
-        "EventStore.ConnectionString", "leves.db");
+        "EventStore.ConnectionString", "yess.db");
 
     auto streamRepository =
         db::StreamRepository(connectorKey, connectionString);
@@ -94,7 +94,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
     switch (action) {
     case Action::CreateStream: {
         std::string type = object->getValue<std::string>("type");
-        leves::db::Stream stream = {0, type, 0};
+        yess::db::Stream stream = {0, type, 0};
         saveStream(stream);
         json.set("status", "OK");
         status = ResponseStatus::OK;
@@ -129,7 +129,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         int streamId = object->getValue<int>("streamId");
         std::string payload = object->getValue<std::string>("payload");
         int version = object->getValue<int>("version");
-        leves::db::Event event = {0, streamId, type, payload, version};
+        yess::db::Event event = {0, streamId, type, payload, version};
         try {
             m_streamRepository->attachEvent(event);
             json.set("status", "OK");
@@ -191,4 +191,4 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
     msg = oss.str();
     return Response(status, msg);
 }
-} // namespace leves
+} // namespace yess

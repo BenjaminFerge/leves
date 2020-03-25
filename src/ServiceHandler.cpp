@@ -21,8 +21,8 @@
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "ServiceHandler.hpp"
-#include "db/Repositories/StreamRepository.hpp"
 #include "db/Repositories/../Entities/Event.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
 namespace Poco
 {
@@ -60,7 +60,7 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-using namespace leves;
+using namespace yess;
 using namespace db;
 
 ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
