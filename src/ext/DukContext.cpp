@@ -106,8 +106,7 @@ Poco::JSON::Object::Ptr DukContext::callProjection(
                     "Funciton result is not a valid javascript object!");
             }
         }
-        // duk_pop(m_pCtx);
-        std::cout << state.toString() << std::endl;
+        duk_pop(m_pCtx);
     }
     duk_pop(m_pCtx);
     result = state.extract<Poco::JSON::Object::Ptr>();

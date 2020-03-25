@@ -102,7 +102,7 @@ TEST_F(TestESInterop, StreamProjection)
     };
 
     events.push_back(e1);
-    // events.push_back(e2);
+    events.push_back(e2);
 
     std::string read = readFile("test/projections/userproj.js");
 
@@ -124,6 +124,8 @@ TEST_F(TestESInterop, StreamProjection)
                            "\"username\":\"johndoe\","
                            "\"email\":\"johndoe2@mail.com\""
                            "}";
+    Poco::Dynamic::Var expectedState = parser.parse(expected);
+    Poco::Dynamic::Var resultState = parser.parse(resultStr);
 
-    ASSERT_EQ(resultStr, expected);
+    ASSERT_EQ(resultState.toString(), expectedState.toString());
 }
