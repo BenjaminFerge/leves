@@ -1,15 +1,13 @@
 #pragma once
 
-#include <Poco/Delegate.h>
-#include <Poco/FIFOBuffer.h>
-#include <Poco/Util/ServerApplication.h>
-#include <memory>
-#include <string>
-#include <vector>
+#include <Poco/Delegate.h>                // for delegate
+#include <Poco/FIFOBuffer.h>              // for FIFOBuffer
+#include <Poco/Util/ServerApplication.h>  // for ServerApplication
+#include <string>                         // for string
+#include <vector>                         // for vector
 
-#include "Poco/Util/Application.h"
-#include "Poco/Util/OptionSet.h"
-#include "db/Repositories/StreamRepository.hpp"
+#include "Poco/Util/Application.h"        // for Application
+#include "Poco/Util/OptionSet.h"          // for OptionSet
 
 namespace Poco
 {
@@ -27,10 +25,8 @@ template <class ServiceHandler> class SocketAcceptor;
 } // namespace Net
 namespace Util
 {
-class Application;
 class HelpFormatter;
 class Option;
-class OptionSet;
 } // namespace Util
 template <class C, class N> class NObserver;
 template <class C> class AutoPtr;

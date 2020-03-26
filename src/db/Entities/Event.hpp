@@ -1,9 +1,8 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
+#include <string>              // for string
 
-#include "Poco/JSON/Object.h"
+#include "Poco/JSON/Object.h"  // for Object
 
 namespace yess::db
 {

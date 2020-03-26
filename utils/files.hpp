@@ -1,9 +1,5 @@
 #pragma once
 
-#include <cassert>
-#include <string>
-
-#include "Poco/FileStream.h"
-#include "Poco/StreamCopier.h"
+#include <string>  // for string
 
 std::string readFile(const std::string &path);
