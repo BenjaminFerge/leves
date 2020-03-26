@@ -61,7 +61,9 @@ enum CLInfoOption {
     help,
     version,
 };
-static constexpr const char *s_aboutString = "Leves application!";
+static constexpr const char *s_aboutString =
+    "Yess is a server application for handling event sourced systems.";
+
 class Server : public Poco::Util::ServerApplication
 {
   public:
