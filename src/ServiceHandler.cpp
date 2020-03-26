@@ -24,24 +24,6 @@
 #include "db/Repositories/../Entities/Event.hpp"
 #include "db/Repositories/StreamRepository.hpp"
 
-namespace Poco
-{
-class Thread;
-
-namespace Net
-{
-class ServerSocket;
-template <class ServiceHandler> class SocketAcceptor;
-} // namespace Net
-namespace Util
-{
-class HelpFormatter;
-class Option;
-class OptionSet;
-class ServerApplication;
-} // namespace Util
-} // namespace Poco
-
 using Poco::AutoPtr;
 using Poco::delegate;
 using Poco::FIFOBuffer;

@@ -1,5 +1,3 @@
-#include <Poco/Delegate.h>
-#include <Poco/FIFOBuffer.h>
 #include <Poco/Net/ServerSocket.h>
 #include <Poco/Net/SocketAcceptor.h>
 #include <Poco/Net/SocketReactor.h>
@@ -18,37 +16,6 @@
 #include "Version.h"
 #include "db/Repositories/../Entities/Event.hpp"
 #include "db/Repositories/StreamRepository.hpp"
-
-namespace Poco
-{
-namespace Net
-{
-class ReadableNotification;
-class ShutdownNotification;
-class StreamSocket;
-class WritableNotification;
-} // namespace Net
-template <class C, class N> class NObserver;
-template <class C> class AutoPtr;
-} // namespace Poco
-
-using Poco::AutoPtr;
-using Poco::delegate;
-using Poco::FIFOBuffer;
-using Poco::NObserver;
-using Poco::Thread;
-using Poco::Net::ReadableNotification;
-using Poco::Net::ServerSocket;
-using Poco::Net::ShutdownNotification;
-using Poco::Net::SocketAcceptor;
-using Poco::Net::SocketReactor;
-using Poco::Net::StreamSocket;
-using Poco::Net::WritableNotification;
-using Poco::Util::Application;
-using Poco::Util::HelpFormatter;
-using Poco::Util::Option;
-using Poco::Util::OptionSet;
-using Poco::Util::ServerApplication;
 
 using namespace yess;
 using namespace db;

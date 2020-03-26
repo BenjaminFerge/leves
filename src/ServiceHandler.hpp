@@ -13,38 +13,7 @@
 #include "Response.hpp"
 #include "Server.hpp"
 #include "db/Repositories/StreamRepository.hpp"
-
-namespace yess
-{
-namespace db
-{
-class StreamRepository;
-} // namespace db
-} // namespace yess
-
-namespace Poco
-{
-class Thread;
-
-namespace Net
-{
-class ReadableNotification;
-class ServerSocket;
-class ShutdownNotification;
-class SocketReactor;
-class WritableNotification;
-template <class ServiceHandler> class SocketAcceptor;
-} // namespace Net
-namespace Util
-{
-class Application;
-class HelpFormatter;
-class Option;
-class OptionSet;
-class ServerApplication;
-} // namespace Util
-template <class C, class N> class NObserver;
-} // namespace Poco
+#include "Poco/Util/ServerApplication.h"
 
 using Poco::AutoPtr;
 using Poco::delegate;

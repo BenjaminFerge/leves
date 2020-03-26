@@ -11,14 +11,6 @@
 
 namespace yess
 {
-class Server;
-
-namespace db
-{
-class StreamRepository;
-struct Stream;
-} // namespace db
-
 enum Action {
     None,
     CreateStream,

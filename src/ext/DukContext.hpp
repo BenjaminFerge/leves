@@ -9,14 +9,6 @@
 #include "Poco/JSON/Object.h"
 #include "duktape.h"
 
-namespace yess
-{
-namespace db
-{
-struct Event;
-} // namespace db
-} // namespace yess
-
 namespace yess::ext
 {
 class DukContext : public IContext
