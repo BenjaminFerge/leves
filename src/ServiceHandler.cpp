@@ -1,28 +1,28 @@
-#include <Poco/AbstractDelegate.h>
-#include <Poco/AbstractEvent.h>
-#include <Poco/BasicEvent.h>
-#include <Poco/Delegate.h>
-#include <Poco/FIFOBuffer.h>
-#include <Poco/JSON/Parser.h>
-#include <Poco/Logger.h>
-#include <Poco/NObserver.h>
-#include <Poco/Net/SocketAddress.h>
-#include <Poco/Net/SocketNotification.h>
-#include <Poco/Net/SocketReactor.h>
-#include <Poco/Net/StreamSocket.h>
-#include <Poco/Util/Application.h>
-#include <memory>
-#include <string>
+#include <Poco/AbstractDelegate.h>                 // for AbstractDelegate
+#include <Poco/AbstractEvent.h>                    // for AbstractEvent
+#include <Poco/BasicEvent.h>                       // for BasicEvent
+#include <Poco/Delegate.h>                         // for delegate, Delegate
+#include <Poco/FIFOBuffer.h>                       // for FIFOBuffer
+#include <Poco/JSON/Parser.h>                      // for Parser
+#include <Poco/Logger.h>                           // for Logger
+#include <Poco/NObserver.h>                        // for NObserver
+#include <Poco/Net/SocketAddress.h>                // for SocketAddress
+#include <Poco/Net/SocketNotification.h>           // for ReadableNotification
+#include <Poco/Net/SocketReactor.h>                // for SocketReactor
+#include <Poco/Net/StreamSocket.h>                 // for StreamSocket
+#include <Poco/Util/Application.h>                 // for Application, Optio...
+#include <memory>                                  // for allocator
+#include <string>                                  // for operator+, string
 
-#include "ActionHandler.hpp"
-#include "Poco/AutoPtr.h"
-#include "Poco/Dynamic/Var.h"
-#include "Poco/Exception.h"
-#include "Poco/JSON/Object.h"
-#include "Response.hpp"
+#include "ActionHandler.hpp"                       // for ActionHandler
+#include "Poco/AutoPtr.h"                          // for AutoPtr
+#include "Poco/Dynamic/Var.h"                      // for Var
+#include "Poco/Exception.h"                        // for Exception
+#include "Poco/JSON/Object.h"                      // for Object::Ptr, Object
+#include "Response.hpp"                            // for Response, Error
 #include "ServiceHandler.hpp"
-#include "db/Repositories/../Entities/Event.hpp"
-#include "db/Repositories/StreamRepository.hpp"
+#include "db/Repositories/StreamRepository.hpp"    // for StreamRepository
+#include "db/Repositories/../Entities/Stream.hpp"  // for db
 
 using Poco::AutoPtr;
 using Poco::delegate;

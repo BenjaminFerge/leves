@@ -1,36 +1,14 @@
 #pragma once
 
-#include <Poco/Delegate.h>                // for delegate
-#include <Poco/FIFOBuffer.h>              // for FIFOBuffer
-#include <Poco/Util/ServerApplication.h>  // for ServerApplication
-#include <string>                         // for string
-#include <vector>                         // for vector
+#include <Poco/Delegate.h>               // for delegate
+#include <Poco/FIFOBuffer.h>             // for FIFOBuffer
+#include <Poco/Util/ServerApplication.h> // for ServerApplication
+#include <string>                        // for string
+#include <vector>                        // for vector
 
-#include "Poco/Util/Application.h"        // for Application
-#include "Poco/Util/OptionSet.h"          // for OptionSet
-
-namespace Poco
-{
-class Thread;
-
-namespace Net
-{
-class ReadableNotification;
-class ServerSocket;
-class ShutdownNotification;
-class SocketReactor;
-class StreamSocket;
-class WritableNotification;
-template <class ServiceHandler> class SocketAcceptor;
-} // namespace Net
-namespace Util
-{
-class HelpFormatter;
-class Option;
-} // namespace Util
-template <class C, class N> class NObserver;
-template <class C> class AutoPtr;
-} // namespace Poco
+#include "Poco/Util/Application.h"   // for Application
+#include "Poco/Util/HelpFormatter.h" // for HelpFormatter (ptr only)
+#include "Poco/Util/OptionSet.h"     // for OptionSet
 
 using Poco::AutoPtr;
 using Poco::delegate;
