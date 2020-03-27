@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 
+#include "Logger.hpp"
 #include "Poco/Foundation.h"
 #include "Poco/Net/Net.h"
 #include "Poco/Util/Subsystem.h"
@@ -122,10 +123,10 @@ int Server::main(const std::vector<std::string> &args)
     case CLInfoOption::none:
         break;
     }
-    std::cout << "Starting yess..." << std::endl;
 
     // get parameters from configuration file
     unsigned short port = (unsigned short)config().getInt("Server.port", 9977);
+    LOG_INFO("Starting yess on port {}...", port);
 
     // set-up a server socket
     ServerSocket svs(port);
