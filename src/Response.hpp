@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "Poco/JSON/Object.h"
-
 namespace yess
 {
 enum ResponseStatus { OK, Error };
