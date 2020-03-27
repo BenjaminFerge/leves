@@ -27,6 +27,7 @@ class Server : public Poco::Util::ServerApplication
   public:
     Server();
     ~Server();
+    std::string getConnStr();
 
   protected:
     void initialize(Application &self);
@@ -40,5 +41,6 @@ class Server : public Poco::Util::ServerApplication
   private:
     CLInfoOption m_requestedInfo;
     bool m_isConfigLoaded;
+    std::string m_connStr;
 };
 } // namespace yess

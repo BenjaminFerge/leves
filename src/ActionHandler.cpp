@@ -71,13 +71,19 @@ ActionHandler::ActionHandler()
 {
     std::cout << "Action handler created" << std::endl;
     Application &app = Server::instance();
+    Server *yess = static_cast<Server *>(&app);
+    auto connStr = yess->getConnStr();
+    // TODO: DRY
     std::string connectorKey = (std::string)app.config().getString(
         "EventStore.ConnectorKey", "SQLite");
     std::string connectionString = (std::string)app.config().getString(
         "EventStore.ConnectionString", "yess.db");
-
+    if (!connStr.empty()) {
+        connectionString = connStr;
+    }
     auto streamRepository =
         db::StreamRepository(connectorKey, connectionString);
+    // Repository initialization in the Server ctor.
     m_streamRepository =
         std::make_unique<db::StreamRepository>(streamRepository);
 }

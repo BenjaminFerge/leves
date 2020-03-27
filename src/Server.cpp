@@ -9,6 +9,7 @@
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/ServerApplication.h>
 #include <iostream>
+#include <string>
 
 #include "Poco/Foundation.h"
 #include "Poco/Net/Net.h"
@@ -27,12 +28,6 @@ using namespace Poco::Util;
 
 Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
 {
-    std::string connectorKey =
-        (std::string)config().getString("EventStore.ConnectorKey", "SQLite");
-    std::string connectionString = (std::string)config().getString(
-        "EventStore.ConnectionString", "yess.db");
-    auto streamRepository = StreamRepository(connectorKey, connectionString);
-    streamRepository.initDB();
 }
 
 Server::~Server() {}
@@ -42,6 +37,22 @@ void Server::initialize(Application &self)
     // load default configuration files, if present
     m_isConfigLoaded = loadConfiguration();
     ServerApplication::initialize(self);
+
+    std::string connectorKey =
+        (std::string)config().getString("EventStore.ConnectorKey", "SQLite");
+    std::string connectionString = (std::string)config().getString(
+        "EventStore.ConnectionString", "yess.db");
+
+    // TODO: warning user when running as daemon, the application directory
+    // changed to '/' -> possibly permission error when relative path is used
+    // or/and
+    // convert it to absolute
+
+    if (!m_connStr.empty()) {
+        connectionString = m_connStr;
+    }
+    auto streamRepository = StreamRepository(connectorKey, connectionString);
+    streamRepository.initDB();
 }
 
 void Server::uninitialize() { ServerApplication::uninitialize(); }
@@ -60,6 +71,12 @@ void Server::defineOptions(OptionSet &options)
                        .required(false)
                        .repeatable(false);
     options.addOption(version);
+
+    auto connStr = Option("conn-str", "c", "Connection string")
+                       .required(false)
+                       .argument("<string>")
+                       .repeatable(false);
+    options.addOption(connStr);
 }
 
 void Server::handleOption(const std::string &name, const std::string &value)
@@ -68,8 +85,10 @@ void Server::handleOption(const std::string &name, const std::string &value)
 
     if (name == "help")
         m_requestedInfo = CLInfoOption::help;
-    else if (name == "version") {
+    else if (name == "version")
         m_requestedInfo = CLInfoOption::version;
+    else if (name == "conn-str") {
+        m_connStr = value;
     }
 }
 
@@ -86,6 +105,8 @@ void Server::displayVersion()
 {
     std::cout << YESS_NAME << " v" << YESS_VER << std::endl;
 }
+
+std::string Server::getConnStr() { return m_connStr; }
 
 int Server::main(const std::vector<std::string> &args)
 {
