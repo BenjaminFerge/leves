@@ -23,8 +23,6 @@
 #include "Response.hpp"
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
-#include "db/Repositories/../Entities/Event.hpp"
-#include "db/Repositories/StreamRepository.hpp"
 
 using namespace yess;
 using namespace db;
