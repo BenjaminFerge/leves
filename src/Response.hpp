@@ -1,6 +1,8 @@
 #pragma once
 
-#include <string>  // for string
+#include <string>
+
+#include "Poco/JSON/Object.h"
 
 namespace yess
 {

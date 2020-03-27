@@ -1,20 +1,21 @@
-#include <Poco/Net/ServerSocket.h>                 // for ServerSocket
-#include <Poco/Net/SocketAcceptor.h>               // for SocketAcceptor
-#include <Poco/Net/SocketReactor.h>                // for SocketReactor
-#include <Poco/Thread.h>                           // for Thread
-#include <Poco/Util/Application.h>                 // for Application, Appli...
-#include <Poco/Util/HelpFormatter.h>               // for HelpFormatter
-#include <Poco/Util/LayeredConfiguration.h>        // for LayeredConfiguration
-#include <Poco/Util/Option.h>                      // for Option
-#include <Poco/Util/OptionSet.h>                   // for OptionSet
-#include <Poco/Util/ServerApplication.h>           // for ServerApplication
-#include <iostream>                                // for operator<<, basic_...
+#include <Poco/Net/ServerSocket.h>
+#include <Poco/Net/SocketAcceptor.h>
+#include <Poco/Net/SocketReactor.h>
+#include <Poco/Thread.h>
+#include <Poco/Util/Application.h>
+#include <Poco/Util/HelpFormatter.h>
+#include <Poco/Util/LayeredConfiguration.h>
+#include <Poco/Util/Option.h>
+#include <Poco/Util/OptionSet.h>
+#include <Poco/Util/ServerApplication.h>
+#include <iostream>
+#include <memory>
 
 #include "Server.hpp"
-#include "ServiceHandler.hpp"                      // for ServiceHandler
-#include "Version.h"                               // for YESS_NAME, YESS_VER
-#include "db/Repositories/StreamRepository.hpp"    // for StreamRepository
-#include "db/Repositories/../Entities/Stream.hpp"  // for db
+#include "ServiceHandler.hpp"
+#include "Version.h"
+#include "db/Repositories/../Entities/Event.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 
 using namespace yess;
 using namespace db;

@@ -1,20 +1,19 @@
 #pragma once
 
-#include <Poco/AutoPtr.h>                        // for AutoPtr
-#include <Poco/Delegate.h>                       // for delegate
-#include <Poco/FIFOBuffer.h>                     // for FIFOBuffer
-#include <Poco/Net/StreamSocket.h>               // for StreamSocket
-#include <memory>                                // for unique_ptr
-#include <string>                                // for string
+#include <Poco/AutoPtr.h>
+#include <Poco/Delegate.h>
+#include <Poco/FIFOBuffer.h>
+#include <Poco/Net/StreamSocket.h>
+#include <memory>
+#include <string>
 
-#include "ActionHandler.hpp"                     // for ActionHandler
-#include "Poco/Net/SocketNotification.h"         // for ReadableNotification
-#include "Poco/Net/SocketReactor.h"              // for SocketReactor
-#include "Response.hpp"                          // for Response
-#include "Server.hpp"                            // for FIFOBuffer, AutoPtr
-#include "db/Repositories/StreamRepository.hpp"  // for StreamRepository
-#include "Poco/Util/ServerApplication.h"         // for ServerApplication
-#include "Poco/Util/Application.h"               // for Application, OptionSet
+#include "ActionHandler.hpp"
+#include "Poco/Net/SocketNotification.h"
+#include "Poco/Net/SocketReactor.h"
+#include "Response.hpp"
+#include "Server.hpp"
+#include "db/Repositories/StreamRepository.hpp"
+#include "Poco/Util/ServerApplication.h"
 
 using Poco::AutoPtr;
 using Poco::delegate;
