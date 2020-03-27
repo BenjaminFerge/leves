@@ -9,8 +9,10 @@
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/ServerApplication.h>
 #include <iostream>
-#include <memory>
 
+#include "Poco/Foundation.h"
+#include "Poco/Net/Net.h"
+#include "Poco/Util/Subsystem.h"
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
 #include "Version.h"

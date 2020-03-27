@@ -3,15 +3,13 @@
 #include <memory>
 #include <string>
 
+#include "ActionHandler.hpp"
 #include "Poco/AutoPtr.h"
 #include "Poco/FIFOBuffer.h"
 #include "Poco/Net/SocketNotification.h"
 #include "Poco/Net/SocketReactor.h"
 #include "Poco/Net/StreamSocket.h"
-
-#include "ActionHandler.hpp"
 #include "Response.hpp"
-#include "Server.hpp"
 #include "db/Repositories/StreamRepository.hpp"
 
 using Poco::AutoPtr;

@@ -1,15 +1,12 @@
 #pragma once
 
-#include <memory>
 #include <string>
 #include <vector>
 
-#include "Poco/Net/ServerSocket.h"
 #include "Poco/Util/Application.h"
+#include "Poco/Util/HelpFormatter.h"
 #include "Poco/Util/OptionSet.h"
 #include "Poco/Util/ServerApplication.h"
-
-#include "db/Repositories/StreamRepository.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::OptionSet;
