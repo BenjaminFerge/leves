@@ -11,31 +11,6 @@
 #include "Poco/Util/OptionSet.h"
 #include "db/Repositories/StreamRepository.hpp"
 
-namespace Poco
-{
-class Thread;
-
-namespace Net
-{
-class ReadableNotification;
-class ServerSocket;
-class ShutdownNotification;
-class SocketReactor;
-class StreamSocket;
-class WritableNotification;
-template <class ServiceHandler> class SocketAcceptor;
-} // namespace Net
-namespace Util
-{
-class Application;
-class HelpFormatter;
-class Option;
-class OptionSet;
-} // namespace Util
-template <class C, class N> class NObserver;
-template <class C> class AutoPtr;
-} // namespace Poco
-
 using Poco::AutoPtr;
 using Poco::delegate;
 using Poco::FIFOBuffer;
