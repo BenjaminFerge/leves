@@ -24,26 +24,9 @@
 #include "db/Repositories/../Entities/Event.hpp"
 #include "db/Repositories/StreamRepository.hpp"
 
-using Poco::AutoPtr;
-using Poco::delegate;
-using Poco::FIFOBuffer;
-using Poco::NObserver;
-using Poco::Thread;
-using Poco::Net::ReadableNotification;
-using Poco::Net::ServerSocket;
-using Poco::Net::ShutdownNotification;
-using Poco::Net::SocketAcceptor;
-using Poco::Net::SocketReactor;
-using Poco::Net::StreamSocket;
-using Poco::Net::WritableNotification;
-using Poco::Util::Application;
-using Poco::Util::HelpFormatter;
-using Poco::Util::Option;
-using Poco::Util::OptionSet;
-using Poco::Util::ServerApplication;
-
 using namespace yess;
 using namespace db;
+using namespace Poco;
 
 ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
     : m_socket(socket), m_reactor(reactor), m_fifoIn(BUFFER_SIZE, true),

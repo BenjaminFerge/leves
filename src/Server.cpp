@@ -19,6 +19,9 @@
 
 using namespace yess;
 using namespace db;
+using namespace Poco;
+using namespace Poco::Net;
+using namespace Poco::Util;
 
 Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
 {

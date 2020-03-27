@@ -1,31 +1,17 @@
 #pragma once
 
-#include <Poco/Delegate.h>
-#include <Poco/FIFOBuffer.h>
-#include <Poco/Util/ServerApplication.h>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "Poco/Net/ServerSocket.h"
 #include "Poco/Util/Application.h"
 #include "Poco/Util/OptionSet.h"
+#include "Poco/Util/ServerApplication.h"
+
 #include "db/Repositories/StreamRepository.hpp"
 
-using Poco::AutoPtr;
-using Poco::delegate;
-using Poco::FIFOBuffer;
-using Poco::NObserver;
-using Poco::Thread;
-using Poco::Net::ReadableNotification;
-using Poco::Net::ServerSocket;
-using Poco::Net::ShutdownNotification;
-using Poco::Net::SocketAcceptor;
-using Poco::Net::SocketReactor;
-using Poco::Net::StreamSocket;
-using Poco::Net::WritableNotification;
 using Poco::Util::Application;
-using Poco::Util::HelpFormatter;
-using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
