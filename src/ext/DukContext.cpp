@@ -3,13 +3,15 @@
 #include <string>
 #include <vector>
 
-#include "../db/Entities/Event.hpp"
-#include "DukContext.hpp"
 #include "Poco/Dynamic/Var.h"
 #include "Poco/Exception.h"
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
 #include "duktape.h"
+
+#include "../Logger.hpp"
+#include "../db/Entities/Event.hpp"
+#include "DukContext.hpp"
 
 namespace yess::ext
 {
@@ -46,7 +48,7 @@ DukContext::callProjection(const std::string &fnName,
     Poco::Dynamic::Var state = initState;
     Poco::JSON::Object::Ptr result;
     if (events.size() == 0) {
-        std::cout << "No events" << std::endl;
+        LOG_WARN("The called projection has no events");
         result = state.extract<Poco::JSON::Object::Ptr>();
         return result;
     }

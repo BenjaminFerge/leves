@@ -4,12 +4,14 @@
 #include <string>
 #include <vector>
 
-#include "ActionHandler.hpp"
 #include "Poco/Exception.h"
 #include "Poco/JSON/Array.h"
 #include "Poco/JSON/Object.h"
 #include "Poco/Util/Application.h"
 #include "Poco/Util/LayeredConfiguration.h"
+
+#include "ActionHandler.hpp"
+#include "Logger.hpp"
 #include "Response.hpp"
 #include "Server.hpp"
 #include "db/Entities/Stream.hpp"
@@ -69,7 +71,6 @@ void ActionHandler::saveStream(const yess::db::Stream &stream)
 
 ActionHandler::ActionHandler()
 {
-    std::cout << "Action handler created" << std::endl;
     Application &app = Server::instance();
     Server *yess = static_cast<Server *>(&app);
     auto connStr = yess->getConnStr();
@@ -96,7 +97,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
     Poco::JSON::Object json;
     ResponseStatus status;
     Action action = actionFromString(actionStr);
-    std::cout << "Command: " << actionStr << std::endl;
+    LOG_INFO("Handling command '{}'...", actionStr);
     switch (action) {
     case Action::CreateStream: {
         std::string type = object->getValue<std::string>("type");
@@ -107,6 +108,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         break;
     }
     case Action::GetAllStreams: {
+        // TODO: implement
         json.set("status", "OK");
         json.set("action", "getallstreams");
         std::cout << "Querying database..." << std::endl;
@@ -141,9 +143,11 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
             json.set("status", "OK");
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
-            std::cerr << "DB ERROR: " << ex.what() << std::endl;
+            std::string err = ex.what();
+            err = "DB ERROR: " + err;
+            LOG_ERROR(err);
             json.set("status", "Error");
-            json.set("message", ex.what());
+            json.set("message", err);
             status = ResponseStatus::Error;
         }
         break;
@@ -160,9 +164,11 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
             json.set("data", arr);
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
-            std::cerr << "DB ERROR: " << ex.what() << std::endl;
+            std::string err = ex.what();
+            err = "DB ERROR: " + err;
+            LOG_ERROR(err);
             json.set("status", "Error");
-            json.set("message", ex.what());
+            json.set("message", err);
             status = ResponseStatus::Error;
         }
         break;
@@ -179,17 +185,21 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
             json.set("data", arr);
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
-            std::cerr << "DB ERROR: " << ex.what() << std::endl;
+            std::string err = ex.what();
+            err = "DB ERROR: " + err;
+            LOG_ERROR(err);
             json.set("status", "Error");
-            json.set("message", ex.what());
+            json.set("message", err);
             status = ResponseStatus::Error;
         }
         break;
     }
     case Action::None:
+        std::string err = "Action 'None' is not implemented";
+        LOG_ERROR(err);
         status = ResponseStatus::Error;
         json.set("status", "Error");
-        json.set("message", "Action 'None' is not implemented");
+        json.set("message", err);
         break;
     }
     std::ostringstream oss;

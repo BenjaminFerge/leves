@@ -3,8 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "../Entities/Event.hpp"
-#include "../Entities/Stream.hpp"
 #include "Poco/Data/AbstractBinder.h"
 #include "Poco/Data/Binding.h"
 #include "Poco/Data/Extraction.h"
@@ -12,6 +10,10 @@
 #include "Poco/Data/SQLite/Connector.h"
 #include "Poco/Data/Session.h"
 #include "Poco/Data/Statement.h"
+
+#include "../../Logger.hpp"
+#include "../Entities/Event.hpp"
+#include "../Entities/Stream.hpp"
 #include "StreamRepository.hpp"
 
 using namespace Poco::Data::Keywords;
@@ -50,7 +52,7 @@ std::vector<Stream> StreamRepository::all()
         select.execute();
         result.push_back(stream);
     }
-    std::cout << "RETRIEVED SUCCESSFULLY" << std::endl;
+    LOG_INFO("Retrieved all streams successfully");
     return result;
 }
 
@@ -64,7 +66,7 @@ void StreamRepository::create(Stream stream)
         use(stream.type), use(stream.version);
 
     insert.execute();
-    std::cout << "CREATED SUCCESSFULLY" << std::endl;
+    LOG_INFO("Created '{}' stream successfully", stream.type);
 }
 
 void StreamRepository::attachEvent(Event event)
@@ -77,7 +79,10 @@ void StreamRepository::attachEvent(Event event)
         use(event.version);
 
     insert.execute();
-    std::cout << "ATTACHED SUCCESSFULLY" << std::endl;
+    LOG_INFO("Atteched '{}' (v{}) event into stream ID {}",
+             event.type,
+             event.version,
+             event.streamId);
 }
 
 std::vector<Event> StreamRepository::getEvents(int streamId)
@@ -97,7 +102,7 @@ std::vector<Event> StreamRepository::getEvents(int streamId)
         select.execute();
         result.push_back(event);
     }
-    std::cout << "RETRIEVED SUCCESSFULLY" << std::endl;
+    LOG_INFO("Retrieved events by streamId '{}' successfully", streamId);
     return result;
 }
 
@@ -118,14 +123,13 @@ std::vector<Event> StreamRepository::getEvents(std::string streamType)
         select.execute();
         result.push_back(event);
     }
-    std::cout << "RETRIEVED SUCCESSFULLY" << std::endl;
+    LOG_INFO("Retrieved events by streamType '{}' successfully", streamType);
     return result;
 }
 
 void StreamRepository::initDB()
 {
     Session session = makeSession();
-    std::cout << "Database initialized" << std::endl;
     session << "DROP TABLE IF EXISTS streams", now;
     session << "DROP TABLE IF EXISTS events", now;
     session << "CREATE TABLE streams (id INTEGER PRIMARY KEY, "
@@ -137,5 +141,6 @@ void StreamRepository::initDB()
            "FOREIGN KEY(streamId) REFERENCES streams(id), "
            "UNIQUE(streamId, version))",
         now;
+    LOG_INFO("Database initialized successfully");
 }
 } // namespace yess::db
