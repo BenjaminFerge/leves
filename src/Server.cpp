@@ -44,11 +44,6 @@ void Server::initialize(Application &self)
     std::string connectionString = (std::string)config().getString(
         "EventStore.ConnectionString", "yess.db");
 
-    // TODO: warning user when running as daemon, the application directory
-    // changed to '/' -> possibly permission error when relative path is used
-    // or/and
-    // convert it to absolute
-
     if (!m_connStr.empty()) {
         connectionString = m_connStr;
     }
