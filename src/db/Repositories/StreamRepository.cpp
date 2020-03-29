@@ -163,9 +163,14 @@ std::optional<Event> StreamRepository::getLastEvent(int streamId)
 
 void StreamRepository::initDB()
 {
+    if (fs::exists(fs::path(m_connetctionString))) {
+        log::info("Database is already exists");
+        // TODO: Check schema
+        return;
+    }
+
+    log::info("Creating database...");
     Session session = makeSession();
-    session << "DROP TABLE IF EXISTS streams", now;
-    session << "DROP TABLE IF EXISTS events", now;
     session << "CREATE TABLE streams (id INTEGER PRIMARY KEY, "
                "type VARCHAR, version INTEGER)",
         now;
