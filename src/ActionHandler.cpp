@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -132,18 +133,40 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         json.set("message", "Action 'GetStream' is not implemented");
         break;
     case Action::PushEvent: {
-        // TODO: Validation
         std::string type = object->getValue<std::string>("type");
         int streamId = object->getValue<int>("streamId");
         std::string payload = object->getValue<std::string>("payload");
         int version = object->getValue<int>("version");
+
+        // Check version
+        std::optional<db::Event> lastEventOpt =
+            m_streamRepository->getLastEvent(streamId);
+        int expectedVer;
+        if (lastEventOpt.has_value()) {
+            auto lastEvent = lastEventOpt.value();
+            expectedVer = lastEvent.version + 1;
+        } else {
+            expectedVer = 1;
+        }
+        if (expectedVer != version) {
+            std::string err = "Event version mismatch: expected v";
+            err += std::to_string(expectedVer);
+            err += ", got v";
+            err += std::to_string(version);
+            log::error(err);
+            json.set("status", "Error");
+            json.set("message", err);
+            status = ResponseStatus::Error;
+            break;
+        }
+
         yess::db::Event event = {0, streamId, type, payload, version};
         try {
             m_streamRepository->attachEvent(event);
             json.set("status", "OK");
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
-            std::string err = ex.what();
+            std::string err = ex.displayText();
             err = "DB ERROR: " + err;
             log::error(err);
             json.set("status", "Error");

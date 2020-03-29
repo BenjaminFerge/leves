@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -125,6 +126,29 @@ std::vector<Event> StreamRepository::getEvents(std::string streamType)
     }
     log::info("Retrieved events by streamType '{}' successfully", streamType);
     return result;
+}
+
+std::optional<Event> StreamRepository::getLastEvent(int streamId)
+{
+    Session session = makeSession();
+    Statement select(session);
+    Event event;
+    select << "SELECT e.id, e.streamId, e.type, e.payload, e.version "
+              "FROM events AS e "
+              "INNER JOIN streams AS s ON s.id = e.streamId "
+              "WHERE s.id = ? "
+              "ORDER BY e.version "
+              "LIMIT 1",
+        use(streamId), into(event.id), into(event.streamId), into(event.type),
+        into(event.payload), into(event.version), range(0, 1);
+
+    select.execute();
+    if (select.rowsExtracted() == 0) {
+        log::info("Stream ID '{}' has no events yet", streamId);
+        return std::nullopt;
+    }
+    log::info("Retrieved last event by streamId '{}' successfully", streamId);
+    return event;
 }
 
 void StreamRepository::initDB()

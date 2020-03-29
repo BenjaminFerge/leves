@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -21,6 +22,7 @@ class StreamRepository
     void attachEvent(Event event);
     std::vector<Event> getEvents(int streamId);
     std::vector<Event> getEvents(std::string streamType);
+    std::optional<Event> getLastEvent(int streamId);
     Poco::Data::Session makeSession();
 
   private:
