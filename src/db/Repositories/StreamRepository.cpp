@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <filesystem>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -20,13 +21,22 @@
 using namespace Poco::Data::Keywords;
 using Poco::Data::Session;
 using Poco::Data::Statement;
+namespace fs = std::filesystem;
 
 namespace yess::db
 {
 StreamRepository::StreamRepository(std::string connectorKey,
                                    std::string connectionString)
-    : m_connectorKey(connectorKey), m_connetctionString(connectionString)
+    : m_connectorKey(connectorKey)
 {
+    // SQLite connection string is the file path
+    fs::path path(connectionString);
+    if (path.is_relative()) {
+        connectionString = fs::absolute(connectionString);
+        log::warn("The given relative path is converted to an absolute: '{}'",
+                  connectionString);
+    }
+    m_connetctionString = connectionString;
     Poco::Data::SQLite::Connector::registerConnector();
 }
 
