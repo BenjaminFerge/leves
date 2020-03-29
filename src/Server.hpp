@@ -42,5 +42,6 @@ class Server : public Poco::Util::ServerApplication
     CLInfoOption m_requestedInfo;
     bool m_isConfigLoaded;
     std::string m_connStr;
+    unsigned short m_port = 2929;
 };
 } // namespace yess

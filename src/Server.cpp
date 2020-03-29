@@ -125,7 +125,9 @@ int Server::main(const std::vector<std::string> &args)
     }
 
     // get parameters from configuration file
-    unsigned short port = (unsigned short)config().getInt("Server.port", 9977);
+    unsigned short port =
+        (unsigned short)config().getInt("Server.port", m_port);
+    m_port = port;
     log::info("Starting yess on port {}...", port);
 
     // set-up a server socket
