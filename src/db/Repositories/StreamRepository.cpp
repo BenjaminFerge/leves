@@ -11,7 +11,7 @@
 #include "Poco/Data/Session.h"
 #include "Poco/Data/Statement.h"
 
-#include "../../Logger.hpp"
+#include "../../log.hpp"
 #include "../Entities/Event.hpp"
 #include "../Entities/Stream.hpp"
 #include "StreamRepository.hpp"
@@ -52,7 +52,7 @@ std::vector<Stream> StreamRepository::all()
         select.execute();
         result.push_back(stream);
     }
-    LOG_INFO("Retrieved all streams successfully");
+    log::info("Retrieved all streams successfully");
     return result;
 }
 
@@ -66,7 +66,7 @@ void StreamRepository::create(Stream stream)
         use(stream.type), use(stream.version);
 
     insert.execute();
-    LOG_INFO("Created '{}' stream successfully", stream.type);
+    log::info("Created '{}' stream successfully", stream.type);
 }
 
 void StreamRepository::attachEvent(Event event)
@@ -79,10 +79,10 @@ void StreamRepository::attachEvent(Event event)
         use(event.version);
 
     insert.execute();
-    LOG_INFO("Atteched '{}' (v{}) event into stream ID {}",
-             event.type,
-             event.version,
-             event.streamId);
+    log::info("Atteched '{}' (v{}) event into stream ID {}",
+              event.type,
+              event.version,
+              event.streamId);
 }
 
 std::vector<Event> StreamRepository::getEvents(int streamId)
@@ -102,7 +102,7 @@ std::vector<Event> StreamRepository::getEvents(int streamId)
         select.execute();
         result.push_back(event);
     }
-    LOG_INFO("Retrieved events by streamId '{}' successfully", streamId);
+    log::info("Retrieved events by streamId '{}' successfully", streamId);
     return result;
 }
 
@@ -123,7 +123,7 @@ std::vector<Event> StreamRepository::getEvents(std::string streamType)
         select.execute();
         result.push_back(event);
     }
-    LOG_INFO("Retrieved events by streamType '{}' successfully", streamType);
+    log::info("Retrieved events by streamType '{}' successfully", streamType);
     return result;
 }
 
@@ -141,6 +141,6 @@ void StreamRepository::initDB()
            "FOREIGN KEY(streamId) REFERENCES streams(id), "
            "UNIQUE(streamId, version))",
         now;
-    LOG_INFO("Database initialized successfully");
+    log::info("Database initialized successfully");
 }
 } // namespace yess::db

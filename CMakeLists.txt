@@ -38,7 +38,7 @@ set(INC_FILES
 	src/msg/Serializer.hpp
 	src/ext/IContext.hpp
 	src/ext/DukContext.hpp
-	src/Logger.hpp
+	src/log.hpp
 )
 add_library(${PROJECT_NAME}_objects OBJECT ${SRC_FILES} ${INCL_FILES})
 add_subdirectory(utils)

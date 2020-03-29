@@ -11,7 +11,6 @@
 #include <iostream>
 #include <string>
 
-#include "Logger.hpp"
 #include "Poco/Foundation.h"
 #include "Poco/Net/Net.h"
 #include "Poco/Util/Subsystem.h"
@@ -20,6 +19,7 @@
 #include "Version.h"
 #include "db/Repositories/../Entities/Event.hpp"
 #include "db/Repositories/StreamRepository.hpp"
+#include "log.hpp"
 
 using namespace yess;
 using namespace db;
@@ -126,7 +126,7 @@ int Server::main(const std::vector<std::string> &args)
 
     // get parameters from configuration file
     unsigned short port = (unsigned short)config().getInt("Server.port", 9977);
-    LOG_INFO("Starting yess on port {}...", port);
+    log::info("Starting yess on port {}...", port);
 
     // set-up a server socket
     ServerSocket svs(port);

@@ -11,12 +11,12 @@
 #include "Poco/Util/LayeredConfiguration.h"
 
 #include "ActionHandler.hpp"
-#include "Logger.hpp"
 #include "Response.hpp"
 #include "Server.hpp"
 #include "db/Entities/Stream.hpp"
 #include "db/Repositories/../Entities/Event.hpp"
 #include "db/Repositories/StreamRepository.hpp"
+#include "log.hpp"
 
 namespace yess
 {
@@ -97,7 +97,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
     Poco::JSON::Object json;
     ResponseStatus status;
     Action action = actionFromString(actionStr);
-    LOG_INFO("Handling command '{}'...", actionStr);
+    log::info("Handling command '{}'...", actionStr);
     switch (action) {
     case Action::CreateStream: {
         std::string type = object->getValue<std::string>("type");
@@ -145,7 +145,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         } catch (const Poco::Exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
-            LOG_ERROR(err);
+            log::error(err);
             json.set("status", "Error");
             json.set("message", err);
             status = ResponseStatus::Error;
@@ -166,7 +166,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         } catch (const Poco::Exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
-            LOG_ERROR(err);
+            log::error(err);
             json.set("status", "Error");
             json.set("message", err);
             status = ResponseStatus::Error;
@@ -187,7 +187,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         } catch (const Poco::Exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
-            LOG_ERROR(err);
+            log::error(err);
             json.set("status", "Error");
             json.set("message", err);
             status = ResponseStatus::Error;
@@ -196,7 +196,7 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
     }
     case Action::None:
         std::string err = "Action 'None' is not implemented";
-        LOG_ERROR(err);
+        log::error(err);
         status = ResponseStatus::Error;
         json.set("status", "Error");
         json.set("message", err);
