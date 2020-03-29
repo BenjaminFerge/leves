@@ -33,7 +33,7 @@ StreamRepository::StreamRepository(std::string connectorKey,
     fs::path path(connectionString);
     if (path.is_relative()) {
         connectionString = fs::absolute(connectionString);
-        log::warn("The given relative path is converted to an absolute: '{}'",
+        log::info("The given relative path is converted to an absolute: '{}'",
                   connectionString);
     }
     m_connetctionString = connectionString;
