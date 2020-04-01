@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 
+#include "../../utils/files.hpp"
 #include "Poco/Foundation.h"
 #include "Poco/Net/Net.h"
 #include "Poco/Util/Subsystem.h"
@@ -73,6 +74,12 @@ void Server::defineOptions(OptionSet &options)
                        .argument("<string>")
                        .repeatable(false);
     options.addOption(connStr);
+
+    auto logPath = Option("log-path", "l", "Log path")
+                       .required(false)
+                       .argument("<path>")
+                       .repeatable(false);
+    options.addOption(logPath);
 }
 
 void Server::handleOption(const std::string &name, const std::string &value)
@@ -83,8 +90,15 @@ void Server::handleOption(const std::string &name, const std::string &value)
         m_requestedInfo = CLInfoOption::help;
     else if (name == "version")
         m_requestedInfo = CLInfoOption::version;
-    else if (name == "conn-str") {
+    else if (name == "conn-str")
         m_connStr = value;
+    else if (name == "log-path")
+        m_logPath = value;
+
+    if (!m_logPath.empty()) {
+        m_logPath = path_abs(m_logPath);
+        log::set_path(m_logPath);
+        log::info("Logging path is set to: {}", m_logPath);
     }
 }
 

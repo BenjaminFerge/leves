@@ -14,6 +14,7 @@
 #include "Poco/Data/Statement.h"
 
 #include "../../log.hpp"
+#include "../../utils/files.hpp"
 #include "../Entities/Event.hpp"
 #include "../Entities/Stream.hpp"
 #include "StreamRepository.hpp"
@@ -30,12 +31,7 @@ StreamRepository::StreamRepository(std::string connectorKey,
     : m_connectorKey(connectorKey)
 {
     // SQLite connection string is the file path
-    fs::path path(connectionString);
-    if (path.is_relative()) {
-        connectionString = fs::absolute(connectionString);
-        log::info("The given relative path is converted to an absolute: '{}'",
-                  connectionString);
-    }
+    connectionString = path_abs(connectionString);
     m_connetctionString = connectionString;
     Poco::Data::SQLite::Connector::registerConnector();
 }

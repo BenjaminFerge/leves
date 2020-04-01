@@ -50,7 +50,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE inc_duktape)
 
 add_subdirectory(test)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} yessutils)
 
 add_custom_target(
   run
