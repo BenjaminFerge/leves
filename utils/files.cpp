@@ -21,7 +21,7 @@ std::string readFile(const std::string &path)
     return read;
 }
 
-std::string path_abs(const std::string &f)
+std::string pathToAbs(const std::string &f)
 {
     std::string filename = f;
     fs::path path(filename);

@@ -31,7 +31,7 @@ StreamRepository::StreamRepository(std::string connectorKey,
     : m_connectorKey(connectorKey)
 {
     // SQLite connection string is the file path
-    connectionString = path_abs(connectionString);
+    connectionString = pathToAbs(connectionString);
     m_connetctionString = connectionString;
     Poco::Data::SQLite::Connector::registerConnector();
 }

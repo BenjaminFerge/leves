@@ -5,5 +5,5 @@
 namespace yess
 {
 std::string readFile(const std::string &path);
-std::string path_abs(const std::string &filename);
+std::string pathToAbs(const std::string &filename);
 } // namespace yess

@@ -96,8 +96,8 @@ void Server::handleOption(const std::string &name, const std::string &value)
         m_logPath = value;
 
     if (!m_logPath.empty()) {
-        m_logPath = path_abs(m_logPath);
-        log::set_path(m_logPath);
+        m_logPath = pathToAbs(m_logPath);
+        log::setFileLogger(m_logPath);
         log::info("Logging path is set to: {}", m_logPath);
     }
 }

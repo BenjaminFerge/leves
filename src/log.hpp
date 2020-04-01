@@ -24,10 +24,9 @@ template <typename... Types> void critical(std::string format, Types... args)
     spdlog::critical(format, args...);
 }
 static void
-file_logger(const std::string &filename, float max_mb = 5, int max_files = 3)
+setFileLogger(const std::string &filename, float max_mb = 5, int max_files = 3)
 {
-    std::string path = path_abs(filename);
-    // Create a file rotating logger with 5mb size max and 3 rotated files
+    std::string path = pathToAbs(filename);
     float max_size = max_mb * 1048576;
     auto rotating_logger = spdlog::rotating_logger_mt(
         "rotating_logger", path, max_size, max_files);
