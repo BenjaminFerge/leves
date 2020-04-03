@@ -4,14 +4,11 @@
 
 #include "../db/Entities/Event.hpp"
 #include "../db/Entities/Stream.hpp"
-#include "Poco/Dynamic/Var.h"
-#include "Poco/JSON/Array.h"
-#include "Poco/JSON/Object.h"
-#include "Poco/JSON/Parser.h"
 #include "Serializer.hpp"
+#include "nlohmann/json.hpp"
 
 using namespace yess::db;
-using namespace Poco::JSON;
+using json = nlohmann::json;
 
 namespace yess::msg
 {
@@ -43,31 +40,18 @@ std::string serialize(const std::vector<Stream> &streams)
 
 std::string serialize(const Event &event)
 {
-    Object obj;
-    obj.set("id", event.id);
-    obj.set("streamId", event.streamId);
-    Parser parser;
-    Poco::Dynamic::Var payloadVar = parser.parse(event.payload);
-    obj.set("payload", payloadVar);
-    obj.set("type", event.type);
-    obj.set("version", event.version);
-    std::string serialized;
-    std::ostringstream oss;
-    obj.stringify(oss);
-    serialized = oss.str();
-    return serialized;
+    json obj = {{"id", event.id},
+                {"streamId", event.streamId},
+                {"payload", json::parse(event.payload)},
+                {"type", event.type},
+                {"version", event.version}};
+    return obj.dump();
 }
 
 std::string serialize(const Stream &stream)
 {
-    Object obj;
-    obj.set("id", stream.id);
-    obj.set("type", stream.type);
-    obj.set("version", stream.version);
-    std::string serialized;
-    std::ostringstream oss;
-    obj.stringify(oss);
-    serialized = oss.str();
-    return serialized;
+    json obj = {
+        {"id", stream.id}, {"type", stream.type}, {"version", stream.version}};
+    return obj.dump();
 }
 } // namespace yess::msg
