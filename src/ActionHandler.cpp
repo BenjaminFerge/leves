@@ -1,3 +1,4 @@
+#include <bits/exception.h>
 #include <iostream>
 #include <memory>
 #include <optional>
@@ -10,13 +11,12 @@
 #include "Poco/JSON/Object.h"
 #include "Poco/Util/Application.h"
 #include "Poco/Util/LayeredConfiguration.h"
-
 #include "ActionHandler.hpp"
 #include "Response.hpp"
 #include "Server.hpp"
 #include "db/Entities/Stream.hpp"
 #include "db/Repositories/../Entities/Event.hpp"
-#include "db/Repositories/StreamRepository.hpp"
+#include "db/Repositories/SqliteStreamRepo.hpp"
 #include "log.hpp"
 
 namespace yess
@@ -83,11 +83,9 @@ ActionHandler::ActionHandler()
     if (!connStr.empty()) {
         connectionString = connStr;
     }
-    auto streamRepository =
-        db::StreamRepository(connectorKey, connectionString);
     // Repository initialization in the Server ctor.
-    m_streamRepository =
-        std::make_unique<db::StreamRepository>(streamRepository);
+    m_streamRepository = std::make_unique<db::SqliteStreamRepo>(
+        db::SqliteStreamRepo(connectorKey, connectionString));
 }
 
 ActionHandler::~ActionHandler() {}

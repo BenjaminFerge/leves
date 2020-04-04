@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../utils/files.hpp"
+#include "fmt/format.h"
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/spdlog.h"
 #include <string>

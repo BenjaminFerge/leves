@@ -6,8 +6,8 @@
 #include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "Server.hpp"
+#include "db/Repositories/SqliteStreamRepo.hpp"
 #include "db/Entities/Stream.hpp"
-#include "db/Repositories/StreamRepository.hpp"
 
 namespace yess
 {
@@ -34,6 +34,6 @@ class ActionHandler
 
   private:
     Server *m_pServer;
-    std::unique_ptr<db::StreamRepository> m_streamRepository;
+    std::unique_ptr<db::SqliteStreamRepo> m_streamRepository;
 };
 } // namespace yess

@@ -8,19 +8,19 @@
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/ServerApplication.h>
+#include <bits/exception.h>
 #include <iostream>
 #include <string>
 
-#include "../../utils/files.hpp"
 #include "Poco/Foundation.h"
 #include "Poco/Net/Net.h"
 #include "Poco/Util/Subsystem.h"
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
 #include "Version.h"
-#include "db/Repositories/../Entities/Event.hpp"
-#include "db/Repositories/StreamRepository.hpp"
+#include "db/Repositories/SqliteStreamRepo.hpp"
 #include "log.hpp"
+#include "db/Repositories/../Entities/Event.hpp"
 
 using namespace yess;
 using namespace db;
@@ -48,7 +48,7 @@ void Server::initialize(Application &self)
     if (!m_connStr.empty()) {
         connectionString = m_connStr;
     }
-    auto streamRepository = StreamRepository(connectorKey, connectionString);
+    auto streamRepository = SqliteStreamRepo(connectorKey, connectionString);
     streamRepository.initDB();
 }
 
@@ -96,9 +96,9 @@ void Server::handleOption(const std::string &name, const std::string &value)
         m_logPath = value;
 
     if (!m_logPath.empty()) {
-        m_logPath = pathToAbs(m_logPath);
-        log::setFileLogger(m_logPath);
         log::info("Logging path is set to: {}", m_logPath);
+        // TODO: impl
+        // log::setPath(m_logPath);
     }
 }
 

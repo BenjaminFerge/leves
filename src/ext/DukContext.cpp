@@ -1,4 +1,3 @@
-#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -8,7 +7,6 @@
 #include "Poco/JSON/Object.h"
 #include "Poco/JSON/Parser.h"
 #include "duktape.h"
-
 #include "../db/Entities/Event.hpp"
 #include "../log.hpp"
 #include "DukContext.hpp"

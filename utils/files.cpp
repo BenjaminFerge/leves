@@ -1,11 +1,12 @@
-#include "files.hpp"
-#include "../src/log.hpp"
-
-#include "Poco/FileStream.h"
-#include "Poco/StreamCopier.h"
+#include <bits/exception.h>
 #include <cassert>
 #include <filesystem>
 #include <string>
+
+#include "../src/log.hpp"
+#include "./files.hpp"
+#include "Poco/FileStream.h"
+#include "Poco/StreamCopier.h"
 
 namespace fs = std::filesystem;
 

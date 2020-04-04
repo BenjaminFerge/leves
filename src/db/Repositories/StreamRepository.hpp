@@ -6,7 +6,6 @@
 
 #include "../Entities/Event.hpp"
 #include "../Entities/Stream.hpp"
-#include "Poco/Data/Session.h"
 
 namespace yess::db
 {
@@ -14,19 +13,18 @@ class StreamRepository
 {
   public:
     StreamRepository(std::string connectorKey, std::string connectionString);
-    ~StreamRepository();
-    std::vector<Stream> all();
-    Stream get(int id);
-    void create(Stream stream);
-    void initDB();
-    void attachEvent(Event event);
-    std::vector<Event> getEvents(int streamId);
-    std::vector<Event> getEvents(std::string streamType);
-    std::optional<Event> getLastEvent(int streamId);
-    Poco::Data::Session makeSession();
+    virtual ~StreamRepository();
+    virtual std::vector<Stream> all() = 0;
+    virtual Stream get(int id) = 0;
+    virtual void create(Stream stream) = 0;
+    virtual void initDB() = 0;
+    virtual void attachEvent(Event event) = 0;
+    virtual std::vector<Event> getEvents(int streamId) = 0;
+    virtual std::vector<Event> getEvents(std::string streamType) = 0;
+    virtual std::optional<Event> getLastEvent(int streamId) = 0;
 
-  private:
+  protected:
     std::string m_connectorKey;
-    std::string m_connetctionString;
+    std::string m_connectionString;
 };
 } // namespace yess::db

@@ -14,6 +14,7 @@
 #include <memory>
 #include <string>
 
+#include "./db/Entities/Event.hpp"
 #include "ActionHandler.hpp"
 #include "Poco/AutoPtr.h"
 #include "Poco/Dynamic/Var.h"
