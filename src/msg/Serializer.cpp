@@ -4,8 +4,7 @@
 #include "../db/Entities/Event.hpp"
 #include "../db/Entities/Stream.hpp"
 #include "Serializer.hpp"
-#include "nlohmann/detail/json_ref.hpp"
-#include "nlohmann/json_fwd.hpp"
+#include "nlohmann/json.hpp"
 
 using namespace yess::db;
 using json = nlohmann::json;

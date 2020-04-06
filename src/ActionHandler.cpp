@@ -1,4 +1,3 @@
-#include <bits/exception.h>
 #include <iostream>
 #include <memory>
 #include <optional>
@@ -6,18 +5,20 @@
 #include <string>
 #include <vector>
 
+#include "ActionHandler.hpp"
 #include "Poco/Exception.h"
-#include "Poco/JSON/Array.h"
-#include "Poco/JSON/Object.h"
 #include "Poco/Util/Application.h"
 #include "Poco/Util/LayeredConfiguration.h"
-#include "ActionHandler.hpp"
 #include "Response.hpp"
 #include "Server.hpp"
 #include "db/Entities/Stream.hpp"
 #include "db/Repositories/../Entities/Event.hpp"
 #include "db/Repositories/SqliteStreamRepo.hpp"
+#include "db/Repositories/StreamRepository.hpp"
 #include "log.hpp"
+#include "nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 namespace yess
 {
@@ -83,58 +84,57 @@ ActionHandler::ActionHandler()
     if (!connStr.empty()) {
         connectionString = connStr;
     }
+    auto streamRepository =
+        db::SqliteStreamRepo(connectorKey, connectionString);
     // Repository initialization in the Server ctor.
-    m_streamRepository = std::make_unique<db::SqliteStreamRepo>(
-        db::SqliteStreamRepo(connectorKey, connectionString));
+    m_streamRepository =
+        std::make_unique<db::SqliteStreamRepo>(std::move(streamRepository));
 }
 
 ActionHandler::~ActionHandler() {}
-Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
+Response ActionHandler::handle(const json &obj)
 {
-    std::string actionStr = object->getValue<std::string>("action");
+    std::string actionStr = obj["action"];
     std::string msg;
-    Poco::JSON::Object json;
+    json jsonObj;
     ResponseStatus status;
     Action action = actionFromString(actionStr);
     log::info("Handling command '{}'...", actionStr);
     switch (action) {
     case Action::CreateStream: {
-        std::string type = object->getValue<std::string>("type");
+        std::string type = obj["type"];
         yess::db::Stream stream = {0, type, 0};
         saveStream(stream);
-        json.set("status", "OK");
+        jsonObj["status"] = "OK";
         status = ResponseStatus::OK;
         break;
     }
     case Action::GetAllStreams: {
-        // TODO: implement
-        json.set("status", "OK");
-        json.set("action", "getallstreams");
-        std::cout << "Querying database..." << std::endl;
+        jsonObj["status"] = "OK";
         auto streams = m_streamRepository->all();
-        std::cout << "OK, length:" << streams.size() << std::endl;
-        for (const auto &stream : streams) {
-            std::cout << "stream: " << stream.type << std::endl;
+        json arr = json::array();
+        for (auto &stream : streams) {
+            arr.push_back(stream.toJSON());
         }
         status = ResponseStatus::OK;
-        json.set("data", streams);
+        jsonObj["data"] = arr;
         break;
     }
     case Action::GetStreamsByType:
         status = ResponseStatus::Error;
-        json.set("status", "Error");
-        json.set("message", "Action 'GetStreamsByType' is not implemented");
+        jsonObj["status"] = "Error";
+        jsonObj["message"] = "Action 'GetStreamsByType' is not implemented";
         break;
     case Action::GetStream:
         status = ResponseStatus::Error;
-        json.set("status", "Error");
-        json.set("message", "Action 'GetStream' is not implemented");
+        jsonObj["status"] = "Error";
+        jsonObj["message"] = "Action 'GetStream' is not implemented";
         break;
     case Action::PushEvent: {
-        std::string type = object->getValue<std::string>("type");
-        int streamId = object->getValue<int>("streamId");
-        std::string payload = object->getValue<std::string>("payload");
-        int version = object->getValue<int>("version");
+        std::string type = obj["type"];
+        int streamId = obj["streamId"];
+        std::string payload = obj["payload"];
+        int version = obj["version"];
 
         // Check version
         std::optional<db::Event> lastEventOpt =
@@ -152,8 +152,8 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
             err += ", got v";
             err += std::to_string(version);
             log::error(err);
-            json.set("status", "Error");
-            json.set("message", err);
+            jsonObj["status"] = "Error";
+            jsonObj["message"] = err;
             status = ResponseStatus::Error;
             break;
         }
@@ -161,56 +161,56 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         yess::db::Event event = {0, streamId, type, payload, version};
         try {
             m_streamRepository->attachEvent(event);
-            json.set("status", "OK");
+            jsonObj["status"] = "OK";
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
             std::string err = ex.displayText();
             err = "DB ERROR: " + err;
             log::error(err);
-            json.set("status", "Error");
-            json.set("message", err);
+            jsonObj["status"] = "Error";
+            jsonObj["message"] = err;
             status = ResponseStatus::Error;
         }
         break;
     }
     case Action::GetEventsByStreamId: {
-        int streamId = object->getValue<int>("id");
+        int streamId = obj["id"];
         try {
             auto events = m_streamRepository->getEvents(streamId);
-            json.set("status", "OK");
-            Poco::JSON::Array arr;
+            jsonObj["status"] = "OK";
+            json arr = json::array();
             for (auto &e : events) {
-                arr.add(e.toObject());
+                arr.push_back(e.toJSON());
             }
-            json.set("data", arr);
+            jsonObj["data"] = arr;
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);
-            json.set("status", "Error");
-            json.set("message", err);
+            jsonObj["status"] = "Error";
+            jsonObj["message"] = err;
             status = ResponseStatus::Error;
         }
         break;
     }
     case Action::GetEventsByStreamType: {
-        std::string type = object->getValue<std::string>("type");
+        std::string type = obj["type"];
         try {
             auto events = m_streamRepository->getEvents(type);
-            json.set("status", "OK");
-            Poco::JSON::Array arr;
+            jsonObj["status"] = "OK";
+            json arr = json::array();
             for (auto &e : events) {
-                arr.add(e.toObject());
+                arr.push_back(e.toJSON());
             }
-            json.set("data", arr);
+            jsonObj["data"] = arr;
             status = ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);
-            json.set("status", "Error");
-            json.set("message", err);
+            jsonObj["status"] = "Error";
+            jsonObj["message"] = err;
             status = ResponseStatus::Error;
         }
         break;
@@ -219,13 +219,11 @@ Response ActionHandler::handle(Poco::JSON::Object::Ptr object)
         std::string err = "Action 'None' is not implemented";
         log::error(err);
         status = ResponseStatus::Error;
-        json.set("status", "Error");
-        json.set("message", err);
+        jsonObj["status"] = "Error";
+        jsonObj["message"] = err;
         break;
     }
-    std::ostringstream oss;
-    json.stringify(oss);
-    msg = oss.str();
+    msg = jsonObj.dump();
     return Response(status, msg);
 }
 } // namespace yess

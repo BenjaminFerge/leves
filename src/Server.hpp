@@ -28,6 +28,7 @@ class Server : public Poco::Util::ServerApplication
     Server();
     ~Server();
     std::string getConnStr();
+    void initDB();
 
   protected:
     void initialize(Application &self);

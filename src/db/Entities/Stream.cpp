@@ -1,19 +1,19 @@
 #include <string>
 
-#include "Poco/JSON/Array.h"
-#include "Poco/JSON/Object.h"
 #include "Stream.hpp"
 
-using namespace Poco::JSON;
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace yess::db
 {
-Object Stream::toObject()
+json Stream::toJSON()
 {
-    Object obj;
-    obj.set("id", id);
-    obj.set("type", type);
-    obj.set("version", version);
+    json obj;
+    obj["id"] = id;
+    obj["type"] = type;
+    obj["version"] = version;
     return obj;
 }
 } // namespace yess::db

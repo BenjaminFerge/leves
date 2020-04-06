@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Poco/JSON/Object.h"
+#include "nlohmann/json_fwd.hpp"
 
 namespace yess::db
 {
@@ -13,6 +13,6 @@ struct Event {
     std::string payload; // JSON
     int version = 0;
 
-    Poco::JSON::Object toObject();
+    nlohmann::json toJSON();
 };
 } // namespace yess::db

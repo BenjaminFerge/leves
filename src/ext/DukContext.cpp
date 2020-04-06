@@ -2,14 +2,13 @@
 #include <string>
 #include <vector>
 
-#include "Poco/Dynamic/Var.h"
-#include "Poco/Exception.h"
-#include "Poco/JSON/Object.h"
-#include "Poco/JSON/Parser.h"
-#include "duktape.h"
 #include "../db/Entities/Event.hpp"
 #include "../log.hpp"
 #include "DukContext.hpp"
+#include "duktape.h"
+#include "nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 namespace yess::ext
 {
@@ -38,17 +37,14 @@ void DukContext::read(const std::string &body)
     duk_push_global_object(m_pCtx);
 }
 
-Poco::JSON::Object::Ptr
-DukContext::callProjection(const std::string &fnName,
-                           const std::vector<db::Event> &events,
-                           Poco::Dynamic::Var initState)
+json DukContext::callProjection(const std::string &fnName,
+                                const std::vector<db::Event> &events,
+                                json initState)
 {
-    Poco::Dynamic::Var state = initState;
-    Poco::JSON::Object::Ptr result;
+    json state = initState;
     if (events.size() == 0) {
         yess::log::warn("The called projection has no events");
-        result = state.extract<Poco::JSON::Object::Ptr>();
-        return result;
+        return state;
     }
     duk_idx_t objIdx = 0;
     duk_idx_t fnIdx = 0;
@@ -64,7 +60,6 @@ DukContext::callProjection(const std::string &fnName,
     }
 
     // Fill parameters
-    Poco::JSON::Parser parser;
     for (const auto &event : events) {
         // param 1: event
         duk_idx_t evIdx = duk_push_object(m_pCtx);
@@ -86,7 +81,7 @@ DukContext::callProjection(const std::string &fnName,
         duk_put_prop_string(m_pCtx, evIdx, "type");
 
         // param 2: state
-        std::string jsonState = parser.parse(state);
+        std::string jsonState = state.dump();
         duk_push_string(m_pCtx, jsonState.c_str());
         duk_json_decode(m_pCtx, -1);
 
@@ -99,9 +94,8 @@ DukContext::callProjection(const std::string &fnName,
             duk_idx_t resultIdx = -1;
             std::string json = duk_json_encode(m_pCtx, resultIdx);
             try {
-                state = parser.parse(json);
-            } catch (Poco::Exception &exc) {
-                // throw std::runtime_error(exc.displayText());
+                state = json::parse(json);
+            } catch (...) {
                 throw std::runtime_error(
                     "Funciton result is not a valid javascript object!");
             }
@@ -109,7 +103,6 @@ DukContext::callProjection(const std::string &fnName,
         duk_pop(m_pCtx);
     }
     duk_pop(m_pCtx);
-    result = state.extract<Poco::JSON::Object::Ptr>();
-    return result;
+    return state;
 }
 } // namespace yess::ext

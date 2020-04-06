@@ -3,11 +3,13 @@
 #include <memory>
 #include <string>
 
-#include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "Server.hpp"
-#include "db/Repositories/SqliteStreamRepo.hpp"
 #include "db/Entities/Stream.hpp"
+#include "db/Repositories/StreamRepository.hpp"
+#include "nlohmann/json_fwd.hpp"
+
+using nlohmann::json;
 
 namespace yess
 {
@@ -29,11 +31,11 @@ class ActionHandler
   public:
     ActionHandler();
     ~ActionHandler();
-    Response handle(Poco::JSON::Object::Ptr action);
+    Response handle(const json &obj);
     void saveStream(const db::Stream &stream);
 
   private:
     Server *m_pServer;
-    std::unique_ptr<db::SqliteStreamRepo> m_streamRepository;
+    std::unique_ptr<db::StreamRepository> m_streamRepository;
 };
 } // namespace yess

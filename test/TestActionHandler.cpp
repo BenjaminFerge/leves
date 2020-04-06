@@ -6,13 +6,13 @@
 #include "../src/Response.hpp"
 #include "../src/Server.hpp"
 #include "../utils/files.hpp"
-#include "Poco/Dynamic/Var.h"
-#include "Poco/JSON/Object.h"
-#include "Poco/JSON/Parser.h"
 #include "gtest/gtest-message.h"
 #include "gtest/gtest-test-part.h"
 #include "gtest/gtest_pred_impl.h"
 
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 using namespace yess;
 
 class ActionHandlerTest : public testing::Test
@@ -24,6 +24,7 @@ class ActionHandlerTest : public testing::Test
     void SetUp()
     {
         m_server = std::make_unique<Server>();
+        m_server->initDB();
         m_handler = std::make_unique<ActionHandler>();
     }
 
@@ -37,10 +38,8 @@ TEST_F(ActionHandlerTest, CreateStream)
 {
     auto createStreamJson = readFile("../test/commands/CreateStream.json");
     std::cout << createStreamJson << std::endl;
-    Poco::JSON::Parser parser;
-    Poco::Dynamic::Var parsed = parser.parse(createStreamJson);
-    Poco::JSON::Object::Ptr cmdObj = parsed.extract<Poco::JSON::Object::Ptr>();
-    auto resp = m_handler->handle(cmdObj);
+    json obj = json::parse(createStreamJson);
+    Response resp = m_handler->handle(obj);
     Response expResp(ResponseStatus::OK, "{\"status\":\"OK\"}");
     ASSERT_EQ(resp, expResp);
 }

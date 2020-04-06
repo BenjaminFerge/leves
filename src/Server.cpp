@@ -8,7 +8,6 @@
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/ServerApplication.h>
-#include <bits/exception.h>
 #include <iostream>
 #include <string>
 
@@ -20,7 +19,6 @@
 #include "Version.h"
 #include "db/Repositories/SqliteStreamRepo.hpp"
 #include "log.hpp"
-#include "db/Repositories/../Entities/Event.hpp"
 
 using namespace yess;
 using namespace db;
@@ -34,12 +32,8 @@ Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
 
 Server::~Server() {}
 
-void Server::initialize(Application &self)
+void Server::initDB()
 {
-    // load default configuration files, if present
-    m_isConfigLoaded = loadConfiguration();
-    ServerApplication::initialize(self);
-
     std::string connectorKey =
         (std::string)config().getString("EventStore.ConnectorKey", "SQLite");
     std::string connectionString = (std::string)config().getString(
@@ -50,6 +44,14 @@ void Server::initialize(Application &self)
     }
     auto streamRepository = SqliteStreamRepo(connectorKey, connectionString);
     streamRepository.initDB();
+}
+
+void Server::initialize(Application &self)
+{
+    // load default configuration files, if present
+    m_isConfigLoaded = loadConfiguration();
+    ServerApplication::initialize(self);
+    initDB();
 }
 
 void Server::uninitialize() { ServerApplication::uninitialize(); }

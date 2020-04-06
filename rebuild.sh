@@ -6,7 +6,7 @@ python duktape/tools/configure.py --output-directory=inc_duktape -DDUK_USE_DEBUG
 mkdir build
 pushd build
 conan install ..
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_CXX_INCLUDE_WHAT_YOU_USE="iwyu;-Xiwyu;any;-Xiwyu;iwyu;-Xiwyu;args" ..
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..
 cmake --build .
 popd
 ln -sf build/compile_commands.json .

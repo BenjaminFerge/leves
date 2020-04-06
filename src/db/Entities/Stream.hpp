@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Poco/JSON/Object.h"
+#include "nlohmann/json_fwd.hpp"
 
 namespace yess::db
 {
@@ -11,6 +11,6 @@ struct Stream {
     std::string type;
     int version = 0;
 
-    Poco::JSON::Object toObject();
+    nlohmann::json toJSON();
 };
 } // namespace yess::db

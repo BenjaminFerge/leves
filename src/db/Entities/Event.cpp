@@ -1,25 +1,22 @@
+#include <nlohmann/json.hpp>
 #include <string>
 
 #include "Event.hpp"
-#include "Poco/Dynamic/Var.h"
 #include "Poco/JSON/Array.h"
-#include "Poco/JSON/Object.h"
-#include "Poco/JSON/Parser.h"
 
 using namespace Poco::JSON;
+using json = nlohmann::json;
 
 namespace yess::db
 {
-Object Event::toObject()
+json Event::toJSON()
 {
-    Object obj;
-    obj.set("id", id);
-    obj.set("streamId", streamId);
-    Parser parser;
-    Poco::Dynamic::Var payloadVar = parser.parse(payload);
-    obj.set("payload", payloadVar);
-    obj.set("type", type);
-    obj.set("version", version);
+    json obj;
+    obj["id"] = id;
+    obj["streamId"] = streamId;
+    obj["payload"] = json::parse(payload);
+    obj["type"] = type;
+    obj["version"] = version;
     return obj;
 }
 } // namespace yess::db

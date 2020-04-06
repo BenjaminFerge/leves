@@ -3,7 +3,6 @@
 #include <Poco/BasicEvent.h>
 #include <Poco/Delegate.h>
 #include <Poco/FIFOBuffer.h>
-#include <Poco/JSON/Parser.h>
 #include <Poco/Logger.h>
 #include <Poco/NObserver.h>
 #include <Poco/Net/SocketAddress.h>
@@ -12,22 +11,22 @@
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Util/Application.h>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <string>
 
-#include "./db/Entities/Event.hpp"
 #include "ActionHandler.hpp"
 #include "Poco/AutoPtr.h"
-#include "Poco/Dynamic/Var.h"
 #include "Poco/Exception.h"
 #include "Poco/Foundation.h"
-#include "Poco/JSON/Object.h"
 #include "Response.hpp"
 #include "Server.hpp"
 #include "ServiceHandler.hpp"
+#include "db/Repositories/../Entities/Event.hpp"
 
 using namespace yess;
 using namespace db;
 using namespace Poco;
+using json = nlohmann::json;
 
 ServiceHandler::ServiceHandler(StreamSocket &socket, SocketReactor &reactor)
     : m_socket(socket), m_reactor(reactor), m_fifoIn(BUFFER_SIZE, true),
@@ -103,15 +102,13 @@ void ServiceHandler::onFIFOInWritable(bool &b)
 
 Response ServiceHandler::generateResponse(std::string req)
 {
-    Poco::JSON::Parser parser;
-    Poco::Dynamic::Var result;
+    json obj;
     try {
-        result = parser.parse(req);
+        obj = json::parse(req);
     } catch (Poco::Exception &exc) {
         return Response(ResponseStatus::Error, exc.displayText());
     }
-    Poco::JSON::Object::Ptr object = result.extract<Poco::JSON::Object::Ptr>();
-    return m_actionHandler.handle(object);
+    return m_actionHandler.handle(obj);
 }
 
 void ServiceHandler::onSocketReadable(const AutoPtr<ReadableNotification> &pNf)

@@ -8,17 +8,16 @@
 #include "../src/ActionHandler.hpp"
 #include "../src/Response.hpp"
 #include "../src/Server.hpp"
-#include "../src/ext/../db/Entities/Event.hpp"
+#include "../src/db/Entities/Event.hpp"
 #include "../src/ext/DukContext.hpp"
 #include "../utils/files.hpp"
-#include "Poco/Dynamic/Var.h"
-#include "Poco/JSON/Object.h"
-#include "Poco/JSON/Parser.h"
 #include "duktape.h"
+#include "nlohmann/json.hpp"
 #include "gtest/gtest-message.h"
 #include "gtest/gtest-test-part.h"
 #include "gtest/gtest_pred_impl.h"
 
+using json = nlohmann::json;
 using namespace yess;
 
 class TestESInterop : public testing::Test
@@ -46,6 +45,7 @@ class TestESInterop : public testing::Test
                             nullptr);
 
         m_server = std::make_unique<Server>();
+        m_server->initDB();
         m_handler = std::make_unique<ActionHandler>();
     }
 
@@ -61,22 +61,14 @@ TEST_F(TestESInterop, EmptyStreamProjection)
     std::vector<db::Event> events;
     std::string read = readFile("test/projections/proj1.js");
 
-    ext::DukContext ctx = *m_context.get();
-    ctx.read(read);
+    m_context->read(read);
 
     std::string initJson = "{}";
-    Poco::JSON::Parser parser;
-    Poco::Dynamic::Var initState = parser.parse(initJson);
+    json initState = json::parse(initJson);
 
-    Poco::JSON::Object::Ptr result =
-        ctx.callProjection("projection", events, initState);
+    json result = m_context->callProjection("projection", events, initState);
 
-    auto resultObj = result.get();
-    std::stringstream ss;
-    resultObj->stringify(ss);
-    std::string resultStr = ss.str();
-
-    ASSERT_EQ(resultStr, initJson);
+    ASSERT_EQ(initState, result);
 }
 
 TEST_F(TestESInterop, StreamProjection)
@@ -109,26 +101,17 @@ TEST_F(TestESInterop, StreamProjection)
 
     std::string read = readFile("test/projections/userproj.js");
 
-    ext::DukContext ctx = *m_context.get();
-    ctx.read(read);
+    m_context->read(read);
 
-    std::string initJson = "{}";
-    Poco::JSON::Parser parser;
-    Poco::Dynamic::Var initState = parser.parse(initJson);
+    json initState = json({});
 
-    Poco::JSON::Object::Ptr result =
-        ctx.callProjection("projection", events, initState);
+    json result = m_context->callProjection("projection", events, initState);
 
-    auto resultObj = result.get();
-    std::stringstream ss;
-    resultObj->stringify(ss);
-    std::string resultStr = ss.str();
-    std::string expected = "{"
-                           "\"username\":\"johndoe\","
-                           "\"email\":\"johndoe2@mail.com\""
-                           "}";
-    Poco::Dynamic::Var expectedState = parser.parse(expected);
-    Poco::Dynamic::Var resultState = parser.parse(resultStr);
+    std::string expectedStr = "{"
+                              "\"username\":\"johndoe\","
+                              "\"email\":\"johndoe2@mail.com\""
+                              "}";
 
-    ASSERT_EQ(resultState.toString(), expectedState.toString());
+    json expected = json::parse(expectedStr);
+    ASSERT_EQ(result, expected);
 }
