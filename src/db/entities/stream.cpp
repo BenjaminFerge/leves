@@ -1,6 +1,6 @@
 #include <string>
 
-#include "Stream.hpp"
+#include "stream.hpp"
 
 #include <nlohmann/json.hpp>
 

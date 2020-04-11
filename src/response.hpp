@@ -4,7 +4,7 @@
 
 namespace yess
 {
-enum ResponseStatus { OK, Error };
+enum class ResponseStatus { OK, Error };
 class Response
 {
   public:

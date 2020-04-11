@@ -7,8 +7,8 @@ conan_basic_setup()
 
 set(YESS_VERSION_TWEAK "pre-alpha")
 configure_file(
-        src/Version.h.in
-	include/Version.h
+        src/version.h.in
+	include/version.h
 )
 
 set(CMAKE_CXX_STANDARD 17)
@@ -16,30 +16,30 @@ set(CMAKE_CXX_STANDARD 17)
 enable_testing()
 set(MAIN_FILE src/main.cpp)
 set(SRC_FILES 
-	src/Server.cpp
-	src/ServiceHandler.cpp
-	src/Response.cpp
-	src/ActionHandler.cpp
-	src/db/Entities/Stream.cpp
-	src/db/Entities/Event.cpp
-	src/db/Repositories/StreamRepository.cpp
-	src/db/Repositories/SqliteStreamRepo.cpp
-	src/msg/Serializer.cpp
+	src/server.cpp
+	src/service_handler.cpp
+	src/response.cpp
+	src/action_handler.cpp
+	src/db/entities/stream.cpp
+	src/db/entities/event.cpp
+	src/db/repositories/stream_repository.cpp
+	src/db/repositories/sqlite_stream_repo.cpp
+	src/msg/serializer.cpp
 	inc_duktape/duktape.c
-	src/ext/DukContext.cpp
+	src/ext/duk_context.cpp
 )
 set(INC_FILES
-	src/Server.hpp
-	src/ServiceHandler.hpp
-	src/Response.hpp
-	src/ActionHandler.hpp
-	src/db/Entities/Stream.hpp
-	src/db/Entities/Event.hpp
-	src/db/Repositories/StreamRepository.hpp
-	src/db/Repositories/SqliteStreamRepo.hpp
-	src/msg/Serializer.hpp
-	src/ext/IContext.hpp
-	src/ext/DukContext.hpp
+	src/server.hpp
+	src/service_handler.hpp
+	src/response.hpp
+	src/action_handler.hpp
+	src/db/entities/stream.hpp
+	src/db/entities/event.hpp
+	src/db/repositories/stream_repository.hpp
+	src/db/repositories/sqlite_stream_repo.hpp
+	src/msg/serializer.hpp
+	src/ext/context.hpp
+	src/ext/duk_context.hpp
 	src/log.hpp
 )
 add_library(${PROJECT_NAME}_objects OBJECT ${SRC_FILES} ${INCL_FILES})

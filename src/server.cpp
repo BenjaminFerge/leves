@@ -1,3 +1,9 @@
+#include <iostream>
+#include <string>
+
+#include "Poco/Foundation.h"
+#include "Poco/Net/Net.h"
+#include "Poco/Util/Subsystem.h"
 #include <Poco/Net/ServerSocket.h>
 #include <Poco/Net/SocketAcceptor.h>
 #include <Poco/Net/SocketReactor.h>
@@ -8,17 +14,12 @@
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/ServerApplication.h>
-#include <iostream>
-#include <string>
 
-#include "Poco/Foundation.h"
-#include "Poco/Net/Net.h"
-#include "Poco/Util/Subsystem.h"
-#include "Server.hpp"
-#include "ServiceHandler.hpp"
-#include "Version.h"
-#include "db/Repositories/SqliteStreamRepo.hpp"
+#include "db/repositories/sqlite_stream_repo.hpp"
 #include "log.hpp"
+#include "server.hpp"
+#include "service_handler.hpp"
+#include "version.h"
 
 using namespace yess;
 using namespace db;
@@ -26,7 +27,8 @@ using namespace Poco;
 using namespace Poco::Net;
 using namespace Poco::Util;
 
-Server::Server() : m_requestedInfo(CLInfoOption::none), m_isConfigLoaded(false)
+Server::Server()
+    : requested_info_(Cli_info_opts::none), is_config_loaded_(false)
 {
 }
 
@@ -39,24 +41,24 @@ void Server::initDB()
     std::string connectionString = (std::string)config().getString(
         "EventStore.ConnectionString", "yess.db");
 
-    if (!m_connStr.empty()) {
-        connectionString = m_connStr;
+    if (!conn_str_.empty()) {
+        connectionString = conn_str_;
     }
-    auto streamRepository = SqliteStreamRepo(connectorKey, connectionString);
+    auto streamRepository = Sqlite_stream_repo(connectorKey, connectionString);
     streamRepository.initDB();
 }
 
 void Server::initialize(Application &self)
 {
     // load default configuration files, if present
-    m_isConfigLoaded = loadConfiguration();
+    is_config_loaded_ = loadConfiguration();
     ServerApplication::initialize(self);
     initDB();
 }
 
 void Server::uninitialize() { ServerApplication::uninitialize(); }
 
-void Server::defineOptions(OptionSet &options)
+void Server::define_options(OptionSet &options)
 {
     ServerApplication::defineOptions(options);
 
@@ -84,60 +86,59 @@ void Server::defineOptions(OptionSet &options)
     options.addOption(logPath);
 }
 
-void Server::handleOption(const std::string &name, const std::string &value)
+void Server::handle_option(const std::string &name, const std::string &value)
 {
     ServerApplication::handleOption(name, value);
 
     if (name == "help")
-        m_requestedInfo = CLInfoOption::help;
+        requested_info_ = Cli_info_opts::help;
     else if (name == "version")
-        m_requestedInfo = CLInfoOption::version;
+        requested_info_ = Cli_info_opts::version;
     else if (name == "conn-str")
-        m_connStr = value;
+        conn_str_ = value;
     else if (name == "log-path")
-        m_logPath = value;
+        log_path_ = value;
 
-    if (!m_logPath.empty()) {
-        log::info("Logging path is set to: {}", m_logPath);
-        log::setFileLogger(m_logPath);
+    if (!log_path_.empty()) {
+        log::info("Logging path is set to: {}", log_path_);
+        log::setFileLogger(log_path_);
     }
 }
 
-void Server::displayHelp()
+void Server::display_help()
 {
     HelpFormatter helpFormatter(options());
     helpFormatter.setCommand(commandName());
     helpFormatter.setUsage("OPTIONS");
-    helpFormatter.setHeader(s_aboutString);
+    helpFormatter.setHeader(about_str);
     helpFormatter.format(std::cout);
 }
 
-void Server::displayVersion()
+void Server::display_version()
 {
     std::cout << YESS_NAME << " v" << YESS_VER << std::endl;
 }
 
-std::string Server::getConnStr() { return m_connStr; }
+std::string Server::conn_str() { return conn_str_; }
 
 int Server::main(const std::vector<std::string> &args)
 {
-    switch (m_requestedInfo) {
-    case CLInfoOption::help:
-        displayHelp();
+    switch (requested_info_) {
+    case Cli_info_opts::help:
+        display_help();
         return Application::EXIT_OK;
         break;
-    case CLInfoOption::version:
-        displayVersion();
+    case Cli_info_opts::version:
+        display_version();
         return Application::EXIT_OK;
         break;
-    case CLInfoOption::none:
+    case Cli_info_opts::none:
         break;
     }
 
     // get parameters from configuration file
-    unsigned short port =
-        (unsigned short)config().getInt("Server.port", m_port);
-    m_port = port;
+    unsigned short port = (unsigned short)config().getInt("Server.port", port_);
+    port_ = port;
     log::info("Starting yess on port {}...", port);
 
     // set-up a server socket
@@ -145,7 +146,7 @@ int Server::main(const std::vector<std::string> &args)
     // set-up a SocketReactor...
     SocketReactor reactor;
     // ... and a SocketAcceptor
-    SocketAcceptor<ServiceHandler> acceptor(svs, reactor);
+    SocketAcceptor<Service_handler> acceptor(svs, reactor);
     // run the reactor in its own thread so that we can wait
     // for a termination request
     Thread thread;

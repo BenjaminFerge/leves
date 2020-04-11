@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "../db/Entities/Event.hpp"
-#include "../db/Entities/Stream.hpp"
+#include "../db/entities/event.hpp"
+#include "../db/entities/stream.hpp"
 
 namespace yess::msg
 {

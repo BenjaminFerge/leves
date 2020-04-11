@@ -4,18 +4,19 @@
 #include <string>
 #include <vector>
 
-#include "../debug/duk_trans_socket.h"
-#include "../src/ActionHandler.hpp"
-#include "../src/Response.hpp"
-#include "../src/Server.hpp"
-#include "../src/db/Entities/Event.hpp"
-#include "../src/ext/DukContext.hpp"
-#include "../utils/files.hpp"
 #include "duktape.h"
 #include "nlohmann/json.hpp"
 #include "gtest/gtest-message.h"
 #include "gtest/gtest-test-part.h"
 #include "gtest/gtest_pred_impl.h"
+
+#include "../debug/duk_trans_socket.h"
+#include "../src/action_handler.hpp"
+#include "../src/db/entities/event.hpp"
+#include "../src/ext/duk_context.hpp"
+#include "../src/response.hpp"
+#include "../src/server.hpp"
+#include "../utils/files.hpp"
 
 using json = nlohmann::json;
 using namespace yess;
@@ -23,18 +24,18 @@ using namespace yess;
 class TestESInterop : public testing::Test
 {
   public:
-    std::unique_ptr<ext::DukContext> m_context;
-    std::unique_ptr<Server> m_server;
-    std::unique_ptr<ActionHandler> m_handler;
+    std::unique_ptr<ext::Duk_context> ctx_;
+    std::unique_ptr<Server> server_;
+    std::unique_ptr<Action_handler> handler_;
 
     void SetUp()
     {
-        m_context = std::make_unique<ext::DukContext>();
+        ctx_ = std::make_unique<ext::Duk_context>();
 
         duk_trans_socket_init();
         duk_trans_socket_waitconn();
 
-        duk_debugger_attach(m_context.get()->getDukContext(),
+        duk_debugger_attach(ctx_.get()->get_duk_ctx(),
                             duk_trans_socket_read_cb,
                             duk_trans_socket_write_cb,
                             duk_trans_socket_peek_cb,
@@ -44,14 +45,14 @@ class TestESInterop : public testing::Test
                             nullptr,
                             nullptr);
 
-        m_server = std::make_unique<Server>();
-        m_server->initDB();
-        m_handler = std::make_unique<ActionHandler>();
+        server_ = std::make_unique<Server>();
+        server_->initDB();
+        handler_ = std::make_unique<Action_handler>();
     }
 
     void TearDown()
     {
-        duk_debugger_detach(m_context.get()->getDukContext());
+        duk_debugger_detach(ctx_.get()->get_duk_ctx());
         duk_trans_socket_finish();
     }
 };
@@ -59,16 +60,16 @@ class TestESInterop : public testing::Test
 TEST_F(TestESInterop, EmptyStreamProjection)
 {
     std::vector<db::Event> events;
-    std::string read = readFile("test/projections/proj1.js");
+    std::string read = read_file("test/projections/proj1.js");
 
-    m_context->read(read);
+    ctx_->read(read);
 
-    std::string initJson = "{}";
-    json initState = json::parse(initJson);
+    std::string init_json = "{}";
+    json init_state = json::parse(init_json);
 
-    json result = m_context->callProjection("projection", events, initState);
+    json result = ctx_->call_projection("projection", events, init_state);
 
-    ASSERT_EQ(initState, result);
+    ASSERT_EQ(init_state, result);
 }
 
 TEST_F(TestESInterop, StreamProjection)
@@ -99,19 +100,19 @@ TEST_F(TestESInterop, StreamProjection)
     events.push_back(e1);
     events.push_back(e2);
 
-    std::string read = readFile("test/projections/userproj.js");
+    std::string read = read_file("test/projections/userproj.js");
 
-    m_context->read(read);
+    ctx_->read(read);
 
-    json initState = json({});
+    json init_state = json({});
 
-    json result = m_context->callProjection("projection", events, initState);
+    json result = ctx_->call_projection("projection", events, init_state);
 
-    std::string expectedStr = "{"
-                              "\"username\":\"johndoe\","
-                              "\"email\":\"johndoe2@mail.com\""
-                              "}";
+    std::string exp_str = "{"
+                          "\"username\":\"johndoe\","
+                          "\"email\":\"johndoe2@mail.com\""
+                          "}";
 
-    json expected = json::parse(expectedStr);
+    json expected = json::parse(exp_str);
     ASSERT_EQ(result, expected);
 }

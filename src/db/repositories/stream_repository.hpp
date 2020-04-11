@@ -4,16 +4,16 @@
 #include <string>
 #include <vector>
 
-#include "../Entities/Event.hpp"
-#include "../Entities/Stream.hpp"
+#include "../entities/event.hpp"
+#include "../entities/stream.hpp"
 
 namespace yess::db
 {
-class StreamRepository
+class Stream_repository
 {
   public:
-    StreamRepository(std::string connectorKey, std::string connectionString);
-    virtual ~StreamRepository();
+    Stream_repository(std::string connectorKey, std::string connectionString);
+    virtual ~Stream_repository();
     virtual std::vector<Stream> all() = 0;
     virtual Stream get(int id) = 0;
     virtual void create(Stream stream) = 0;

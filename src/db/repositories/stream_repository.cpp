@@ -3,22 +3,22 @@
 #include <string>
 
 #include "../../log.hpp"
-#include "StreamRepository.hpp"
+#include "stream_repository.hpp"
 
 namespace fs = std::filesystem;
 
 namespace yess::db
 {
-StreamRepository::StreamRepository(std::string connectorKey,
-                                   std::string connectionString)
+Stream_repository::Stream_repository(std::string connectorKey,
+                                     std::string connectionString)
     : m_connectorKey(connectorKey), m_connectionString(connectionString)
 {
 }
 
-void StreamRepository::initDB()
+void Stream_repository::initDB()
 {
     log::info("Connection: {}, {}", m_connectorKey, m_connectionString);
 }
 
-StreamRepository::~StreamRepository() {}
+Stream_repository::~Stream_repository() {}
 } // namespace yess::db

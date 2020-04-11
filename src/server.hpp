@@ -14,12 +14,12 @@ using Poco::Util::ServerApplication;
 
 namespace yess
 {
-enum CLInfoOption {
+enum Cli_info_opts {
     none,
     help,
     version,
 };
-static constexpr const char *s_aboutString =
+static constexpr const char *about_str =
     "Yess is a server application for handling event sourced systems.";
 
 class Server : public Poco::Util::ServerApplication
@@ -27,23 +27,23 @@ class Server : public Poco::Util::ServerApplication
   public:
     Server();
     ~Server();
-    std::string getConnStr();
+    std::string conn_str();
     void initDB();
 
   protected:
     void initialize(Application &self);
     void uninitialize();
-    void defineOptions(OptionSet &options);
-    void handleOption(const std::string &name, const std::string &value);
-    void displayHelp();
-    void displayVersion();
+    void define_options(OptionSet &options);
+    void handle_option(const std::string &name, const std::string &value);
+    void display_help();
+    void display_version();
     int main(const std::vector<std::string> &args);
 
   private:
-    CLInfoOption m_requestedInfo;
-    bool m_isConfigLoaded;
-    std::string m_connStr;
-    std::string m_logPath;
-    unsigned short m_port = 2929;
+    Cli_info_opts requested_info_;
+    bool is_config_loaded_;
+    std::string conn_str_;
+    std::string log_path_;
+    unsigned short port_ = 2929;
 };
 } // namespace yess

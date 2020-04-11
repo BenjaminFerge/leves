@@ -5,17 +5,17 @@
 #include <string>
 #include <vector>
 
-#include "../Entities/Event.hpp"
-#include "../Entities/Stream.hpp"
+#include "../entities/event.hpp"
+#include "../entities/stream.hpp"
 #include "SQLiteCpp/Database.h"
-#include "StreamRepository.hpp"
+#include "stream_repository.hpp"
 
 namespace yess::db
 {
-class SqliteStreamRepo : public StreamRepository
+class Sqlite_stream_repo : public Stream_repository
 {
   public:
-    SqliteStreamRepo(std::string connectorKey, std::string connectionString);
+    Sqlite_stream_repo(std::string connectorKey, std::string connectionString);
     // ~SqliteStreamRepo();
     std::vector<Stream> all();
     Stream get(int id);

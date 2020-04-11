@@ -1,37 +1,37 @@
+#include <algorithm>
 #include <bits/exception.h>
 #include <filesystem>
 #include <memory>
 #include <optional>
 #include <string>
-#include <vector>
 #include <utility>
-#include <algorithm>
+#include <vector>
 
 #include "../../log.hpp"
 #include "../../utils/files.hpp"
-#include "../Entities/Event.hpp"
-#include "../Entities/Stream.hpp"
+#include "../entities/event.hpp"
+#include "../entities/stream.hpp"
+#include "SQLiteCpp/Column.h"
 #include "SQLiteCpp/Database.h"
 #include "SQLiteCpp/Statement.h"
 #include "SQLiteCpp/Transaction.h"
-#include "SqliteStreamRepo.hpp"
-#include "StreamRepository.hpp"
-#include "SQLiteCpp/Column.h"
+#include "sqlite_stream_repo.hpp"
+#include "stream_repository.hpp"
 
 namespace fs = std::filesystem;
 
 namespace yess::db
 {
-SqliteStreamRepo::SqliteStreamRepo(std::string connectorKey,
-                                   std::string connectionString)
-    : StreamRepository(connectorKey, pathToAbs(connectionString))
+Sqlite_stream_repo::Sqlite_stream_repo(std::string conn_key,
+                                       std::string conn_str)
+    : Stream_repository(conn_key, path_to_abs(conn_str))
 {
     initDB();
 }
 
 // SqliteStreamRepo::~SqliteStreamRepo() {}
 
-std::vector<Stream> SqliteStreamRepo::all()
+std::vector<Stream> Sqlite_stream_repo::all()
 {
 
     std::string sql = "SELECT id, type, version FROM streams";
@@ -50,7 +50,7 @@ std::vector<Stream> SqliteStreamRepo::all()
     return result;
 }
 
-Stream SqliteStreamRepo::get(int id)
+Stream Sqlite_stream_repo::get(int id)
 {
 
     std::string sql = "SELECT type, version "
@@ -70,7 +70,7 @@ Stream SqliteStreamRepo::get(int id)
     return stream;
 }
 
-void SqliteStreamRepo::create(Stream stream)
+void Sqlite_stream_repo::create(Stream stream)
 {
     std::string sql = "INSERT INTO streams(type, version) VALUES(?, ?)";
     SQLite::Statement stmt(*db_, sql);
@@ -82,7 +82,7 @@ void SqliteStreamRepo::create(Stream stream)
     log::info("Created '{}' stream successfully", stream.type);
 }
 
-void SqliteStreamRepo::attachEvent(Event event)
+void Sqlite_stream_repo::attachEvent(Event event)
 {
     std::string sql = "INSERT INTO events(streamId, type, payload, version)"
                       "VALUES(?, ?, ?, ?)";
@@ -100,7 +100,7 @@ void SqliteStreamRepo::attachEvent(Event event)
               event.streamId);
 }
 
-std::vector<Event> SqliteStreamRepo::getEvents(int streamId)
+std::vector<Event> Sqlite_stream_repo::getEvents(int streamId)
 {
     std::string sql = "SELECT e.id, e.streamId, e.type, e.payload, e.version "
                       "FROM events AS e "
@@ -125,7 +125,7 @@ std::vector<Event> SqliteStreamRepo::getEvents(int streamId)
     return result;
 }
 
-std::vector<Event> SqliteStreamRepo::getEvents(std::string streamType)
+std::vector<Event> Sqlite_stream_repo::getEvents(std::string streamType)
 {
     std::string sql = "SELECT e.id, e.streamId, e.type, e.payload, e.version "
                       "FROM events AS e "
@@ -150,7 +150,7 @@ std::vector<Event> SqliteStreamRepo::getEvents(std::string streamType)
     return result;
 }
 
-std::optional<Event> SqliteStreamRepo::getLastEvent(int streamId)
+std::optional<Event> Sqlite_stream_repo::getLastEvent(int streamId)
 {
     std::string sql = "SELECT e.id, e.type, e.payload, e.version "
                       "FROM events AS e "
@@ -178,7 +178,7 @@ std::optional<Event> SqliteStreamRepo::getLastEvent(int streamId)
     return event;
 }
 
-void SqliteStreamRepo::initDB()
+void Sqlite_stream_repo::initDB()
 {
     log::info("Initializing database...");
     bool shouldReturn = false;

@@ -1,10 +1,10 @@
 #include <string>
 #include <vector>
 
-#include "../db/Entities/Event.hpp"
-#include "../db/Entities/Stream.hpp"
-#include "Serializer.hpp"
+#include "../db/entities/event.hpp"
+#include "../db/entities/stream.hpp"
 #include "nlohmann/json.hpp"
+#include "serializer.hpp"
 
 using namespace yess::db;
 using json = nlohmann::json;
