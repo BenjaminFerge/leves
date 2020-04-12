@@ -17,8 +17,7 @@ enable_testing()
 set(MAIN_FILE src/main.cpp)
 set(SRC_FILES 
 	src/server.cpp
-	src/service_handler.cpp
-	src/response.cpp
+	src/msg/response.cpp
 	src/action_handler.cpp
 	src/db/entities/stream.cpp
 	src/db/entities/event.cpp
@@ -27,11 +26,12 @@ set(SRC_FILES
 	src/msg/serializer.cpp
 	inc_duktape/duktape.c
 	src/ext/duk_context.cpp
+	protos/yess.grpc.pb.cc
+	protos/yess.pb.cc
 )
 set(INC_FILES
 	src/server.hpp
-	src/service_handler.hpp
-	src/response.hpp
+	src/msg/response.hpp
 	src/action_handler.hpp
 	src/db/entities/stream.hpp
 	src/db/entities/event.hpp
@@ -41,18 +41,34 @@ set(INC_FILES
 	src/ext/context.hpp
 	src/ext/duk_context.hpp
 	src/log.hpp
+	src/grpc_server.hpp
+	protos/yess.grpc.pb.h
+	protos/yess.pb.h
 )
 add_library(${PROJECT_NAME}_objects OBJECT ${SRC_FILES} ${INCL_FILES})
 add_subdirectory(utils)
 add_subdirectory(debug)
 
-target_include_directories(${PROJECT_NAME}_objects PRIVATE "${CMAKE_BINARY_DIR}/include" inc_duktape)
+target_include_directories(${PROJECT_NAME}_objects PRIVATE "${CMAKE_BINARY_DIR}/include" inc_duktape protos)
 add_executable(${PROJECT_NAME} ${MAIN_FILE} $<TARGET_OBJECTS:${PROJECT_NAME}_objects>)
-target_include_directories(${PROJECT_NAME} PRIVATE inc_duktape)
+target_include_directories(${PROJECT_NAME} PRIVATE inc_duktape protos)
 
 add_subdirectory(test)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} yessutils)
+find_package(Threads REQUIRED)
+
+find_package(Protobuf CONFIG REQUIRED)
+message(STATUS "Using protobuf ${protobuf_VERSION}")
+
+find_package(gRPC CONFIG REQUIRED)
+message(STATUS "Using gRPC ${gRPC_VERSION}")
+
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} yessutils
+	gRPC::grpc++
+	gRPC::grpc++_reflection
+	protobuf::libprotobuf
+)
 
 add_custom_target(
   run

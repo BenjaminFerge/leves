@@ -13,6 +13,6 @@ file(COPY ${CMAKE_SOURCE_DIR}/test/projections
 )
 
 target_link_libraries(testyess PRIVATE ${CONAN_LIBS} yessutils yessdebug)
-target_include_directories(testyess PRIVATE ../inc_duktape)
+target_include_directories(testyess PRIVATE ../inc_duktape ../protos)
 
-add_test(NAME all_tests COMMAND testyess)
+# add_test(NAME all_tests COMMAND testyess)

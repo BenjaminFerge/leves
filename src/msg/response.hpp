@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace yess
+namespace yess::msg
 {
 enum class ResponseStatus { OK, Error };
 class Response
@@ -17,4 +17,4 @@ class Response
     ResponseStatus m_status;
     std::string m_message;
 };
-} // namespace yess
+} // namespace yess::msg

@@ -3,9 +3,8 @@
 #include <memory>
 #include <string>
 
+#include "msg/response.hpp"
 #include "nlohmann/json_fwd.hpp"
-#include "response.hpp"
-#include "server.hpp"
 
 #include "db/entities/stream.hpp"
 #include "db/repositories/stream_repository.hpp"
@@ -30,13 +29,12 @@ Action action_from_str(std::string action);
 class Action_handler
 {
   public:
-    Action_handler();
+    Action_handler(std::string conn_str);
     ~Action_handler();
-    Response handle(const json &obj);
+    msg::Response handle(const json &obj);
     void save_stream(const db::Stream &stream);
 
   private:
-    Server *server_;
     std::unique_ptr<db::Stream_repository> stream_repo_;
 };
 } // namespace yess

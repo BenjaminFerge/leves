@@ -16,10 +16,10 @@
 #include "db/repositories/sqlite_stream_repo.hpp"
 #include "db/repositories/stream_repository.hpp"
 #include "log.hpp"
-#include "response.hpp"
-#include "server.hpp"
+#include "msg/response.hpp"
 
 using json = nlohmann::json;
+using namespace yess::msg;
 
 namespace yess
 {
@@ -72,20 +72,9 @@ void Action_handler::save_stream(const yess::db::Stream &stream)
     stream_repo_->create(stream);
 }
 
-Action_handler::Action_handler()
+Action_handler::Action_handler(std::string conn_str)
 {
-    Application &app = Server::instance();
-    Server *yess = static_cast<Server *>(&app);
-    auto connStr = yess->conn_str();
-    // TODO: DRY
-    std::string conn_key = (std::string)app.config().getString(
-        "EventStore.ConnectorKey", "SQLite");
-    std::string conn_str = (std::string)app.config().getString(
-        "EventStore.ConnectionString", "yess.db");
-    if (!connStr.empty()) {
-        conn_str = connStr;
-    }
-    auto stream_repo = db::Sqlite_stream_repo(conn_key, conn_str);
+    auto stream_repo = db::Sqlite_stream_repo("SQLite", conn_str);
     // Repository initialization in the Server ctor.
     stream_repo_ =
         std::make_unique<db::Sqlite_stream_repo>(std::move(stream_repo));

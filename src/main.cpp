@@ -1,7 +1,9 @@
-#include "server.hpp"
+#include "grpc_service.hpp"
 
 int main(int argc, char **argv)
 {
-    yess::Server server;
-    return server.run(argc, argv);
+    yess::run_server();
+
+    return 0;
 }
+
