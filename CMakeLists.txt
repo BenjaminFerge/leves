@@ -26,6 +26,7 @@ set(SRC_FILES
 	src/msg/serializer.cpp
 	inc_duktape/duktape.c
 	src/ext/duk_context.cpp
+	src/grpc_service.cpp
 	protos/yess.grpc.pb.cc
 	protos/yess.pb.cc
 )
@@ -41,7 +42,7 @@ set(INC_FILES
 	src/ext/context.hpp
 	src/ext/duk_context.hpp
 	src/log.hpp
-	src/grpc_server.hpp
+	src/grpc_service.hpp
 	protos/yess.grpc.pb.h
 	protos/yess.pb.h
 )
