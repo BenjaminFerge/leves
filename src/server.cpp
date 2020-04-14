@@ -14,6 +14,7 @@ using namespace db;
 
 Server::Server(int argc, char **argv)
 {
+    log::init_logger();
     argparser_ = argparse::ArgumentParser("yess");
     parse_args(argc, argv);
 }
@@ -24,12 +25,20 @@ void Server::parse_args(int argc, char **argv)
         .help("print version number")
         .default_value(false)
         .implicit_value(true);
+
     argparser_.add_argument("-c", "--conn-str")
         .default_value(conn_str_)
         .help("connection string");
+
     argparser_.add_argument("-p", "--log-path")
         .help("file log path")
         .default_value(std::string(""));
+
+    argparser_.add_argument("--file-only")
+        .help("log into file only")
+        .default_value(false)
+        .implicit_value(true);
+
     argparser_.add_argument("-d", "--daemon")
         .help("run in background")
         .default_value(false)
@@ -49,10 +58,16 @@ void Server::parse_args(int argc, char **argv)
     }
 
     auto log_path = argparser_.get<std::string>("--log-path");
+    bool file_only = argparser_.get<bool>("--file-only");
     if (!log_path.empty()) {
         log_path_ = log_path;
-        log::info("Logging path is set to: {}", log_path_);
-        log::setFileLogger(log_path_);
+        log::info(
+            "Logging path is set to: {} (file only: {})", log_path_, file_only);
+        log::rotating_logger(log_path_, 5, 3, file_only);
+    } else if (file_only) {
+        std::cerr << "Please specify --log-path option when --file-only is set"
+                  << std::endl;
+        exit(1);
     }
 
     auto conn_str = argparser_.get<std::string>("--conn-str");
