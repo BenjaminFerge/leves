@@ -4,6 +4,7 @@ gtest/1.10.0
 spdlog/1.5.0
 jsonformoderncpp/3.7.3@vthiery/stable
 sqlitecpp/2.5.0
+argparse/2.1
 
 [generators]
 cmake

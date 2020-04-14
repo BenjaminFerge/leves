@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv)
 {
-    yess::Server server;
+    yess::Server server(argc, argv);
     return server.run();
 }
 
