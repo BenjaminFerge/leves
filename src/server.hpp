@@ -14,6 +14,7 @@ static constexpr const char *about_str =
 class Server
 {
   public:
+    Server();
     Server(int argc, char **argv);
     ~Server();
     std::string conn_str();

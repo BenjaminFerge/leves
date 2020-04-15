@@ -14,7 +14,6 @@
 #include "../src/action_handler.hpp"
 #include "../src/db/entities/event.hpp"
 #include "../src/ext/duk_context.hpp"
-#include "../src/response.hpp"
 #include "../src/server.hpp"
 #include "../utils/files.hpp"
 
@@ -47,7 +46,7 @@ class TestESInterop : public testing::Test
 
         server_ = std::make_unique<Server>();
         server_->initDB();
-        handler_ = std::make_unique<Action_handler>();
+        handler_ = std::make_unique<Action_handler>("yess.db");
     }
 
     void TearDown()

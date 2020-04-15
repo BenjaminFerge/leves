@@ -8,12 +8,14 @@
 #include <nlohmann/json.hpp>
 
 #include "../src/action_handler.hpp"
-#include "../src/response.hpp"
+#include "../src/msg/response.hpp"
 #include "../src/server.hpp"
 #include "../utils/files.hpp"
 
 using json = nlohmann::json;
 using namespace yess;
+using yess::msg::Response;
+using yess::msg::ResponseStatus;
 
 class Action_handler_test : public testing::Test
 {
@@ -25,7 +27,7 @@ class Action_handler_test : public testing::Test
     {
         m_server = std::make_unique<Server>();
         m_server->initDB();
-        m_handler = std::make_unique<Action_handler>();
+        m_handler = std::make_unique<Action_handler>("yess.db");
     }
 
     void TearDown()

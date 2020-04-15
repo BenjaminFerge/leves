@@ -56,6 +56,12 @@ Server::Server(int argc, char **argv)
     parse_args(argc, argv);
 }
 
+Server::Server()
+{
+    log::init_logger();
+    argparser_ = argparse::ArgumentParser("yess");
+}
+
 void Server::parse_args(int argc, char **argv)
 {
     argparser_.add_argument("-v", "--version")
