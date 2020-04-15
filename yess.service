@@ -1,0 +1,12 @@
+[Unit]
+Description=Yess service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/yess --daemon
+Restart=on-failure
+KillMode=process
+WatchdogSec=6
+
+[Install]
+WantedBy=multi-user.target

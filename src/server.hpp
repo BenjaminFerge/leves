@@ -28,7 +28,9 @@ class Server
   private:
     void parse_args(int argc, char **argv);
     bool is_config_loaded_ = false;
+    bool daemon_ = false;
     std::string log_path_;
     argparse::ArgumentParser argparser_;
+    void daemon();
 };
 } // namespace yess
