@@ -14,8 +14,6 @@
 
 using json = nlohmann::json;
 using namespace yess;
-using yess::msg::Response;
-using yess::msg::ResponseStatus;
 
 class Action_handler_test : public testing::Test
 {
@@ -41,7 +39,7 @@ TEST_F(Action_handler_test, CreateStream)
     auto create_stream_json = read_file("../test/commands/CreateStream.json");
     std::cout << create_stream_json << std::endl;
     json obj = json::parse(create_stream_json);
-    Response resp = m_handler->handle(obj);
-    Response exp_resp(ResponseStatus::OK, "{\"status\":\"OK\"}");
+    msg::Response resp = m_handler->handle(obj);
+    msg::Response exp_resp(msg::ResponseStatus::OK, "{\"status\":\"OK\"}");
     ASSERT_EQ(resp, exp_resp);
 }

@@ -25,10 +25,32 @@ class Grpc_service : public YessService::Service
     std::unique_ptr<yess::Action_handler> handler_;
     grpc::Status CreateStream(grpc::ServerContext *context,
                               const yess::CreateStreamReq *request,
-                              yess::Response *reply) override;
+                              yess::CreateStreamResp *reply) override;
 
     grpc::Status PushEvent(grpc::ServerContext *context,
                            const yess::PushEventReq *request,
-                           yess::Response *reply) override;
+                           yess::PushEventResp *reply) override;
+
+    grpc::Status GetAllStreams(grpc::ServerContext *context,
+                               const yess::GetAllStreamsReq *request,
+                               yess::GetAllStreamsResp *reply) override;
+
+    grpc::Status GetStreamsByType(grpc::ServerContext *context,
+                                  const yess::GetStreamsByTypeReq *request,
+                                  yess::GetStreamsByTypeResp *reply) override;
+
+    grpc::Status GetStream(grpc::ServerContext *context,
+                           const yess::GetStreamReq *request,
+                           yess::GetStreamResp *reply) override;
+
+    grpc::Status
+    GetEventsByStreamId(grpc::ServerContext *context,
+                        const yess::GetEventsByStreamIdReq *request,
+                        yess::GetEventsByStreamIdResp *reply) override;
+
+    grpc::Status
+    GetEventsByStreamType(grpc::ServerContext *context,
+                          const yess::GetEventsByStreamTypeReq *request,
+                          yess::GetEventsByStreamTypeResp *reply) override;
 };
 } // namespace yess

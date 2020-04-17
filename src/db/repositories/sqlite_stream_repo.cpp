@@ -1,5 +1,3 @@
-#include <algorithm>
-#include <bits/exception.h>
 #include <filesystem>
 #include <memory>
 #include <optional>
@@ -8,10 +6,8 @@
 #include <vector>
 
 #include "../../log.hpp"
-#include "../../utils/files.hpp"
 #include "../entities/event.hpp"
 #include "../entities/stream.hpp"
-#include "SQLiteCpp/Column.h"
 #include "SQLiteCpp/Database.h"
 #include "SQLiteCpp/Statement.h"
 #include "SQLiteCpp/Transaction.h"

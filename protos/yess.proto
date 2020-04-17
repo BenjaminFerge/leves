@@ -2,36 +2,88 @@ syntax = "proto3";
 
 package yess;
 
-message Event {
-  int32 id = 1;
-  int32 stream_id = 2;
-  string type = 3;
-  string payload = 4;
-  int32 version = 5;
+message Event
+{
+    int32 id = 1;
+    int32 stream_id = 2;
+    string type = 3;
+    string payload = 4;
+    int32 version = 5;
 }
 
-message Stream {
-  int32 id = 1;
-  string type = 2;
-  int32 version = 3;
-  repeated Event events = 4;
+message Stream
+{
+    int32 id = 1;
+    string type = 2;
+    int32 version = 3;
+    repeated Event events = 4;
 }
 
-message Response {
-  int32 status = 1;
-  string msg = 2;
+message ResponseStatus
+{
+    int32 status = 1;
+    string msg = 2;
 }
 
-message CreateStreamReq {
-  string type = 1;
+message CreateStreamReq { string type = 1; }
+message CreateStreamResp { ResponseStatus status = 1; }
+
+message PushEventReq
+{
+    int32 stream_id = 1;
+    Event event = 2;
+}
+message PushEventResp
+{
+    ResponseStatus status = 1;
+    int32 stream_id = 2;
+    Event event = 3;
 }
 
-message PushEventReq {
-  int32 stream_id = 1;
-  Event event = 2;
+message GetAllStreamsReq {}
+message GetAllStreamsResp
+{
+    ResponseStatus status = 1;
+    repeated Stream streams = 2;
 }
 
-service YessService {
-  rpc CreateStream (CreateStreamReq) returns (Response);
-  rpc PushEvent (PushEventReq) returns (Response);
+message GetStreamsByTypeReq { string type = 1; }
+message GetStreamsByTypeResp
+{
+    ResponseStatus status = 1;
+    repeated Stream streams = 2;
+}
+
+message GetStreamReq { int32 id = 1; }
+message GetStreamResp
+{
+    ResponseStatus status = 1;
+    Stream stream = 2;
+}
+
+message GetEventsByStreamIdReq { int32 id = 1; }
+message GetEventsByStreamIdResp
+{
+    ResponseStatus status = 1;
+    repeated Event events = 2;
+}
+
+message GetEventsByStreamTypeReq { string type = 1; }
+message GetEventsByStreamTypeResp
+{
+    ResponseStatus status = 1;
+    repeated Event events = 2;
+}
+
+service YessService
+{
+    rpc CreateStream(CreateStreamReq) returns (CreateStreamResp);
+    rpc PushEvent(PushEventReq) returns (PushEventResp);
+    rpc GetAllStreams(GetAllStreamsReq) returns (GetAllStreamsResp);
+    rpc GetStreamsByType(GetStreamsByTypeReq) returns (GetStreamsByTypeResp);
+    rpc GetStream(GetStreamReq) returns (GetStreamResp);
+    rpc GetEventsByStreamId(GetEventsByStreamIdReq)
+        returns (GetEventsByStreamIdResp);
+    rpc GetEventsByStreamType(GetEventsByStreamTypeReq)
+        returns (GetEventsByStreamTypeResp);
 }

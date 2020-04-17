@@ -17,9 +17,9 @@
 #include "db/repositories/stream_repository.hpp"
 #include "log.hpp"
 #include "msg/response.hpp"
+#include "yess.pb.h"
 
 using json = nlohmann::json;
-using namespace yess::msg;
 
 namespace yess
 {
@@ -81,12 +81,12 @@ Action_handler::Action_handler(std::string conn_str)
 }
 
 Action_handler::~Action_handler() {}
-Response Action_handler::handle(const json &obj)
+msg::Response Action_handler::handle(const json &obj)
 {
     std::string actionStr = obj["action"];
     std::string msg;
     json jsonObj;
-    ResponseStatus status;
+    msg::ResponseStatus status;
     Action action = action_from_str(actionStr);
     log::info("Handling command '{}'...", actionStr);
     switch (action) {
@@ -95,7 +95,7 @@ Response Action_handler::handle(const json &obj)
         yess::db::Stream stream = {0, type, 0};
         save_stream(stream);
         jsonObj["status"] = "OK";
-        status = ResponseStatus::OK;
+        status = msg::ResponseStatus::OK;
         break;
     }
     case Action::GetAllStreams: {
@@ -105,17 +105,17 @@ Response Action_handler::handle(const json &obj)
         for (auto &stream : streams) {
             arr.push_back(stream.toJSON());
         }
-        status = ResponseStatus::OK;
+        status = msg::ResponseStatus::OK;
         jsonObj["data"] = arr;
         break;
     }
     case Action::GetStreamsByType:
-        status = ResponseStatus::Error;
+        status = msg::ResponseStatus::Error;
         jsonObj["status"] = "Error";
         jsonObj["message"] = "Action 'GetStreamsByType' is not implemented";
         break;
     case Action::GetStream:
-        status = ResponseStatus::Error;
+        status = msg::ResponseStatus::Error;
         jsonObj["status"] = "Error";
         jsonObj["message"] = "Action 'GetStream' is not implemented";
         break;
@@ -143,7 +143,7 @@ Response Action_handler::handle(const json &obj)
             log::error(err);
             jsonObj["status"] = "Error";
             jsonObj["message"] = err;
-            status = ResponseStatus::Error;
+            status = msg::ResponseStatus::Error;
             break;
         }
 
@@ -151,14 +151,14 @@ Response Action_handler::handle(const json &obj)
         try {
             stream_repo_->attachEvent(event);
             jsonObj["status"] = "OK";
-            status = ResponseStatus::OK;
+            status = msg::ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
             std::string err = ex.displayText();
             err = "DB ERROR: " + err;
             log::error(err);
             jsonObj["status"] = "Error";
             jsonObj["message"] = err;
-            status = ResponseStatus::Error;
+            status = msg::ResponseStatus::Error;
         }
         break;
     }
@@ -172,14 +172,14 @@ Response Action_handler::handle(const json &obj)
                 arr.push_back(e.toJSON());
             }
             jsonObj["data"] = arr;
-            status = ResponseStatus::OK;
+            status = msg::ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);
             jsonObj["status"] = "Error";
             jsonObj["message"] = err;
-            status = ResponseStatus::Error;
+            status = msg::ResponseStatus::Error;
         }
         break;
     }
@@ -193,26 +193,65 @@ Response Action_handler::handle(const json &obj)
                 arr.push_back(e.toJSON());
             }
             jsonObj["data"] = arr;
-            status = ResponseStatus::OK;
+            status = msg::ResponseStatus::OK;
         } catch (const Poco::Exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);
             jsonObj["status"] = "Error";
             jsonObj["message"] = err;
-            status = ResponseStatus::Error;
+            status = msg::ResponseStatus::Error;
         }
         break;
     }
     case Action::None:
         std::string err = "Action 'None' is not implemented";
         log::error(err);
-        status = ResponseStatus::Error;
+        status = msg::ResponseStatus::Error;
         jsonObj["status"] = "Error";
         jsonObj["message"] = err;
         break;
     }
     msg = jsonObj.dump();
-    return Response(status, msg);
+    return msg::Response(status, msg);
+}
+
+void Action_handler::create_stream(std::string type)
+{
+    yess::db::Stream stream = {0, type, 0};
+    save_stream(stream);
+}
+
+Action_handler::Action_handler(Action_handler &&handler)
+    : stream_repo_(std::move(handler.stream_repo_))
+{
+}
+
+std::vector<db::Stream> Action_handler::get_all_streams()
+{
+    return stream_repo_->all();
+}
+
+// TODO: implement
+/*
+std::vector<db::Stream> Action_handler::get_streams_by_type(std::string type)
+{
+    return stream_repo_->get(type);
+}
+*/
+
+db::Stream Action_handler::get_stream(int id) { return db::Stream(); }
+
+void Action_handler::push_event(int stream_id, db::Event event) {}
+
+std::vector<db::Event> Action_handler::get_events_by_stream_id(int stream_id)
+{
+    return stream_repo_->getEvents(stream_id);
+}
+
+std::vector<db::Event>
+Action_handler::get_events_by_stream_type(std::string type)
+{
+    return stream_repo_->getEvents(type);
 }
 } // namespace yess
