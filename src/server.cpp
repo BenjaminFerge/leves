@@ -4,6 +4,7 @@
 #include <systemd/sd-daemon.h>
 
 #include "argparse.hpp"
+#include "cmd/shell.hpp"
 #include "db/repositories/sqlite_stream_repo.hpp"
 #include "grpc_service.hpp"
 #include "log.hpp"
@@ -87,6 +88,11 @@ void Server::parse_args(int argc, char **argv)
         .default_value(false)
         .implicit_value(true);
 
+    argparser_.add_argument("-i", "--interactive")
+        .help("interactive shell")
+        .default_value(false)
+        .implicit_value(true);
+
     try {
         argparser_.parse_args(argc, argv);
     } catch (const std::runtime_error &err) {
@@ -97,6 +103,12 @@ void Server::parse_args(int argc, char **argv)
 
     if (argparser_["--version"] == true) {
         display_version();
+        exit(0);
+    }
+
+    if (argparser_["--interactive"] == true) {
+        log::disable_cout();
+        shell();
         exit(0);
     }
 
@@ -189,4 +201,11 @@ int Server::run()
     grpc_th.join();
 
     return 0;
+}
+
+void Server::shell()
+{
+    auto handler = Action_handler(conn_str_);
+    yess::cmd::Shell sh(std::move(handler));
+    sh.run();
 }

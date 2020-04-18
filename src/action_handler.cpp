@@ -67,7 +67,7 @@ Action action_from_str(std::string action)
     throw std::runtime_error("Invalid action: " + action);
 }
 
-void Action_handler::save_stream(const yess::db::Stream &stream)
+void Action_handler::save_stream(const yess::db::Stream &stream) const
 {
     stream_repo_->create(stream);
 }
@@ -216,7 +216,7 @@ msg::Response Action_handler::handle(const json &obj)
     return msg::Response(status, msg);
 }
 
-void Action_handler::create_stream(std::string type)
+void Action_handler::create_stream(std::string type) const
 {
     yess::db::Stream stream = {0, type, 0};
     save_stream(stream);

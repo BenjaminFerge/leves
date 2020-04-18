@@ -33,5 +33,6 @@ class Server
     std::string log_path_;
     argparse::ArgumentParser argparser_;
     void daemon();
+    void shell();
 };
 } // namespace yess

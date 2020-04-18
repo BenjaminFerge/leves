@@ -34,9 +34,9 @@ class Action_handler
     Action_handler(Action_handler &&handler);
     ~Action_handler();
     msg::Response handle(const json &obj);
-    void save_stream(const db::Stream &stream);
+    void save_stream(const db::Stream &stream) const;
 
-    void create_stream(std::string type);
+    void create_stream(std::string type) const;
     std::vector<db::Stream> get_all_streams();
     // TODO:
     // std::vector<db::Stream> get_streams_by_type(std::string type);
