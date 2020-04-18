@@ -14,6 +14,9 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
     auto c = std::get<0>(cmd_argv);
     auto argv = std::get<1>(cmd_argv);
     switch (c) {
+    case Shell_cmd::none: {
+        return std::make_unique<cmd::None>();
+    }
     case Shell_cmd::unknown: {
         return std::make_unique<cmd::Unknown>();
     }
@@ -48,7 +51,7 @@ void cmd::Shell::run()
         std::getline(std::cin, line);
         std::unique_ptr<cmd::Command> cmd = interpret(line);
         cmd::Command_result result = cmd->execute();
-        std::cout << result.message() << std::endl;
+        std::cout << result.message();
         if (result.status() == Command_result::Status::exit)
             should_exit = true;
     }
@@ -70,6 +73,9 @@ std::tuple<cmd::Shell::Shell_cmd, std::vector<std::string>>
 cmd::Shell::tokens(std::string in)
 {
     std::vector<std::string> argv = to_words(in);
+    if (argv.size() == 0) {
+        return std::tuple<Shell_cmd, std::vector<std::string>>(cmd::Shell::Shell_cmd::none, {});
+    }
     std::string first = argv[0];
     argv.erase(argv.begin());
 

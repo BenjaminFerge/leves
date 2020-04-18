@@ -17,6 +17,12 @@ class Help : public Command
     Help();
     Command_result execute() override;
 };
+class None : public Command
+{
+  public:
+    None();
+    Command_result execute() override;
+};
 class Quit : public Command
 {
   public:

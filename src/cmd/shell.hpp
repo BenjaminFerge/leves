@@ -10,10 +10,11 @@ class Shell
 {
   public:
     enum class Shell_cmd {
+        none,
         unknown,
+        quit,
         help,
         create_stream,
-        quit,
     };
     Shell(const Action_handler &handler);
     void run();
