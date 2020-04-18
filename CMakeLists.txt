@@ -29,7 +29,6 @@ set(SRC_FILES
         src/grpc_service.cpp
         protos/yess.grpc.pb.cc
         protos/yess.pb.cc
-        src/daemonizer.cpp
         src/cmd/domain_commands.hpp
         src/cmd/command.hpp
         src/cmd/domain_commands.cpp
@@ -53,7 +52,6 @@ set(INC_FILES
         src/grpc_service.hpp
         protos/yess.grpc.pb.h
         protos/yess.pb.h
-        src/daemonizer.hpp
         )
 add_library(${PROJECT_NAME}_objects OBJECT ${SRC_FILES} ${INCL_FILES})
 add_subdirectory(utils)

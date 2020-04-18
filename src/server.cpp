@@ -151,19 +151,23 @@ void Server::display_version()
 
 std::string Server::conn_str() { return conn_str_; }
 
-#include <thread>
-
 int Server::run()
 {
-    // setup signal handler
-    {
-        struct sigaction action;
-        action.sa_handler = my_signal_handler;
-        sigemptyset(&action.sa_mask);
-        action.sa_flags = 0;
-        sigaction(SIGTERM, &action, NULL);
-    }
+    if (daemon_) {
+        // setup signal handler
+        {
+            struct sigaction action;
+            action.sa_handler = my_signal_handler;
+            sigemptyset(&action.sa_mask);
+            action.sa_flags = 0;
+            sigaction(SIGTERM, &action, NULL);
+        }
 
+        sd_notify(0, "READY=1");
+        std::cerr << std::string("Yess daemon has successfully started up.")
+                  << std::endl
+                  << std::flush;
+    }
     std::string server_address("0.0.0.0:" + std::to_string(port_));
     Grpc_service service(conn_str_);
 
@@ -194,12 +198,15 @@ int Server::run()
         });
         w_th.join();
     }
-    std::thread grpc_th([&]() {
-        // Other thread is responsible for shutting down the server
-        server->Wait();
-    });
-    grpc_th.join();
 
+    server->Wait();
+
+    if (daemon_) {
+        sd_notify(0, "STOPPING=1");
+        std::cerr << std::string("Yess daemon has been successfully shut down.")
+                  << std::endl
+                  << std::flush;
+    }
     return 0;
 }
 
