@@ -5,9 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "Poco/Exception.h"
-#include "Poco/Util/Application.h"
-#include "Poco/Util/LayeredConfiguration.h"
 #include "nlohmann/json.hpp"
 
 #include "action_handler.hpp"
@@ -152,8 +149,8 @@ msg::Response Action_handler::handle(const json &obj)
             stream_repo_->attachEvent(event);
             jsonObj["status"] = "OK";
             status = msg::ResponseStatus::OK;
-        } catch (const Poco::Exception &ex) {
-            std::string err = ex.displayText();
+        } catch (const std::exception &ex) {
+            std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);
             jsonObj["status"] = "Error";
@@ -173,7 +170,7 @@ msg::Response Action_handler::handle(const json &obj)
             }
             jsonObj["data"] = arr;
             status = msg::ResponseStatus::OK;
-        } catch (const Poco::Exception &ex) {
+        } catch (const std::exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);
@@ -194,7 +191,7 @@ msg::Response Action_handler::handle(const json &obj)
             }
             jsonObj["data"] = arr;
             status = msg::ResponseStatus::OK;
-        } catch (const Poco::Exception &ex) {
+        } catch (const std::exception &ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);

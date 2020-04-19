@@ -1,10 +1,8 @@
 #include <bits/exception.h>
 #include <cassert>
 #include <filesystem>
+#include <fstream>
 #include <string>
-
-#include "Poco/FileStream.h"
-#include "Poco/StreamCopier.h"
 
 #include "../src/log.hpp"
 #include "./files.hpp"
@@ -15,12 +13,10 @@ namespace yess
 {
 std::string read_file(const std::string &path)
 {
-    Poco::FileInputStream fis(path);
-    assert(fis.good());
-    std::string read;
-    Poco::StreamCopier::copyToString(fis, read);
-    assert(!read.empty());
-    return read;
+    std::ifstream ifs(path);
+    std::stringstream buffer;
+    buffer << ifs.rdbuf();
+    return buffer.str();
 }
 
 std::string path_to_abs(const std::string &f)
