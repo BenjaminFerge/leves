@@ -51,6 +51,9 @@ Command_result Push::execute()
     };
     try {
         handler_.push_event(request_.stream_id_, e);
+    } catch (std::runtime_error err) {
+        return Command_result(
+            Command_result::Status::error, err.what(), nullptr);
     } catch (std::exception /* ex */) {
         std::string msg = "Unexpected error: cannot push event";
         return Command_result(Command_result::Status::error, msg, nullptr);

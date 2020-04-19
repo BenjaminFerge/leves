@@ -122,41 +122,10 @@ msg::Response Action_handler::handle(const json &obj)
         std::string payload = obj["payload"];
         int version = obj["version"];
 
-        // Check version
-        std::optional<db::Event> lastEventOpt =
-            stream_repo_->getLastEvent(streamId);
-        int expectedVer;
-        if (lastEventOpt.has_value()) {
-            auto lastEvent = lastEventOpt.value();
-            expectedVer = lastEvent.version + 1;
-        } else {
-            expectedVer = 1;
-        }
-        if (expectedVer != version) {
-            std::string err = "Event version mismatch: expected v";
-            err += std::to_string(expectedVer);
-            err += ", got v";
-            err += std::to_string(version);
-            log::error(err);
-            jsonObj["status"] = "Error";
-            jsonObj["message"] = err;
-            status = msg::ResponseStatus::Error;
-            break;
-        }
-
         yess::db::Event event = {0, streamId, type, payload, version};
-        try {
-            stream_repo_->attachEvent(event);
-            jsonObj["status"] = "OK";
-            status = msg::ResponseStatus::OK;
-        } catch (const std::exception &ex) {
-            std::string err = ex.what();
-            err = "DB ERROR: " + err;
-            log::error(err);
-            jsonObj["status"] = "Error";
-            jsonObj["message"] = err;
-            status = msg::ResponseStatus::Error;
-        }
+        push_event(streamId, event);
+        jsonObj["status"] = "OK";
+        status = msg::ResponseStatus::OK;
         break;
     }
     case Action::GetEventsByStreamId: {
@@ -239,7 +208,36 @@ std::vector<db::Stream> Action_handler::get_streams_by_type(std::string type)
 
 db::Stream Action_handler::get_stream(int id) { return db::Stream(); }
 
-void Action_handler::push_event(int stream_id, db::Event event) const {}
+void Action_handler::push_event(int stream_id, db::Event event) const
+{
+    // Check version
+    std::optional<db::Event> lastEventOpt =
+        stream_repo_->getLastEvent(stream_id);
+    int expectedVer;
+    if (lastEventOpt.has_value()) {
+        auto lastEvent = lastEventOpt.value();
+        expectedVer = lastEvent.version + 1;
+    } else {
+        expectedVer = 1;
+    }
+    if (expectedVer != event.version) {
+        std::string err = "Event version mismatch: expected v";
+        err += std::to_string(expectedVer);
+        err += ", got v";
+        err += std::to_string(event.version);
+        log::error(err);
+        throw std::runtime_error(err);
+    }
+
+    try {
+        stream_repo_->attachEvent(event);
+    } catch (const std::exception &ex) {
+        std::string err = ex.what();
+        err = "DB ERROR: " + err;
+        log::error(err);
+        throw std::runtime_error(err);
+    }
+}
 
 std::vector<db::Event> Action_handler::get_events_by_stream_id(int stream_id)
 {
