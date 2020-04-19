@@ -34,6 +34,24 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
         auto req = new cmd::Create_stream_req(argv[0]);
         return std::make_unique<cmd::Create_stream>(handler_, *req);
     }
+    case Shell_cmd::push: {
+        if (argv.size() != 4) {
+            // TODO: provide usage hints
+            return std::make_unique<cmd::Unknown>();
+        }
+        int stream_id;
+        int version;
+        try {
+            stream_id = std::stoi(argv[0]);
+            version = std::stoi(argv[3]);
+        } catch (std::invalid_argument /* ex */) {
+            return std::make_unique<cmd::Unknown>();
+        }
+        std::string type = argv[1];
+        std::string payload = argv[2];
+        auto req = new cmd::Push_req(stream_id, type, payload, version);
+        return std::make_unique<cmd::Push>(handler_, *req);
+    }
     }
 }
 cmd::Shell::Shell(const Action_handler &handler) : handler_(handler) {}
@@ -49,9 +67,11 @@ void cmd::Shell::run()
         std::cout << prompt_;
         std::string line;
         std::getline(std::cin, line);
+        if (line.empty())
+            continue;
         std::unique_ptr<cmd::Command> cmd = interpret(line);
         cmd::Command_result result = cmd->execute();
-        std::cout << result.message();
+        std::cout << result.message() << std::endl;
         if (result.status() == Command_result::Status::exit)
             should_exit = true;
     }
@@ -74,7 +94,8 @@ cmd::Shell::tokens(std::string in)
 {
     std::vector<std::string> argv = to_words(in);
     if (argv.size() == 0) {
-        return std::tuple<Shell_cmd, std::vector<std::string>>(cmd::Shell::Shell_cmd::none, {});
+        return std::tuple<Shell_cmd, std::vector<std::string>>(
+            cmd::Shell::Shell_cmd::none, {});
     }
     std::string first = argv[0];
     argv.erase(argv.begin());
@@ -82,6 +103,8 @@ cmd::Shell::tokens(std::string in)
     auto c = cmd::Shell::Shell_cmd::unknown;
     if (first == "help")
         c = cmd::Shell::Shell_cmd::help;
+    if (first == "push")
+        c = cmd::Shell::Shell_cmd::push;
     if (first == "create_stream")
         c = cmd::Shell::Shell_cmd::create_stream;
     if (first == "quit")

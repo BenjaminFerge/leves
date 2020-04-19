@@ -41,7 +41,7 @@ class Action_handler
     // TODO:
     // std::vector<db::Stream> get_streams_by_type(std::string type);
     db::Stream get_stream(int id);
-    void push_event(int stream_id, db::Event event);
+    void push_event(int stream_id, db::Event event) const;
     std::vector<db::Event> get_events_by_stream_id(int stream_id);
     std::vector<db::Event> get_events_by_stream_type(std::string type);
 

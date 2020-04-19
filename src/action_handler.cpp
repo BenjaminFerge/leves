@@ -239,7 +239,7 @@ std::vector<db::Stream> Action_handler::get_streams_by_type(std::string type)
 
 db::Stream Action_handler::get_stream(int id) { return db::Stream(); }
 
-void Action_handler::push_event(int stream_id, db::Event event) {}
+void Action_handler::push_event(int stream_id, db::Event event) const {}
 
 std::vector<db::Event> Action_handler::get_events_by_stream_id(int stream_id)
 {

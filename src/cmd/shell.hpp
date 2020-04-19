@@ -15,6 +15,7 @@ class Shell
         quit,
         help,
         create_stream,
+        push,
     };
     Shell(const Action_handler &handler);
     void run();
