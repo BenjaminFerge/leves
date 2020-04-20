@@ -152,13 +152,13 @@ std::optional<Event> Sqlite_stream_repo::getLastEvent(int streamId)
                       "FROM events AS e "
                       "INNER JOIN streams AS s ON s.id = e.streamId "
                       "WHERE s.id = ? "
-                      "ORDER BY e.version "
+                      "ORDER BY e.version DESC "
                       "LIMIT 1";
 
     SQLite::Statement stmt(*db_, sql);
 
     stmt.bind(1, streamId);
-    stmt.exec();
+    stmt.executeStep();
 
     if (!stmt.hasRow()) {
         log::info("Stream ID '{}' has no events yet", streamId);
