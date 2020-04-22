@@ -21,7 +21,7 @@ Command_result Create_stream::execute()
     return Command_result(Command_result::Status::ok, "OK", nullptr);
 }
 
-std::string Create_stream::usage() { return std::string("create_stream <type>"); }
+std::string Create_stream::usage() { return std::string("create_stream T"); }
 
 Domain_command::Domain_command(const yess::Action_handler &handler)
     : handler_(handler)
@@ -66,5 +66,5 @@ Command_result Push::execute()
 std::string Push::usage()
 {
     return std::string(
-        "push <stream_id> <event_type> <json_payload> <version>");
+        "push SID T JSON VER");
 }
