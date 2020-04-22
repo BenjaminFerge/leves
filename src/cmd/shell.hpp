@@ -12,6 +12,7 @@ class Shell
     enum class Shell_cmd {
         none,
         unknown,
+        invalid,
         quit,
         help,
         create_stream,

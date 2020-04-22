@@ -23,7 +23,13 @@ yess::cmd::Command_result yess::cmd::Unknown::execute()
 yess::cmd::None::None() {}
 yess::cmd::Command_result yess::cmd::None::execute()
 {
-    return yess::cmd::Command_result(yess::cmd::Command_result::Status::ok,
-                                     "",
-                                     std::any());
+    return yess::cmd::Command_result(
+        yess::cmd::Command_result::Status::ok, "", std::any());
 }
+
+yess::cmd::Command_result yess::cmd::Invalid::execute()
+{
+    return yess::cmd::Command_result(
+        yess::cmd::Command_result::Status::error, prefix_ + usage_, std::any());
+}
+yess::cmd::Invalid::Invalid(std::string usage) : usage_(std::move(usage)) {}

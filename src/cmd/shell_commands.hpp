@@ -2,28 +2,42 @@
 #define YESS_SHELL_COMMANDS_HPP
 
 #include "command.hpp"
+#include <memory>
 
 namespace yess::cmd
 {
-class Unknown : public Command
+class Shell_command : public Command
+{
+};
+class Unknown : public Shell_command
 {
   public:
     Unknown();
     Command_result execute() override;
 };
-class Help : public Command
+class Help : public Shell_command
 {
   public:
     Help();
     Command_result execute() override;
 };
-class None : public Command
+class None : public Shell_command
 {
   public:
     None();
     Command_result execute() override;
 };
-class Quit : public Command
+class Invalid : public Shell_command
+{
+  public:
+    Invalid(std::string usage);
+    Command_result execute() override;
+
+  private:
+    std::string usage_;
+    const std::string prefix_ = "Invalid command.\nUsage: ";
+};
+class Quit : public Shell_command
 {
   public:
     Quit();

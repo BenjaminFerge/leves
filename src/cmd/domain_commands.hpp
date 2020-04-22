@@ -25,6 +25,7 @@ class Create_stream : public Domain_command
   public:
     Create_stream(const Action_handler &handler, const Create_stream_req &req);
     Command_result execute() override;
+    static std::string usage();
 
   private:
     const Create_stream_req &request_;
@@ -46,6 +47,7 @@ class Push : public Domain_command
   public:
     Push(const Action_handler &handler, const Push_req &req);
     Command_result execute() override;
+    static std::string usage();
 
   private:
     const Push_req &request_;

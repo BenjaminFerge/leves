@@ -28,16 +28,14 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
     }
     case Shell_cmd::create_stream: {
         if (argv.size() != 1) {
-            // TODO: provide usage hints
-            return std::make_unique<cmd::Unknown>();
+            return std::make_unique<cmd::Invalid>(Create_stream::usage());
         }
         auto req = new cmd::Create_stream_req(argv[0]);
         return std::make_unique<cmd::Create_stream>(handler_, *req);
     }
     case Shell_cmd::push: {
         if (argv.size() != 4) {
-            // TODO: provide usage hints
-            return std::make_unique<cmd::Unknown>();
+            return std::make_unique<cmd::Invalid>(Push::usage());
         }
         int stream_id;
         int version;
@@ -45,7 +43,7 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
             stream_id = std::stoi(argv[0]);
             version = std::stoi(argv[3]);
         } catch (std::invalid_argument /* ex */) {
-            return std::make_unique<cmd::Unknown>();
+            return std::make_unique<cmd::Invalid>(Push::usage());
         }
         std::string type = argv[1];
         std::string payload = argv[2];
@@ -55,7 +53,6 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
     }
 }
 cmd::Shell::Shell(const Action_handler &handler) : handler_(handler) {}
-void cmd::Shell::execute(const cmd::Command &cmd) {}
 void cmd::Shell::run()
 {
     std::cout << "yess interactive shell (";
