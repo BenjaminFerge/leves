@@ -210,25 +210,6 @@ db::Stream Action_handler::get_stream(int id) { return db::Stream(); }
 
 void Action_handler::push_event(int stream_id, db::Event event) const
 {
-    // Check version
-    std::optional<db::Event> lastEventOpt =
-        stream_repo_->getLastEvent(stream_id);
-    int expectedVer;
-    if (lastEventOpt.has_value()) {
-        auto lastEvent = lastEventOpt.value();
-        expectedVer = lastEvent.version + 1;
-    } else {
-        expectedVer = 1;
-    }
-    if (expectedVer != event.version) {
-        std::string err = "Event version mismatch: expected v";
-        err += std::to_string(expectedVer);
-        err += ", got v";
-        err += std::to_string(event.version);
-        log::error(err);
-        throw std::runtime_error(err);
-    }
-
     try {
         stream_repo_->attachEvent(event);
     } catch (const std::exception &ex) {

@@ -80,7 +80,7 @@ void Sqlite_stream_repo::create(Stream stream)
 
 void Sqlite_stream_repo::attachEvent(Event event)
 {
-    std::string sql = "INSERT INTO events(streamId, type, payload, version)"
+    std::string sql = "INSERT INTO events(stream_id, type, payload, version)"
                       "VALUES(?, ?, ?, ?)";
     SQLite::Statement stmt(*db_, sql);
 
@@ -96,36 +96,36 @@ void Sqlite_stream_repo::attachEvent(Event event)
               event.streamId);
 }
 
-std::vector<Event> Sqlite_stream_repo::getEvents(int streamId)
+std::vector<Event> Sqlite_stream_repo::getEvents(int stream_id)
 {
-    std::string sql = "SELECT e.id, e.streamId, e.type, e.payload, e.version "
+    std::string sql = "SELECT e.id, e.stream_id, e.type, e.payload, e.version "
                       "FROM events AS e "
-                      "INNER JOIN streams AS s ON s.id = e.streamId "
-                      "WHERE streamId = ?";
+                      "INNER JOIN streams AS s ON s.id = e.stream_id "
+                      "WHERE stream_id = ?";
     SQLite::Statement stmt(*db_, sql);
 
-    stmt.bind(1, streamId);
+    stmt.bind(1, stream_id);
 
     std::vector<Event> result;
     while (stmt.executeStep()) {
         int id = stmt.getColumn(0);
-        int streamId = stmt.getColumn(1);
+        int stream_id = stmt.getColumn(1);
         std::string type = stmt.getColumn(2);
         std::string payload = stmt.getColumn(3);
         int version = stmt.getColumn(4);
 
-        Event e = {id, streamId, type, payload, version};
+        Event e = {id, stream_id, type, payload, version};
         result.push_back(e);
     }
-    log::info("Retrieved events by streamId '{}' successfully", streamId);
+    log::info("Retrieved events by stream_id '{}' successfully", stream_id);
     return result;
 }
 
 std::vector<Event> Sqlite_stream_repo::getEvents(std::string streamType)
 {
-    std::string sql = "SELECT e.id, e.streamId, e.type, e.payload, e.version "
+    std::string sql = "SELECT e.id, e.stream_id, e.type, e.payload, e.version "
                       "FROM events AS e "
-                      "INNER JOIN streams AS s ON s.id = e.streamId "
+                      "INNER JOIN streams AS s ON s.id = e.stream_id "
                       "WHERE s.type = ?";
     SQLite::Statement stmt(*db_, sql);
 
@@ -134,34 +134,34 @@ std::vector<Event> Sqlite_stream_repo::getEvents(std::string streamType)
     std::vector<Event> result;
     while (stmt.executeStep()) {
         int id = stmt.getColumn(0);
-        int streamId = stmt.getColumn(1);
+        int stream_id = stmt.getColumn(1);
         std::string type = stmt.getColumn(2);
         std::string payload = stmt.getColumn(3);
         int version = stmt.getColumn(4);
 
-        Event e = {id, streamId, type, payload, version};
+        Event e = {id, stream_id, type, payload, version};
         result.push_back(e);
     }
     log::info("Retrieved events by streamType '{}' successfully", streamType);
     return result;
 }
 
-std::optional<Event> Sqlite_stream_repo::getLastEvent(int streamId)
+std::optional<Event> Sqlite_stream_repo::getLastEvent(int stream_id)
 {
     std::string sql = "SELECT e.id, e.type, e.payload, e.version "
                       "FROM events AS e "
-                      "INNER JOIN streams AS s ON s.id = e.streamId "
+                      "INNER JOIN streams AS s ON s.id = e.stream_id "
                       "WHERE s.id = ? "
                       "ORDER BY e.version DESC "
                       "LIMIT 1";
 
     SQLite::Statement stmt(*db_, sql);
 
-    stmt.bind(1, streamId);
+    stmt.bind(1, stream_id);
     stmt.executeStep();
 
     if (!stmt.hasRow()) {
-        log::info("Stream ID '{}' has no events yet", streamId);
+        log::info("Stream ID '{}' has no events yet", stream_id);
         return std::nullopt;
     }
     int id = stmt.getColumn(0);
@@ -169,8 +169,8 @@ std::optional<Event> Sqlite_stream_repo::getLastEvent(int streamId)
     std::string payload = stmt.getColumn(2);
     int version = stmt.getColumn(3);
 
-    Event event = {id, streamId, type, payload, version};
-    log::info("Retrieved last event by streamId '{}' successfully", streamId);
+    Event event = {id, stream_id, type, payload, version};
+    log::info("Retrieved last event by stream_id '{}' successfully", stream_id);
     return event;
 }
 
@@ -205,13 +205,31 @@ void Sqlite_stream_repo::initDB()
     stmt1.exec();
     std::string createEvents =
         "CREATE TABLE events (id INTEGER PRIMARY KEY, "
-        "streamId INTEGER, type VARCHAR, payload VARCHAR, version INTEGER, "
-        "FOREIGN KEY(streamId) REFERENCES streams(id), "
-        "UNIQUE(streamId, version))";
+        "stream_id INTEGER, type VARCHAR, payload VARCHAR, version INTEGER, "
+        "FOREIGN KEY(stream_id) REFERENCES streams(id), "
+        "UNIQUE(stream_id, version))";
 
     SQLite::Statement stmt2(*db_, createEvents);
     stmt2.exec();
     transaction.commit();
     log::info("Database initialized successfully");
+
+    sql = "CREATE TRIGGER ver_valid BEFORE INSERT ON events "
+          "BEGIN "
+          "SELECT CASE "
+          "WHEN ((SELECT count(*) FROM events "
+          "WHERE events.stream_id = NEW.stream_id) = 0 "
+          "AND (NEW.version != 1)) "
+          "THEN RAISE(ABORT, 'The stream should starts with event version 1.') "
+          "WHEN ((SELECT events.version FROM events "
+          "WHERE events.stream_id = NEW.stream_id "
+          "ORDER BY events.version DESC "
+          "LIMIT 1) != (NEW.version - 1)) "
+          // TODO: show the expectations
+          "THEN RAISE(ABORT, 'Event version mismatch.') "
+          "END; "
+          "END;";
+    SQLite::Statement stmt_tr(*db_, sql);
+    stmt_tr.exec();
 }
 } // namespace yess::db
