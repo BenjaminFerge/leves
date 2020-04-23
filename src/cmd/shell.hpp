@@ -18,14 +18,14 @@ class Shell
         create_stream,
         push,
     };
-    Shell(const Action_handler &handler);
+    Shell(const Action_handler& handler);
     void run();
 
   private:
     std::tuple<Shell_cmd, std::vector<std::string>> tokens(std::string in);
-    const Action_handler &handler_;
+    const Action_handler& handler_;
     std::unique_ptr<Command> interpret(std::string in);
-    void execute(const Command &cmd);
+    void execute(const Command& cmd);
     std::string prompt_ = "> ";
 };
 } // namespace yess::cmd

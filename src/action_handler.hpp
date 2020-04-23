@@ -31,10 +31,10 @@ class Action_handler
 {
   public:
     Action_handler(std::string conn_str);
-    Action_handler(Action_handler &&handler);
+    Action_handler(Action_handler&& handler);
     ~Action_handler();
-    msg::Response handle(const json &obj);
-    void save_stream(const db::Stream &stream) const;
+    msg::Response handle(const json& obj);
+    void save_stream(const db::Stream& stream) const;
 
     void create_stream(std::string type) const;
     std::vector<db::Stream> get_all_streams();
@@ -45,7 +45,7 @@ class Action_handler
     std::vector<db::Event> get_events_by_stream_id(int stream_id);
     std::vector<db::Event> get_events_by_stream_type(std::string type);
 
-    Action_handler &operator=(Action_handler &&a)
+    Action_handler& operator=(Action_handler&& a)
     {
         stream_repo_ = std::move(a.stream_repo_);
         return *this;

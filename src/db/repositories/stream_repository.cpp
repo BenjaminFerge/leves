@@ -20,5 +20,7 @@ void Stream_repository::initDB()
     log::info("Connection: {}, {}", m_connectorKey, m_connectionString);
 }
 
-Stream_repository::~Stream_repository() {}
+Stream_repository::~Stream_repository()
+{
+}
 } // namespace yess::db

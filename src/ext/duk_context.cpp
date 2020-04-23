@@ -24,9 +24,12 @@ Duk_context::~Duk_context()
     // duk_destroy_heap(ctx_);
 }
 
-duk_context *Duk_context::get_duk_ctx() { return ctx_; }
+duk_context* Duk_context::get_duk_ctx()
+{
+    return ctx_;
+}
 
-void Duk_context::read(const std::string &body)
+void Duk_context::read(const std::string& body)
 {
     duk_push_string(ctx_, body.c_str());
     if (duk_peval(ctx_) != 0) {
@@ -37,8 +40,8 @@ void Duk_context::read(const std::string &body)
     duk_push_global_object(ctx_);
 }
 
-json Duk_context::call_projection(const std::string &fn_name,
-                                  const std::vector<db::Event> &events,
+json Duk_context::call_projection(const std::string& fn_name,
+                                  const std::vector<db::Event>& events,
                                   json init_state)
 {
     json state = init_state;
@@ -60,7 +63,7 @@ json Duk_context::call_projection(const std::string &fn_name,
     }
 
     // Fill parameters
-    for (const auto &event : events) {
+    for (const auto& event : events) {
         // param 1: event
         duk_idx_t evIdx = duk_push_object(ctx_);
 

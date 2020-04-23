@@ -9,4 +9,5 @@ AlignConsecutiveDeclarations: false
 BinPackParameters: false
 BinPackArguments: false
 DerivePointerAlignment: false
-PointerAlignment: Right
+PointerAlignment: Left
+AllowShortFunctionsOnASingleLine: None

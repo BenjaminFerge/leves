@@ -11,7 +11,7 @@ namespace fs = std::filesystem;
 
 namespace yess
 {
-std::string read_file(const std::string &path)
+std::string read_file(const std::string& path)
 {
     std::ifstream ifs(path);
     std::stringstream buffer;
@@ -19,7 +19,7 @@ std::string read_file(const std::string &path)
     return buffer.str();
 }
 
-std::string path_to_abs(const std::string &f)
+std::string path_to_abs(const std::string& f)
 {
     std::string filename = f;
     fs::path path(filename);

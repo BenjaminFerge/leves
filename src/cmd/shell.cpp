@@ -52,7 +52,9 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
     }
     }
 }
-cmd::Shell::Shell(const Action_handler &handler) : handler_(handler) {}
+cmd::Shell::Shell(const Action_handler& handler) : handler_(handler)
+{
+}
 void cmd::Shell::run()
 {
     std::cout << "yess interactive shell (";

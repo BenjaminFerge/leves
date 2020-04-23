@@ -17,13 +17,13 @@ class Duk_context : public Context
   public:
     Duk_context();
     ~Duk_context();
-    json call_projection(const std::string &fn_name,
-                         const std::vector<db::Event> &events,
+    json call_projection(const std::string& fn_name,
+                         const std::vector<db::Event>& events,
                          json init_state) override;
-    void read(const std::string &body);
-    duk_context *get_duk_ctx();
+    void read(const std::string& body);
+    duk_context* get_duk_ctx();
 
   private:
-    duk_context *ctx_;
+    duk_context* ctx_;
 };
 } // namespace yess::ext

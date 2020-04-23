@@ -10,7 +10,7 @@ class Command_result
 {
   public:
     enum class Status { ok, error, exit };
-    Command_result(Status status, const std::string &msg, std::any data);
+    Command_result(Status status, const std::string& msg, std::any data);
     std::string message();
     Status status();
     std::any data();

@@ -28,7 +28,7 @@ Grpc_service::Grpc_service(std::string conn_str)
 {
 }
 
-ResponseStatus *make_status(int code = 0, std::string msg = "OK")
+ResponseStatus* make_status(int code = 0, std::string msg = "OK")
 {
     auto status = new ResponseStatus;
     status->set_msg("OK");
@@ -36,9 +36,9 @@ ResponseStatus *make_status(int code = 0, std::string msg = "OK")
     return status;
 }
 
-Status Grpc_service::CreateStream(ServerContext *context,
-                                  const CreateStreamReq *request,
-                                  CreateStreamResp *reply)
+Status Grpc_service::CreateStream(ServerContext* context,
+                                  const CreateStreamReq* request,
+                                  CreateStreamResp* reply)
 {
     handler_->create_stream(request->type());
     auto status = make_status();
@@ -46,9 +46,9 @@ Status Grpc_service::CreateStream(ServerContext *context,
     return Status::OK;
 }
 
-Status Grpc_service::PushEvent(ServerContext *context,
-                               const PushEventReq *request,
-                               PushEventResp *reply)
+Status Grpc_service::PushEvent(ServerContext* context,
+                               const PushEventReq* request,
+                               PushEventResp* reply)
 {
     db::Event event = {
         -1,
@@ -64,20 +64,20 @@ Status Grpc_service::PushEvent(ServerContext *context,
     return Status::OK;
 }
 
-Status Grpc_service::GetAllStreams(grpc::ServerContext *context,
-                                   const yess::GetAllStreamsReq *request,
-                                   yess::GetAllStreamsResp *reply)
+Status Grpc_service::GetAllStreams(grpc::ServerContext* context,
+                                   const yess::GetAllStreamsReq* request,
+                                   yess::GetAllStreamsResp* reply)
 {
     std::vector<db::Stream> streams = handler_->get_all_streams();
-    for (const auto &stream : streams) {
+    for (const auto& stream : streams) {
         // TODO: Add streams to reply
     }
     return Status::OK;
 }
 
-Status Grpc_service::GetStreamsByType(grpc::ServerContext *context,
-                                      const yess::GetStreamsByTypeReq *request,
-                                      yess::GetStreamsByTypeResp *reply)
+Status Grpc_service::GetStreamsByType(grpc::ServerContext* context,
+                                      const yess::GetStreamsByTypeReq* request,
+                                      yess::GetStreamsByTypeResp* reply)
 {
     /*
     std::vector<db::Stream> streams =
@@ -89,9 +89,9 @@ Status Grpc_service::GetStreamsByType(grpc::ServerContext *context,
     return Status::OK;
 }
 
-Status Grpc_service::GetStream(grpc::ServerContext *context,
-                               const yess::GetStreamReq *request,
-                               yess::GetStreamResp *reply)
+Status Grpc_service::GetStream(grpc::ServerContext* context,
+                               const yess::GetStreamReq* request,
+                               yess::GetStreamResp* reply)
 {
     db::Stream stream = handler_->get_stream(request->id());
     // TODO: Add stream to reply
@@ -99,26 +99,26 @@ Status Grpc_service::GetStream(grpc::ServerContext *context,
 }
 
 Status
-Grpc_service::GetEventsByStreamId(grpc::ServerContext *context,
-                                  const yess::GetEventsByStreamIdReq *request,
-                                  yess::GetEventsByStreamIdResp *reply)
+Grpc_service::GetEventsByStreamId(grpc::ServerContext* context,
+                                  const yess::GetEventsByStreamIdReq* request,
+                                  yess::GetEventsByStreamIdResp* reply)
 {
     std::vector<db::Event> events =
         handler_->get_events_by_stream_id(request->id());
-    for (const auto &event : events) {
+    for (const auto& event : events) {
         // TODO: Add events to reply
     }
     return Status::OK;
 }
 
 grpc::Status Grpc_service::GetEventsByStreamType(
-    grpc::ServerContext *context,
-    const yess::GetEventsByStreamTypeReq *request,
-    yess::GetEventsByStreamTypeResp *reply)
+    grpc::ServerContext* context,
+    const yess::GetEventsByStreamTypeReq* request,
+    yess::GetEventsByStreamTypeResp* reply)
 {
     std::vector<db::Event> events =
         handler_->get_events_by_stream_type(request->type());
-    for (const auto &event : events) {
+    for (const auto& event : events) {
         // TODO: Add events to reply
     }
     return Status::OK;

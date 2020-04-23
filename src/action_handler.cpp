@@ -64,7 +64,7 @@ Action action_from_str(std::string action)
     throw std::runtime_error("Invalid action: " + action);
 }
 
-void Action_handler::save_stream(const yess::db::Stream &stream) const
+void Action_handler::save_stream(const yess::db::Stream& stream) const
 {
     stream_repo_->create(stream);
 }
@@ -77,8 +77,10 @@ Action_handler::Action_handler(std::string conn_str)
         std::make_unique<db::Sqlite_stream_repo>(std::move(stream_repo));
 }
 
-Action_handler::~Action_handler() {}
-msg::Response Action_handler::handle(const json &obj)
+Action_handler::~Action_handler()
+{
+}
+msg::Response Action_handler::handle(const json& obj)
 {
     std::string actionStr = obj["action"];
     std::string msg;
@@ -99,7 +101,7 @@ msg::Response Action_handler::handle(const json &obj)
         jsonObj["status"] = "OK";
         auto streams = stream_repo_->all();
         json arr = json::array();
-        for (auto &stream : streams) {
+        for (auto& stream : streams) {
             arr.push_back(stream.toJSON());
         }
         status = msg::ResponseStatus::OK;
@@ -134,12 +136,12 @@ msg::Response Action_handler::handle(const json &obj)
             auto events = stream_repo_->getEvents(streamId);
             jsonObj["status"] = "OK";
             json arr = json::array();
-            for (auto &e : events) {
+            for (auto& e : events) {
                 arr.push_back(e.toJSON());
             }
             jsonObj["data"] = arr;
             status = msg::ResponseStatus::OK;
-        } catch (const std::exception &ex) {
+        } catch (const std::exception& ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);
@@ -155,12 +157,12 @@ msg::Response Action_handler::handle(const json &obj)
             auto events = stream_repo_->getEvents(type);
             jsonObj["status"] = "OK";
             json arr = json::array();
-            for (auto &e : events) {
+            for (auto& e : events) {
                 arr.push_back(e.toJSON());
             }
             jsonObj["data"] = arr;
             status = msg::ResponseStatus::OK;
-        } catch (const std::exception &ex) {
+        } catch (const std::exception& ex) {
             std::string err = ex.what();
             err = "DB ERROR: " + err;
             log::error(err);
@@ -188,7 +190,7 @@ void Action_handler::create_stream(std::string type) const
     save_stream(stream);
 }
 
-Action_handler::Action_handler(Action_handler &&handler)
+Action_handler::Action_handler(Action_handler&& handler)
     : stream_repo_(std::move(handler.stream_repo_))
 {
 }
@@ -206,13 +208,16 @@ std::vector<db::Stream> Action_handler::get_streams_by_type(std::string type)
 }
 */
 
-db::Stream Action_handler::get_stream(int id) { return db::Stream(); }
+db::Stream Action_handler::get_stream(int id)
+{
+    return db::Stream();
+}
 
 void Action_handler::push_event(int stream_id, db::Event event) const
 {
     try {
         stream_repo_->attachEvent(event);
-    } catch (const std::exception &ex) {
+    } catch (const std::exception& ex) {
         std::string err = ex.what();
         err = "DB ERROR: " + err;
         log::error(err);

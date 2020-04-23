@@ -8,15 +8,15 @@
 
 yess::cmd::Command_result yess::cmd::Help::execute()
 {
-    char *tmp;
-    char *buf;
+    char* tmp;
+    char* buf;
     size_t sz;
-    const char *format = "%-25s%s\n"
+    const char* format = "%-25s%s\n"
                          "%-25s%s\n"
                          "%-25s%s\n"
                          "%-25s%s";
     sz = snprintf(nullptr, 0, format, SH_HELP_MSG);
-    buf = (char *)malloc(sz + 1);
+    buf = (char*)malloc(sz + 1);
     if (buf == nullptr) {
         throw std::runtime_error(
             "Cannot allocate memory for the help message.");
@@ -27,14 +27,20 @@ yess::cmd::Command_result yess::cmd::Help::execute()
     return yess::cmd::Command_result(
         yess::cmd::Command_result::Status::ok, msg, std::any());
 }
-yess::cmd::Help::Help() {}
+yess::cmd::Help::Help()
+{
+}
 yess::cmd::Command_result yess::cmd::Quit::execute()
 {
     return yess::cmd::Command_result(
         yess::cmd::Command_result::Status::exit, "Bye!", std::any());
 }
-yess::cmd::Quit::Quit() {}
-yess::cmd::Unknown::Unknown() {}
+yess::cmd::Quit::Quit()
+{
+}
+yess::cmd::Unknown::Unknown()
+{
+}
 yess::cmd::Command_result yess::cmd::Unknown::execute()
 {
     return yess::cmd::Command_result(
@@ -42,7 +48,9 @@ yess::cmd::Command_result yess::cmd::Unknown::execute()
         "Unknown command. Enter 'help' for usage hints.",
         std::any());
 }
-yess::cmd::None::None() {}
+yess::cmd::None::None()
+{
+}
 yess::cmd::Command_result yess::cmd::None::execute()
 {
     return yess::cmd::Command_result(
@@ -54,4 +62,6 @@ yess::cmd::Command_result yess::cmd::Invalid::execute()
     return yess::cmd::Command_result(
         yess::cmd::Command_result::Status::error, prefix_ + usage_, std::any());
 }
-yess::cmd::Invalid::Invalid(std::string usage) : usage_(std::move(usage)) {}
+yess::cmd::Invalid::Invalid(std::string usage) : usage_(std::move(usage))
+{
+}

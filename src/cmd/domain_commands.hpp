@@ -10,32 +10,32 @@ namespace yess::cmd
 class Domain_command : public Command
 {
   public:
-    explicit Domain_command(const Action_handler &handler);
+    explicit Domain_command(const Action_handler& handler);
 
   protected:
-    const Action_handler &handler_;
+    const Action_handler& handler_;
 };
 struct Create_stream_req {
-    explicit Create_stream_req(const std::string &type);
+    explicit Create_stream_req(const std::string& type);
     std::string type_;
 };
 
 class Create_stream : public Domain_command
 {
   public:
-    Create_stream(const Action_handler &handler, const Create_stream_req &req);
+    Create_stream(const Action_handler& handler, const Create_stream_req& req);
     Command_result execute() override;
     static std::string usage();
 
   private:
-    const Create_stream_req &request_;
+    const Create_stream_req& request_;
 };
 
 struct Push_req {
-    explicit Push_req(const int &stream_id,
+    explicit Push_req(const int& stream_id,
                       std::string type,
                       std::string payload,
-                      const int &version);
+                      const int& version);
     int stream_id_;
     std::string type_;
     std::string payload_;
@@ -45,12 +45,12 @@ struct Push_req {
 class Push : public Domain_command
 {
   public:
-    Push(const Action_handler &handler, const Push_req &req);
+    Push(const Action_handler& handler, const Push_req& req);
     Command_result execute() override;
     static std::string usage();
 
   private:
-    const Push_req &request_;
+    const Push_req& request_;
 };
 } // namespace yess::cmd
 

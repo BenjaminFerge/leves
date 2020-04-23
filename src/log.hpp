@@ -68,7 +68,7 @@ inline void disable_cout()
     spdlog::set_level(spdlog::level::off);
 }
 
-inline void rotating_logger(const std::string &filename,
+inline void rotating_logger(const std::string& filename,
                             float max_mb = 5,
                             int max_files = 3,
                             bool only_file_ = false)

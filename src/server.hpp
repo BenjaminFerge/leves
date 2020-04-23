@@ -8,14 +8,14 @@
 
 namespace yess
 {
-static constexpr const char *about_str =
+static constexpr const char* about_str =
     "Yess is a server application for handling event sourced systems.";
 
 class Server
 {
   public:
     Server();
-    Server(int argc, char **argv);
+    Server(int argc, char** argv);
     ~Server();
     std::string conn_str();
     void initDB();
@@ -27,7 +27,7 @@ class Server
     void display_version();
 
   private:
-    void parse_args(int argc, char **argv);
+    void parse_args(int argc, char** argv);
     bool is_config_loaded_ = false;
     bool daemon_ = false;
     std::string log_path_;

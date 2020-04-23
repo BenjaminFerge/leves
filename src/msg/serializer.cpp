@@ -11,11 +11,11 @@ using json = nlohmann::json;
 
 namespace yess::msg
 {
-std::string serialize(const std::vector<Event> &events)
+std::string serialize(const std::vector<Event>& events)
 {
     std::string result = "[";
     std::string delim = "";
-    for (const auto &e : events) {
+    for (const auto& e : events) {
         result += delim;
         result += serialize(e);
         delim = ",";
@@ -24,11 +24,11 @@ std::string serialize(const std::vector<Event> &events)
     return result;
 }
 
-std::string serialize(const std::vector<Stream> &streams)
+std::string serialize(const std::vector<Stream>& streams)
 {
     std::string result = "[";
     std::string delim = "";
-    for (const auto &s : streams) {
+    for (const auto& s : streams) {
         result += delim;
         result += serialize(s);
         delim = ",";
@@ -37,7 +37,7 @@ std::string serialize(const std::vector<Stream> &streams)
     return result;
 }
 
-std::string serialize(const Event &event)
+std::string serialize(const Event& event)
 {
     json obj = {{"id", event.id},
                 {"streamId", event.streamId},
@@ -47,7 +47,7 @@ std::string serialize(const Event &event)
     return obj.dump();
 }
 
-std::string serialize(const Stream &stream)
+std::string serialize(const Stream& stream)
 {
     json obj = {
         {"id", stream.id}, {"type", stream.type}, {"version", stream.version}};

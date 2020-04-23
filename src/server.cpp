@@ -50,7 +50,7 @@ void my_signal_handler(int /*signum*/)
     // unsafe, internal buffers: printf("received signal\n");
 }
 
-Server::Server(int argc, char **argv)
+Server::Server(int argc, char** argv)
 {
     log::init_logger();
     argparser_ = argparse::ArgumentParser("yess");
@@ -63,7 +63,7 @@ Server::Server()
     argparser_ = argparse::ArgumentParser("yess");
 }
 
-void Server::parse_args(int argc, char **argv)
+void Server::parse_args(int argc, char** argv)
 {
     argparser_.add_argument("-v", "--version")
         .help("print version number")
@@ -95,7 +95,7 @@ void Server::parse_args(int argc, char **argv)
 
     try {
         argparser_.parse_args(argc, argv);
-    } catch (const std::runtime_error &err) {
+    } catch (const std::runtime_error& err) {
         std::cout << err.what() << std::endl;
         std::cout << argparser_;
         exit(0);
@@ -136,7 +136,9 @@ void Server::parse_args(int argc, char **argv)
     }
 }
 
-Server::~Server() {}
+Server::~Server()
+{
+}
 
 void Server::initDB()
 {
@@ -149,7 +151,10 @@ void Server::display_version()
     std::cout << YESS_NAME << " v" << YESS_VER << std::endl;
 }
 
-std::string Server::conn_str() { return conn_str_; }
+std::string Server::conn_str()
+{
+    return conn_str_;
+}
 
 int Server::run()
 {
