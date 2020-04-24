@@ -14,7 +14,7 @@ configure_file(
 set(CMAKE_CXX_STANDARD 17)
 
 enable_testing()
-set(MAIN_FILE src/main.cpp src/cmd/shell.cpp src/cmd/shell.hpp src/cmd/shell_commands.cpp src/cmd/shell_commands.hpp)
+set(MAIN_FILE src/main.cpp src/cmd/shell.cpp src/cmd/shell.hpp src/cmd/shell_commands.cpp src/cmd/shell_commands.hpp src/db/entities/projection.hpp src/db/repositories/projection_repo.cpp src/db/repositories/projection_repo.hpp src/db/repositories/sqlite_repository.cpp src/db/repositories/sqlite_repository.hpp src/db/repositories/sqlite_projection_repo.cpp src/db/repositories/sqlite_projection_repo.hpp)
 set(SRC_FILES
         src/server.cpp
         src/msg/response.cpp

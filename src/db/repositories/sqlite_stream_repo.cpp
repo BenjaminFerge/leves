@@ -20,9 +20,8 @@ namespace yess::db
 {
 Sqlite_stream_repo::Sqlite_stream_repo(std::string conn_key,
                                        std::string conn_str)
-    : Stream_repository(conn_key, path_to_abs(conn_str))
+    : Sqlite_repository(conn_key, path_to_abs(conn_str))
 {
-    initDB();
 }
 
 // SqliteStreamRepo::~SqliteStreamRepo() {}
@@ -172,64 +171,5 @@ std::optional<Event> Sqlite_stream_repo::getLastEvent(int stream_id)
     Event event = {id, stream_id, type, payload, version};
     log::info("Retrieved last event by stream_id '{}' successfully", stream_id);
     return event;
-}
-
-void Sqlite_stream_repo::initDB()
-{
-    log::info("Initializing database...");
-    bool shouldReturn = false;
-    fs::path p(m_connectionString);
-    if (fs::exists(m_connectionString)) {
-        log::info("Database file is already exists");
-        // TODO: Check schema
-        shouldReturn = true;
-    } else {
-        log::info("Creating database file...");
-    }
-
-    auto db = SQLite::Database(m_connectionString,
-                               SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-    db_ = std::make_unique<SQLite::Database>(std::move(db));
-    if (shouldReturn)
-        return;
-
-    std::string sql = "PRAGMA foreign_keys = ON";
-    SQLite::Statement stmt(*db_, sql);
-    stmt.exec();
-
-    log::info("Creating tables...");
-    SQLite::Transaction transaction(*db_);
-    std::string createStreams = "CREATE TABLE streams (id INTEGER PRIMARY KEY, "
-                                "type VARCHAR, version INTEGER)";
-    SQLite::Statement stmt1(*db_, createStreams);
-    stmt1.exec();
-    std::string createEvents =
-        "CREATE TABLE events (id INTEGER PRIMARY KEY, "
-        "stream_id INTEGER, type VARCHAR, payload VARCHAR, version INTEGER, "
-        "FOREIGN KEY(stream_id) REFERENCES streams(id), "
-        "UNIQUE(stream_id, version))";
-
-    SQLite::Statement stmt2(*db_, createEvents);
-    stmt2.exec();
-    transaction.commit();
-    log::info("Database initialized successfully");
-
-    sql = "CREATE TRIGGER ver_valid BEFORE INSERT ON events "
-          "BEGIN "
-          "SELECT CASE "
-          "WHEN ((SELECT count(*) FROM events "
-          "WHERE events.stream_id = NEW.stream_id) = 0 "
-          "AND (NEW.version != 1)) "
-          "THEN RAISE(ABORT, 'The stream should starts with event version 1.') "
-          "WHEN ((SELECT events.version FROM events "
-          "WHERE events.stream_id = NEW.stream_id "
-          "ORDER BY events.version DESC "
-          "LIMIT 1) != (NEW.version - 1)) "
-          // TODO: show the expectations
-          "THEN RAISE(ABORT, 'Event version mismatch.') "
-          "END; "
-          "END;";
-    SQLite::Statement stmt_tr(*db_, sql);
-    stmt_tr.exec();
 }
 } // namespace yess::db
