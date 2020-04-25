@@ -10,6 +10,7 @@
 #include "action_handler.hpp"
 #include "db/entities/event.hpp"
 #include "db/entities/stream.hpp"
+#include "db/repositories/sqlite_projection_repo.hpp"
 #include "db/repositories/sqlite_stream_repo.hpp"
 #include "db/repositories/stream_repository.hpp"
 #include "log.hpp"
@@ -37,6 +38,8 @@ std::string action_to_str(Action action)
         return "GetEventsByStreamId";
     case Action::GetEventsByStreamType:
         return "GetEventsByStreamType";
+    case Action::CreateProjection:
+        return "CreateProjection";
     case Action::None:
         return "None";
     }
@@ -58,6 +61,8 @@ Action action_from_str(std::string action)
         return Action::GetEventsByStreamId;
     } else if (action == action_to_str(Action::GetEventsByStreamType)) {
         return Action::GetEventsByStreamType;
+    } else if (action == action_to_str(Action::CreateProjection)) {
+        return Action::CreateProjection;
     } else if (action == action_to_str(Action::None)) {
         return Action::None;
     }
@@ -72,8 +77,11 @@ void Action_handler::save_stream(const yess::db::Stream& stream) const
 Action_handler::Action_handler(std::string conn_str)
 {
     // Repository initialization in the Server ctor.
+    auto db = db::Sqlite_repository::init_db(conn_str);
+    proj_repo_ =
+        std::make_unique<db::Sqlite_projection_repo>(db);
     stream_repo_ =
-        std::make_unique<db::Sqlite_stream_repo>("SQLite", conn_str);
+        std::make_unique<db::Sqlite_stream_repo>(db);
 }
 
 Action_handler::~Action_handler()
@@ -233,5 +241,23 @@ std::vector<db::Event>
 Action_handler::get_events_by_stream_type(std::string type)
 {
     return stream_repo_->getEvents(type);
+}
+void Action_handler::create_projection(std::string data) const
+{
+    db::Projection p = {
+        -1,
+        "",
+        data
+    };
+    proj_repo_->create(p);
+}
+void Action_handler::create_projection(std::string data, std::string type) const
+{
+    db::Projection p = {
+        -1,
+        type,
+        data
+    };
+    proj_repo_->create(p);
 }
 } // namespace yess

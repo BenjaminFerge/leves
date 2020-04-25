@@ -7,6 +7,7 @@
 #include "nlohmann/json_fwd.hpp"
 
 #include "db/entities/stream.hpp"
+#include "db/repositories/projection_repo.hpp"
 #include "db/repositories/stream_repository.hpp"
 #include "yess.pb.h"
 
@@ -23,6 +24,7 @@ enum Action {
     GetStream,
     GetEventsByStreamId,
     GetEventsByStreamType,
+    CreateProjection,
 };
 std::string action_to_str(Action action);
 Action action_from_str(std::string action);
@@ -44,6 +46,8 @@ class Action_handler
     void push_event(int stream_id, db::Event event) const;
     std::vector<db::Event> get_events_by_stream_id(int stream_id);
     std::vector<db::Event> get_events_by_stream_type(std::string type);
+    void create_projection(std::string data) const;
+    void create_projection(std::string data, std::string type) const;
 
     Action_handler& operator=(Action_handler&& a)
     {
@@ -53,5 +57,6 @@ class Action_handler
 
   private:
     std::unique_ptr<db::Stream_repository> stream_repo_;
+    std::unique_ptr<db::Projection_repo> proj_repo_;
 };
 } // namespace yess

@@ -52,6 +52,42 @@ class Push : public Domain_command
   private:
     const Push_req& request_;
 };
+
+struct Create_projection_req {
+    Create_projection_req(std::string data, std::string type);
+    explicit Create_projection_req(std::string data);
+    std::string data;
+    std::string type;
+};
+
+class Create_projection : public Domain_command
+{
+  public:
+    Create_projection(const Action_handler& handler, const Create_projection_req& req);
+    Command_result execute() override;
+    static std::string usage();
+
+  private:
+    const Create_projection_req& request_;
+};
+
+struct Play_req {
+    explicit Play_req(const int& stream_id,
+                      const int& projection_id);
+    int stream_id_;
+    int projection_id;
+};
+
+class Play : public Domain_command
+{
+  public:
+    Play(const Action_handler& handler, const Play_req& req);
+    Command_result execute() override;
+    static std::string usage();
+
+  private:
+    const Play_req& request_;
+};
 } // namespace yess::cmd
 
 #endif // YESS_DOMAIN_COMMANDS_HPP

@@ -72,3 +72,34 @@ std::string Push::usage()
 {
     return std::string("push SID T JSON VER");
 }
+Create_projection_req::Create_projection_req(std::string data, std::string type)
+    : data(data), type(type)
+{
+}
+Create_projection_req::Create_projection_req(std::string data) : data(data)
+{
+}
+Create_projection::Create_projection(const yess::Action_handler& handler,
+                                     const Create_projection_req& req)
+    : Domain_command(handler), request_(req)
+{
+}
+Command_result Create_projection::execute()
+{
+    try {
+        if (!request_.type.empty()) {
+            handler_.create_projection(request_.data, request_.type);
+        } else {
+            handler_.create_projection(request_.data);
+        }
+    } catch (std::runtime_error err) {
+        return Command_result(
+            Command_result::Status::error, err.what(), nullptr);
+    }
+    return Command_result(
+        Command_result::Status::ok, "OK", std::any());
+}
+std::string Create_projection::usage()
+{
+    return std::string("create_projection JS [T]");
+}

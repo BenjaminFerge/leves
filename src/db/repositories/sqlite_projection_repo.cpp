@@ -3,11 +3,9 @@
 
 namespace yess::db
 {
-Sqlite_projection_repo::Sqlite_projection_repo(std::string conn_key,
-                                               std::string conn_str)
-    : Sqlite_repository(conn_key, conn_str)
+Sqlite_projection_repo::Sqlite_projection_repo(std::shared_ptr<SQLite::Database> db)
+    : Sqlite_repository(db)
 {
-    init_db();
 }
 void Sqlite_projection_repo::create(Projection p)
 {

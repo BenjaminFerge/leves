@@ -50,6 +50,22 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
         auto req = new cmd::Push_req(stream_id, type, payload, version);
         return std::make_unique<cmd::Push>(handler_, *req);
     }
+    case Shell_cmd::create_projection: {
+        // std::unique_ptr<cmd::Create_projection_req> req;
+        cmd::Create_projection_req* req;
+        if (argv.size() == 1) {
+            req = new cmd::Create_projection_req(argv[0]);
+        } else if (argv.size() == 2) {
+            req = new cmd::Create_projection_req(argv[0], argv[1]);
+        } else {
+            return std::make_unique<cmd::Invalid>(Create_projection::usage());
+        }
+        return std::make_unique<cmd::Create_projection>(handler_, *req);
+    }
+        /*
+    case Shell_cmd::play: {
+        return std::make_unique<cmd::Play>(handler_, *req);
+    }*/
     }
 }
 cmd::Shell::Shell(const Action_handler& handler) : handler_(handler)
@@ -106,6 +122,8 @@ cmd::Shell::tokens(std::string in)
         c = cmd::Shell::Shell_cmd::push;
     if (first == "create_stream")
         c = cmd::Shell::Shell_cmd::create_stream;
+    if (first == "create_projection")
+        c = cmd::Shell::Shell_cmd::create_projection;
     if (first == "quit")
         c = cmd::Shell::Shell_cmd::quit;
     return std::tuple<Shell_cmd, std::vector<std::string>>(c, argv);

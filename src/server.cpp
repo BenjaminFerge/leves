@@ -142,8 +142,7 @@ Server::~Server()
 
 void Server::initDB()
 {
-    auto streamRepository = Sqlite_stream_repo("SQLite", conn_str_);
-    streamRepository.init_db();
+    // TODO: remove/refactor
 }
 
 void Server::display_version()

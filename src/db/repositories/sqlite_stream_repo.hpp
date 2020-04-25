@@ -15,7 +15,7 @@ namespace yess::db
 class Sqlite_stream_repo : public Stream_repository, public Sqlite_repository
 {
   public:
-    Sqlite_stream_repo(std::string conn_key, std::string conn_str);
+    explicit Sqlite_stream_repo(std::shared_ptr<SQLite::Database> db);
     // ~SqliteStreamRepo();
     std::vector<Stream> all();
     Stream get(int id);

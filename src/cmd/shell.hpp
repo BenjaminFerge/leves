@@ -17,6 +17,8 @@ class Shell
         help,
         create_stream,
         push,
+        play,
+        create_projection,
     };
     Shell(const Action_handler& handler);
     void run();

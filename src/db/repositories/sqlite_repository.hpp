@@ -9,14 +9,12 @@ namespace yess::db
 class Sqlite_repository
 {
   public:
-    Sqlite_repository(std::string conn_key, std::string conn_str);
+    explicit Sqlite_repository(std::shared_ptr<SQLite::Database> db);
     virtual ~Sqlite_repository();
-    void init_db();
+    static std::shared_ptr<SQLite::Database> init_db(std::string conn_str);
 
   protected:
-    std::unique_ptr<SQLite::Database> db_;
-    std::string conn_key_;
-    std::string conn_str_;
+    std::shared_ptr<SQLite::Database> db_;
 };
 } // namespace yess::db
 

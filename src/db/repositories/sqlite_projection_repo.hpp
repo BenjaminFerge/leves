@@ -10,7 +10,7 @@ namespace yess::db
 class Sqlite_projection_repo : public Projection_repo, public Sqlite_repository
 {
   public:
-    Sqlite_projection_repo(std::string conn_key, std::string conn_str);
+    Sqlite_projection_repo(std::shared_ptr<SQLite::Database> db);
     void create(Projection p) override;
     std::vector<Projection> all() override;
     Projection id(int id) override;

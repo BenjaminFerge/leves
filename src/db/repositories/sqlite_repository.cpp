@@ -7,16 +7,16 @@ namespace fs = std::filesystem;
 
 namespace yess::db
 {
-Sqlite_repository::Sqlite_repository(std::string conn_key, std::string conn_str)
-    : conn_key_(conn_key), conn_str_(conn_str)
+Sqlite_repository::Sqlite_repository(std::shared_ptr<SQLite::Database> db)
+    : db_(db)
 {
 }
-void Sqlite_repository::init_db()
+std::shared_ptr<SQLite::Database> Sqlite_repository::init_db(std::string conn_str)
 {
     log::info("Initializing database...");
     bool shouldReturn = false;
-    fs::path p(conn_str_);
-    if (fs::exists(conn_str_)) {
+    fs::path p(conn_str);
+    if (fs::exists(conn_str)) {
         log::info("Database file is already exists");
         // TODO: Check schema
         shouldReturn = true;
@@ -24,21 +24,20 @@ void Sqlite_repository::init_db()
         log::info("Creating database file...");
     }
 
-    auto db = SQLite::Database(conn_str_,
+    auto db = std::make_shared<SQLite::Database>(conn_str,
                                SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-    db_ = std::make_unique<SQLite::Database>(std::move(db));
     if (shouldReturn)
-        return;
+        return db;
 
     std::string sql = "PRAGMA foreign_keys = ON";
-    SQLite::Statement stmt(*db_, sql);
+    SQLite::Statement stmt(*db, sql);
     stmt.exec();
 
     log::info("Creating tables...");
-    SQLite::Transaction transaction(*db_);
+    SQLite::Transaction transaction(*db);
     std::string createStreams = "CREATE TABLE streams (id INTEGER PRIMARY KEY, "
                                 "type VARCHAR, version INTEGER)";
-    SQLite::Statement stmt1(*db_, createStreams);
+    SQLite::Statement stmt1(*db, createStreams);
     stmt1.exec();
     std::string createEvents =
         "CREATE TABLE events (id INTEGER PRIMARY KEY, "
@@ -46,7 +45,7 @@ void Sqlite_repository::init_db()
         "FOREIGN KEY(stream_id) REFERENCES streams(id), "
         "UNIQUE(stream_id, version))";
 
-    SQLite::Statement stmt2(*db_, createEvents);
+    SQLite::Statement stmt2(*db, createEvents);
     stmt2.exec();
     transaction.commit();
     log::info("Database initialized successfully");
@@ -66,7 +65,7 @@ void Sqlite_repository::init_db()
           "THEN RAISE(ABORT, 'Event version mismatch.') "
           "END; "
           "END;";
-    SQLite::Statement stmt_tr(*db_, sql);
+    SQLite::Statement stmt_tr(*db, sql);
     stmt_tr.exec();
 
     // Table: projections
@@ -74,8 +73,9 @@ void Sqlite_repository::init_db()
           "id INTEGER PRIMARY KEY, "
           "data VARCHAR, "
           "type VARCHAR)";
-    SQLite::Statement stmt_proj(*db_, sql);
+    SQLite::Statement stmt_proj(*db, sql);
     stmt_proj.exec();
+    return db;
 }
 Sqlite_repository::~Sqlite_repository()
 {

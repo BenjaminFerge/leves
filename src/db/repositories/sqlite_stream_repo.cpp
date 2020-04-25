@@ -18,9 +18,8 @@ namespace fs = std::filesystem;
 
 namespace yess::db
 {
-Sqlite_stream_repo::Sqlite_stream_repo(std::string conn_key,
-                                       std::string conn_str)
-    : Sqlite_repository(conn_key, path_to_abs(conn_str))
+Sqlite_stream_repo::Sqlite_stream_repo(std::shared_ptr<SQLite::Database> db)
+    : Sqlite_repository(db)
 {
 }
 
