@@ -150,3 +150,22 @@ std::string Get_projections::usage()
 {
     return std::string("get_projections [T]");
 }
+Delete_projection::Delete_projection(const yess::Action_handler& handler,
+                                     const Delete_projection_req& req)
+    : Domain_command(handler), request_(req)
+{
+}
+Command_result Delete_projection::execute()
+{
+    try {
+        handler_.delete_projection(request_.id);
+    } catch (std::runtime_error err) {
+        return Command_result(
+            Command_result::Status::error, err.what(), nullptr);
+    }
+    return Command_result(Command_result::Status::ok, "OK", nullptr);
+}
+std::string Delete_projection::usage()
+{
+    return std::string("delete_projection ID");
+}

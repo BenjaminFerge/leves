@@ -21,6 +21,7 @@ class Shell
         create_projection,
         get_streams,
         get_projections,
+        delete_projection,
     };
     Shell(const Action_handler& handler);
     void run();

@@ -118,6 +118,22 @@ class Get_projections : public Domain_command
   private:
     const Get_projections_req& request_;
 };
+
+struct Delete_projection_req {
+    int id;
+};
+
+class Delete_projection : public Domain_command
+{
+  public:
+    Delete_projection(const Action_handler& handler,
+                    const Delete_projection_req& req);
+    Command_result execute() override;
+    static std::string usage();
+
+  private:
+    const Delete_projection_req& request_;
+};
 } // namespace yess::cmd
 
 #endif // YESS_DOMAIN_COMMANDS_HPP

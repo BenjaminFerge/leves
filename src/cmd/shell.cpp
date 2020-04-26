@@ -80,6 +80,20 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
         }
         return std::make_unique<cmd::Get_projections>(handler_, *req);
     }
+    case Shell_cmd::delete_projection: {
+        cmd::Delete_projection_req* req = new cmd::Delete_projection_req;
+        if (argv.size() == 1) {
+            try {
+                req->id = std::stoi(argv[0]);
+            } catch (std::invalid_argument /* ex */) {
+                return std::make_unique<cmd::Invalid>(
+                    Delete_projection::usage());
+            }
+        } else {
+            return std::make_unique<cmd::Invalid>(Delete_projection::usage());
+        }
+        return std::make_unique<cmd::Delete_projection>(handler_, *req);
+    }
         /*
     case Shell_cmd::play: {
         return std::make_unique<cmd::Play>(handler_, *req);
@@ -114,7 +128,8 @@ void cmd::Shell::run()
                 auto events = std::any_cast<std::vector<db::Event>>(d);
                 std::cout << events << std::endl;
             } else if (d.type() == typeid(std::vector<db::Projection>)) {
-                auto projections = std::any_cast<std::vector<db::Projection>>(d);
+                auto projections =
+                    std::any_cast<std::vector<db::Projection>>(d);
                 std::cout << projections << std::endl;
             } else if (d.type() == typeid(db::Stream)) {
                 auto stream = std::any_cast<db::Stream>(d);
@@ -173,6 +188,8 @@ cmd::Shell::tokens(std::string in)
         c = cmd::Shell::Shell_cmd::get_streams;
     if (first == "get_projections")
         c = cmd::Shell::Shell_cmd::get_projections;
+    if (first == "delete_projection")
+        c = cmd::Shell::Shell_cmd::delete_projection;
     if (first == "quit")
         c = cmd::Shell::Shell_cmd::quit;
     return std::tuple<Shell_cmd, std::vector<std::string>>(c, argv);

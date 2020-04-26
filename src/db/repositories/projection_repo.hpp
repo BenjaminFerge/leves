@@ -16,6 +16,7 @@ class Projection_repo
     virtual std::vector<Projection> all() = 0;
     virtual Projection id(int id) = 0;
     virtual std::vector<Projection> type(std::string t) = 0;
+    // TODO: throw error on non-existing id
     virtual void remove(int id) = 0;
 };
 } // namespace yess::db

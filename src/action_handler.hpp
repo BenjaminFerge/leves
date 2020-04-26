@@ -49,6 +49,7 @@ class Action_handler
     void create_projection(std::string data, std::string type) const;
     std::vector<db::Projection> get_all_projections() const;
     std::vector<db::Projection> get_projections_by_type(std::string type) const;
+    void delete_projection(int id) const;
 
     Action_handler& operator=(Action_handler&& a)
     {

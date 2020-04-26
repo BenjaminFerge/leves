@@ -258,4 +258,8 @@ Action_handler::get_projections_by_type(std::string type) const
 {
     return proj_repo_->type(type);
 }
+void Action_handler::delete_projection(int id) const
+{
+    proj_repo_->remove(id);
+}
 } // namespace yess

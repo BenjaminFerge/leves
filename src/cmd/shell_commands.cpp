@@ -7,7 +7,8 @@
         Create_stream::usage().c_str(), "create a new event stream",           \
         Create_projection::usage().c_str(), "create a new projection",         \
         Get_streams::usage().c_str(), "list streams",                          \
-        Get_projections::usage().c_str(), "list projections"
+        Get_projections::usage().c_str(), "list projections",                  \
+        Delete_projection::usage().c_str(), "delete the specified projection"
 
 yess::cmd::Command_result yess::cmd::Help::execute()
 {
@@ -15,6 +16,7 @@ yess::cmd::Command_result yess::cmd::Help::execute()
     char* buf;
     size_t sz;
     const char* format = "%-25s%s\n"
+                         "%-25s%s\n"
                          "%-25s%s\n"
                          "%-25s%s\n"
                          "%-25s%s\n"
