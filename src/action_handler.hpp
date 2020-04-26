@@ -47,6 +47,8 @@ class Action_handler
     std::vector<db::Event> get_events_by_stream_type(std::string type) const;
     void create_projection(std::string data) const;
     void create_projection(std::string data, std::string type) const;
+    std::vector<db::Projection> get_all_projections() const;
+    std::vector<db::Projection> get_projections_by_type(std::string type) const;
 
     Action_handler& operator=(Action_handler&& a)
     {

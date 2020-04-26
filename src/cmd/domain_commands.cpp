@@ -126,3 +126,27 @@ std::string Get_streams::usage()
 {
     return std::string("get_streams [T]");
 }
+Get_projections::Get_projections(const yess::Action_handler& handler,
+                                 const Get_projections_req& req)
+    : Domain_command(handler), request_(req)
+{
+}
+Command_result Get_projections::execute()
+{
+    std::vector<db::Projection> result;
+    try {
+        if (!request_.type.empty()) {
+            result = handler_.get_projections_by_type(request_.type);
+        } else {
+            result = handler_.get_all_projections();
+        }
+    } catch (std::runtime_error err) {
+        return Command_result(
+            Command_result::Status::error, err.what(), nullptr);
+    }
+    return Command_result(Command_result::Status::ok, "OK", result);
+}
+std::string Get_projections::usage()
+{
+    return std::string("get_projections [T]");
+}

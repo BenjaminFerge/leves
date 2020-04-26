@@ -71,6 +71,15 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
         }
         return std::make_unique<cmd::Get_streams>(handler_, *req);
     }
+    case Shell_cmd::get_projections: {
+        cmd::Get_projections_req* req = new cmd::Get_projections_req;
+        if (argv.size() == 1) {
+            req->type = argv[0];
+        } else if (argv.size() != 0) {
+            return std::make_unique<cmd::Invalid>(Get_projections::usage());
+        }
+        return std::make_unique<cmd::Get_projections>(handler_, *req);
+    }
         /*
     case Shell_cmd::play: {
         return std::make_unique<cmd::Play>(handler_, *req);
@@ -104,9 +113,15 @@ void cmd::Shell::run()
             } else if (d.type() == typeid(std::vector<db::Event>)) {
                 auto events = std::any_cast<std::vector<db::Event>>(d);
                 std::cout << events << std::endl;
+            } else if (d.type() == typeid(std::vector<db::Projection>)) {
+                auto projections = std::any_cast<std::vector<db::Projection>>(d);
+                std::cout << projections << std::endl;
             } else if (d.type() == typeid(db::Stream)) {
                 auto stream = std::any_cast<db::Stream>(d);
                 std::cout << stream << std::endl;
+            } else if (d.type() == typeid(db::Projection)) {
+                auto projection = std::any_cast<db::Projection>(d);
+                std::cout << projection << std::endl;
             } else if (d.type() == typeid(db::Event)) {
                 auto event = std::any_cast<db::Event>(d);
                 std::cout << event << std::endl;
@@ -156,6 +171,8 @@ cmd::Shell::tokens(std::string in)
         c = cmd::Shell::Shell_cmd::create_projection;
     if (first == "get_streams")
         c = cmd::Shell::Shell_cmd::get_streams;
+    if (first == "get_projections")
+        c = cmd::Shell::Shell_cmd::get_projections;
     if (first == "quit")
         c = cmd::Shell::Shell_cmd::quit;
     return std::tuple<Shell_cmd, std::vector<std::string>>(c, argv);

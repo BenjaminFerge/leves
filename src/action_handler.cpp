@@ -249,4 +249,13 @@ void Action_handler::create_projection(std::string data, std::string type) const
     db::Projection p = {-1, type, data};
     proj_repo_->create(p);
 }
+std::vector<db::Projection> Action_handler::get_all_projections() const
+{
+    return proj_repo_->all();
+}
+std::vector<db::Projection>
+Action_handler::get_projections_by_type(std::string type) const
+{
+    return proj_repo_->type(type);
+}
 } // namespace yess

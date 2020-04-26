@@ -66,7 +66,7 @@ std::vector<Projection> Sqlite_projection_repo::type(std::string t)
         std::string type = stmt.getColumn(1);
         std::string data = stmt.getColumn(2);
 
-        Projection s = {id, type, data};
+        Projection s = {id, data, type};
         result.push_back(s);
     }
     log::info("Retrieved projections for type '{}' successfully", t);

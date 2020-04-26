@@ -77,7 +77,8 @@ struct Create_projection_req {
 class Create_projection : public Domain_command
 {
   public:
-    Create_projection(const Action_handler& handler, const Create_projection_req& req);
+    Create_projection(const Action_handler& handler,
+                      const Create_projection_req& req);
     Command_result execute() override;
     static std::string usage();
 
@@ -86,8 +87,7 @@ class Create_projection : public Domain_command
 };
 
 struct Play_req {
-    explicit Play_req(const int& stream_id,
-                      const int& projection_id);
+    explicit Play_req(const int& stream_id, const int& projection_id);
     int stream_id_;
     int projection_id;
 };
@@ -101,6 +101,22 @@ class Play : public Domain_command
 
   private:
     const Play_req& request_;
+};
+
+struct Get_projections_req {
+    std::string type = "";
+};
+
+class Get_projections : public Domain_command
+{
+  public:
+    Get_projections(const Action_handler& handler,
+                    const Get_projections_req& req);
+    Command_result execute() override;
+    static std::string usage();
+
+  private:
+    const Get_projections_req& request_;
 };
 } // namespace yess::cmd
 

@@ -20,6 +20,7 @@ class Shell
         play,
         create_projection,
         get_streams,
+        get_projections,
     };
     Shell(const Action_handler& handler);
     void run();
