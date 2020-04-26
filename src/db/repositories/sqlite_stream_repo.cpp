@@ -27,7 +27,6 @@ Sqlite_stream_repo::Sqlite_stream_repo(std::shared_ptr<SQLite::Database> db)
 
 std::vector<Stream> Sqlite_stream_repo::all()
 {
-
     std::string sql = "SELECT id, type, version FROM streams";
     SQLite::Statement stmt(*db_, sql);
 
@@ -170,5 +169,23 @@ std::optional<Event> Sqlite_stream_repo::getLastEvent(int stream_id)
     Event event = {id, stream_id, type, payload, version};
     log::info("Retrieved last event by stream_id '{}' successfully", stream_id);
     return event;
+}
+std::vector<Stream> Sqlite_stream_repo::by_type(std::string type)
+{
+    std::string sql = "SELECT id, type, version FROM streams WHERE type = ?";
+    SQLite::Statement stmt(*db_, sql);
+    stmt.bind(1, type);
+
+    std::vector<Stream> result;
+    while (stmt.executeStep()) {
+        int id = stmt.getColumn(0);
+        std::string type = stmt.getColumn(1);
+        int version = stmt.getColumn(2);
+
+        Stream s = {id, type, version};
+        result.push_back(s);
+    }
+    log::info("Retrieved streams by type '{}' successfully", type);
+    return result;
 }
 } // namespace yess::db

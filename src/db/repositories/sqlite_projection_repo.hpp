@@ -15,7 +15,7 @@ class Sqlite_projection_repo : public Projection_repo, public Sqlite_repository
     std::vector<Projection> all() override;
     Projection id(int id) override;
     std::vector<Projection> type(std::string t) override;
-    Projection remove(int id) override;
+    void remove(int id) override;
 };
 } // namespace yess::db
 

@@ -15,6 +15,7 @@ class Stream_repository
     Stream_repository();
     virtual ~Stream_repository();
     virtual std::vector<Stream> all() = 0;
+    virtual std::vector<Stream> by_type(std::string type) = 0;
     virtual Stream get(int id) = 0;
     virtual void create(Stream stream) = 0;
     virtual void attachEvent(Event event) = 0;

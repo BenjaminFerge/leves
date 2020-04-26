@@ -4,6 +4,7 @@
 #include <SQLiteCpp/Database.h>
 #include <memory>
 #include <string>
+
 namespace yess::db
 {
 class Sqlite_repository

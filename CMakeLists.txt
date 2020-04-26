@@ -35,7 +35,7 @@ set(SRC_FILES
         src/cmd/command.cpp
         src/cmd/command_result.cpp
         src/cmd/command_result.hpp
-        )
+        src/db/entities/entity.hpp src/db/entities/entity.cpp src/db/entities/projection.cpp)
 
 set(INC_FILES
         src/server.hpp

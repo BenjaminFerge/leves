@@ -78,10 +78,8 @@ Action_handler::Action_handler(std::string conn_str)
 {
     // Repository initialization in the Server ctor.
     auto db = db::Sqlite_repository::init_db(conn_str);
-    proj_repo_ =
-        std::make_unique<db::Sqlite_projection_repo>(db);
-    stream_repo_ =
-        std::make_unique<db::Sqlite_stream_repo>(db);
+    proj_repo_ = std::make_unique<db::Sqlite_projection_repo>(db);
+    stream_repo_ = std::make_unique<db::Sqlite_stream_repo>(db);
 }
 
 Action_handler::~Action_handler()
@@ -109,7 +107,7 @@ msg::Response Action_handler::handle(const json& obj)
         auto streams = stream_repo_->all();
         json arr = json::array();
         for (auto& stream : streams) {
-            arr.push_back(stream.toJSON());
+            arr.push_back(stream.json());
         }
         status = msg::ResponseStatus::OK;
         jsonObj["data"] = arr;
@@ -144,7 +142,7 @@ msg::Response Action_handler::handle(const json& obj)
             jsonObj["status"] = "OK";
             json arr = json::array();
             for (auto& e : events) {
-                arr.push_back(e.toJSON());
+                arr.push_back(e.json());
             }
             jsonObj["data"] = arr;
             status = msg::ResponseStatus::OK;
@@ -165,7 +163,7 @@ msg::Response Action_handler::handle(const json& obj)
             jsonObj["status"] = "OK";
             json arr = json::array();
             for (auto& e : events) {
-                arr.push_back(e.toJSON());
+                arr.push_back(e.json());
             }
             jsonObj["data"] = arr;
             status = msg::ResponseStatus::OK;
@@ -202,22 +200,20 @@ Action_handler::Action_handler(Action_handler&& handler)
 {
 }
 
-std::vector<db::Stream> Action_handler::get_all_streams()
+std::vector<db::Stream> Action_handler::get_all_streams() const
 {
     return stream_repo_->all();
 }
 
-// TODO: implement
-/*
-std::vector<db::Stream> Action_handler::get_streams_by_type(std::string type)
+std::vector<db::Stream>
+Action_handler::get_streams_by_type(std::string type) const
 {
-    return stream_repo_->get(type);
+    return stream_repo_->by_type(type);
 }
-*/
 
-db::Stream Action_handler::get_stream(int id)
+db::Stream Action_handler::get_stream(int id) const
 {
-    return db::Stream();
+    return stream_repo_->get(id);
 }
 
 void Action_handler::push_event(int stream_id, db::Event event) const
@@ -232,32 +228,25 @@ void Action_handler::push_event(int stream_id, db::Event event) const
     }
 }
 
-std::vector<db::Event> Action_handler::get_events_by_stream_id(int stream_id)
+std::vector<db::Event>
+Action_handler::get_events_by_stream_id(int stream_id) const
 {
     return stream_repo_->getEvents(stream_id);
 }
 
 std::vector<db::Event>
-Action_handler::get_events_by_stream_type(std::string type)
+Action_handler::get_events_by_stream_type(std::string type) const
 {
     return stream_repo_->getEvents(type);
 }
 void Action_handler::create_projection(std::string data) const
 {
-    db::Projection p = {
-        -1,
-        "",
-        data
-    };
+    db::Projection p = {-1, "", data};
     proj_repo_->create(p);
 }
 void Action_handler::create_projection(std::string data, std::string type) const
 {
-    db::Projection p = {
-        -1,
-        type,
-        data
-    };
+    db::Projection p = {-1, type, data};
     proj_repo_->create(p);
 }
 } // namespace yess

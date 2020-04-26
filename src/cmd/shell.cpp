@@ -62,6 +62,15 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
         }
         return std::make_unique<cmd::Create_projection>(handler_, *req);
     }
+    case Shell_cmd::get_streams: {
+        cmd::Get_streams_req* req = new cmd::Get_streams_req;
+        if (argv.size() == 1) {
+            req->type = argv[0];
+        } else if (argv.size() != 0) {
+            return std::make_unique<cmd::Invalid>(Get_streams::usage());
+        }
+        return std::make_unique<cmd::Get_streams>(handler_, *req);
+    }
         /*
     case Shell_cmd::play: {
         return std::make_unique<cmd::Play>(handler_, *req);
@@ -87,6 +96,27 @@ void cmd::Shell::run()
         std::unique_ptr<cmd::Command> cmd = interpret(line);
         cmd::Command_result result = cmd->execute();
         std::cout << result.message() << std::endl;
+        auto d = result.data();
+        if (d.has_value()) {
+            if (d.type() == typeid(std::vector<db::Stream>)) {
+                auto streams = std::any_cast<std::vector<db::Stream>>(d);
+                std::cout << streams << std::endl;
+            } else if (d.type() == typeid(std::vector<db::Event>)) {
+                auto events = std::any_cast<std::vector<db::Event>>(d);
+                std::cout << events << std::endl;
+            } else if (d.type() == typeid(db::Stream)) {
+                auto stream = std::any_cast<db::Stream>(d);
+                std::cout << stream << std::endl;
+            } else if (d.type() == typeid(db::Event)) {
+                auto event = std::any_cast<db::Event>(d);
+                std::cout << event << std::endl;
+            } else if (d.type() == typeid(nullptr)) {
+                std::cout << "NULL" << std::endl;
+            } else {
+                std::cout << result.data().type().name() << std::endl;
+                throw std::runtime_error("Unexpected error.");
+            }
+        }
         if (result.status() == Command_result::Status::exit)
             should_exit = true;
     }
@@ -124,6 +154,8 @@ cmd::Shell::tokens(std::string in)
         c = cmd::Shell::Shell_cmd::create_stream;
     if (first == "create_projection")
         c = cmd::Shell::Shell_cmd::create_projection;
+    if (first == "get_streams")
+        c = cmd::Shell::Shell_cmd::get_streams;
     if (first == "quit")
         c = cmd::Shell::Shell_cmd::quit;
     return std::tuple<Shell_cmd, std::vector<std::string>>(c, argv);

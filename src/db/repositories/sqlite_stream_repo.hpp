@@ -17,12 +17,13 @@ class Sqlite_stream_repo : public Stream_repository, public Sqlite_repository
   public:
     explicit Sqlite_stream_repo(std::shared_ptr<SQLite::Database> db);
     // ~SqliteStreamRepo();
-    std::vector<Stream> all();
-    Stream get(int id);
-    void create(Stream stream);
-    void attachEvent(Event event);
-    std::vector<Event> getEvents(int streamId);
-    std::vector<Event> getEvents(std::string streamType);
-    std::optional<Event> getLastEvent(int streamId);
+    std::vector<Stream> all() override;
+    std::vector<Stream> by_type(std::string type) override;
+    Stream get(int id) override;
+    void create(Stream stream) override;
+    void attachEvent(Event event) override;
+    std::vector<Event> getEvents(int streamId) override;
+    std::vector<Event> getEvents(std::string streamType) override;
+    std::optional<Event> getLastEvent(int streamId) override;
 };
 } // namespace yess::db

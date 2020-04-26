@@ -39,13 +39,12 @@ class Action_handler
     void save_stream(const db::Stream& stream) const;
 
     void create_stream(std::string type) const;
-    std::vector<db::Stream> get_all_streams();
-    // TODO:
-    // std::vector<db::Stream> get_streams_by_type(std::string type);
-    db::Stream get_stream(int id);
+    std::vector<db::Stream> get_all_streams() const;
+    std::vector<db::Stream> get_streams_by_type(std::string type) const;
+    db::Stream get_stream(int id) const;
     void push_event(int stream_id, db::Event event) const;
-    std::vector<db::Event> get_events_by_stream_id(int stream_id);
-    std::vector<db::Event> get_events_by_stream_type(std::string type);
+    std::vector<db::Event> get_events_by_stream_id(int stream_id) const;
+    std::vector<db::Event> get_events_by_stream_type(std::string type) const;
     void create_projection(std::string data) const;
     void create_projection(std::string data, std::string type) const;
 

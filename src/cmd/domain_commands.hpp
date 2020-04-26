@@ -30,6 +30,20 @@ class Create_stream : public Domain_command
   private:
     const Create_stream_req& request_;
 };
+struct Get_streams_req {
+    std::string type = "";
+};
+
+class Get_streams : public Domain_command
+{
+  public:
+    Get_streams(const Action_handler& handler, const Get_streams_req& req);
+    Command_result execute() override;
+    static std::string usage();
+
+  private:
+    const Get_streams_req& request_;
+};
 
 struct Push_req {
     explicit Push_req(const int& stream_id,

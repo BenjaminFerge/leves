@@ -5,7 +5,8 @@
     "help", "show this help message", "quit", "leave the interactive shell",   \
         Push::usage().c_str(), "push event into stream",                       \
         Create_stream::usage().c_str(), "create a new event stream",           \
-        Create_projection::usage().c_str(), "create a new projection"
+        Create_projection::usage().c_str(), "create a new projection",         \
+        Get_streams::usage().c_str(), "list streams"
 
 yess::cmd::Command_result yess::cmd::Help::execute()
 {
@@ -13,6 +14,7 @@ yess::cmd::Command_result yess::cmd::Help::execute()
     char* buf;
     size_t sz;
     const char* format = "%-25s%s\n"
+                         "%-25s%s\n"
                          "%-25s%s\n"
                          "%-25s%s\n"
                          "%-25s%s\n"

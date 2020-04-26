@@ -3,7 +3,8 @@
 
 namespace yess::db
 {
-Sqlite_projection_repo::Sqlite_projection_repo(std::shared_ptr<SQLite::Database> db)
+Sqlite_projection_repo::Sqlite_projection_repo(
+    std::shared_ptr<SQLite::Database> db)
     : Sqlite_repository(db)
 {
 }
@@ -71,7 +72,7 @@ std::vector<Projection> Sqlite_projection_repo::type(std::string t)
     log::info("Retrieved projections for type '{}' successfully", t);
     return result;
 }
-Projection Sqlite_projection_repo::remove(int id)
+void Sqlite_projection_repo::remove(int id)
 {
     std::string sql = "DELETE FROM projections WHERE id = ?";
     SQLite::Statement stmt(*db_, sql);

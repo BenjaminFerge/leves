@@ -96,10 +96,33 @@ Command_result Create_projection::execute()
         return Command_result(
             Command_result::Status::error, err.what(), nullptr);
     }
-    return Command_result(
-        Command_result::Status::ok, "OK", std::any());
+    return Command_result(Command_result::Status::ok, "OK", std::any());
 }
 std::string Create_projection::usage()
 {
     return std::string("create_projection JS [T]");
+}
+Get_streams::Get_streams(const yess::Action_handler& handler,
+                         const Get_streams_req& req)
+    : Domain_command(handler), request_(req)
+{
+}
+Command_result Get_streams::execute()
+{
+    std::vector<db::Stream> result;
+    try {
+        if (!request_.type.empty()) {
+            result = handler_.get_streams_by_type(request_.type);
+        } else {
+            result = handler_.get_all_streams();
+        }
+    } catch (std::runtime_error err) {
+        return Command_result(
+            Command_result::Status::error, err.what(), nullptr);
+    }
+    return Command_result(Command_result::Status::ok, "OK", result);
+}
+std::string Get_streams::usage()
+{
+    return std::string("get_streams [T]");
 }
