@@ -151,23 +151,53 @@ void cmd::Shell::run()
             should_exit = true;
     }
 }
-std::vector<std::string> to_words(std::string in)
+std::vector<std::string> tokenize(std::string command)
 {
-    std::vector<std::string> result;
-    std::istringstream ss(in);
-    do {
-        std::string word;
-        ss >> word;
-        if (!word.empty())
-            result.push_back(word);
-    } while (ss);
-    return result;
+    std::vector<std::string> qargs;
+    int len = command.length();
+    bool qot = false, sqot = false;
+    int arglen;
+    for (int i = 0; i < len; i++) {
+        int start = i;
+        if (command[i] == '\"') {
+            qot = true;
+        } else if (command[i] == '\'')
+            sqot = true;
+
+        if (qot) {
+            i++;
+            start++;
+            while (i < len && command[i] != '\"')
+                i++;
+            if (i < len)
+                qot = false;
+            arglen = i - start;
+            i++;
+        } else if (sqot) {
+            i++;
+            start++;
+            while (i < len && command[i] != '\'')
+                i++;
+            if (i < len)
+                sqot = false;
+            arglen = i - start;
+            i++;
+        } else {
+            while (i < len && command[i] != ' ')
+                i++;
+            arglen = i - start;
+        }
+        qargs.push_back(command.substr(start, arglen));
+    }
+    if (qot || sqot)
+        throw std::runtime_error("One of the quotes is open");
+    return qargs;
 }
 
 std::tuple<cmd::Shell::Shell_cmd, std::vector<std::string>>
 cmd::Shell::tokens(std::string in)
 {
-    std::vector<std::string> argv = to_words(in);
+    std::vector<std::string> argv = tokenize(in);
     if (argv.size() == 0) {
         return std::tuple<Shell_cmd, std::vector<std::string>>(
             cmd::Shell::Shell_cmd::none, {});
