@@ -87,9 +87,12 @@ class Create_projection : public Domain_command
 };
 
 struct Play_req {
-    explicit Play_req(const int& stream_id, const int& projection_id);
-    int stream_id_;
+    Play_req(int projection_id, int stream_id, json init = json::object());
+    Play_req(int projection_id, std::string type, json init = json::object());
+    int stream_id_{};
+    std::string type;
     int projection_id;
+    json init = json::object();
 };
 
 class Play : public Domain_command
@@ -127,7 +130,7 @@ class Delete_projection : public Domain_command
 {
   public:
     Delete_projection(const Action_handler& handler,
-                    const Delete_projection_req& req);
+                      const Delete_projection_req& req);
     Command_result execute() override;
     static std::string usage();
 

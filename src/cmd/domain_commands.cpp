@@ -169,3 +169,36 @@ std::string Delete_projection::usage()
 {
     return std::string("delete_projection ID");
 }
+Play_req::Play_req(int projection_id, int stream_id, json init)
+    : projection_id(projection_id), stream_id_(stream_id), init(std::move(init))
+{
+}
+Play_req::Play_req(int projection_id, std::string type, json init)
+    : projection_id(projection_id), type(std::move(type)), init(std::move(init))
+{
+}
+Play::Play(const yess::Action_handler& handler, const Play_req& req)
+    : Domain_command(handler), request_(req)
+{
+}
+Command_result Play::execute()
+{
+    json res;
+    try {
+        if (!request_.type.empty()) {
+            res = handler_.play_projection(
+                request_.projection_id, request_.init, request_.type);
+        } else {
+            res = handler_.play_projection(
+                request_.projection_id, request_.init, request_.stream_id_);
+        }
+    } catch (const std::runtime_error& err) {
+        return Command_result(
+            Command_result::Status::error, err.what(), nullptr);
+    }
+    return Command_result(Command_result::Status::ok, "OK", res);
+}
+std::string Play::usage()
+{
+    return std::string("play PID T/SID [I]");
+}

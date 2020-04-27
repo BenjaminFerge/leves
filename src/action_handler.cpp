@@ -80,6 +80,7 @@ Action_handler::Action_handler(std::string conn_str)
     auto db = db::Sqlite_repository::init_db(conn_str);
     proj_repo_ = std::make_unique<db::Sqlite_projection_repo>(db);
     stream_repo_ = std::make_unique<db::Sqlite_stream_repo>(db);
+    ctx_ = std::make_unique<ext::Duk_context>();
 }
 
 Action_handler::~Action_handler()
@@ -246,7 +247,7 @@ void Action_handler::create_projection(std::string data) const
 }
 void Action_handler::create_projection(std::string data, std::string type) const
 {
-    db::Projection p = {-1, type, data};
+    db::Projection p = {-1, data, type};
     proj_repo_->create(p);
 }
 std::vector<db::Projection> Action_handler::get_all_projections() const
@@ -261,5 +262,25 @@ Action_handler::get_projections_by_type(std::string type) const
 void Action_handler::delete_projection(int id) const
 {
     proj_repo_->remove(id);
+}
+json Action_handler::play_projection(const int projection_id,
+                                     const json& init,
+                                     const std::string& type,
+                                     const std::string& fn_name) const
+{
+    db::Projection proj = proj_repo_->id(projection_id);
+    std::vector<db::Event> events = stream_repo_->getEvents(type);
+    ctx_->read(proj.data);
+    return ctx_->call_projection(fn_name, events, init);
+}
+json Action_handler::play_projection(const int projection_id,
+                                     const json& init,
+                                     const int stream_id,
+                                     const std::string& fn_name) const
+{
+    db::Projection proj = proj_repo_->id(projection_id);
+    std::vector<db::Event> events = stream_repo_->getEvents(stream_id);
+    ctx_->read(proj.data);
+    return ctx_->call_projection(fn_name, events, init);
 }
 } // namespace yess

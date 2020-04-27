@@ -94,10 +94,35 @@ std::unique_ptr<cmd::Command> cmd::Shell::interpret(std::string in)
         }
         return std::make_unique<cmd::Delete_projection>(handler_, *req);
     }
-        /*
     case Shell_cmd::play: {
+        if (argv.size() < 2 || argv.size() > 3) {
+            return std::make_unique<cmd::Invalid>(Play::usage());
+        }
+        std::string t;
+        int sid;
+        try {
+            sid = std::stoi(argv[1]);
+        } catch (const std::exception& /* ex */) {
+            t = argv[1];
+        }
+        Play_req* req;
+        try {
+            int pid = std::stoi(argv[0]);
+            json init;
+            if (argv.size() == 3)
+                init = json::parse(argv[2]);
+            else
+                init = json::object();
+            if (t.empty()) {
+                req = new cmd::Play_req(pid, sid, init);
+            } else {
+                req = new cmd::Play_req(pid, t, init);
+            }
+        } catch (const std::invalid_argument& /* ex */) {
+            return std::make_unique<cmd::Invalid>(Play::usage());
+        }
         return std::make_unique<cmd::Play>(handler_, *req);
-    }*/
+    }
     }
 }
 cmd::Shell::Shell(const Action_handler& handler) : handler_(handler)
@@ -140,6 +165,9 @@ void cmd::Shell::run()
             } else if (d.type() == typeid(db::Event)) {
                 auto event = std::any_cast<db::Event>(d);
                 std::cout << event << std::endl;
+            } else if (d.type() == typeid(json)) {
+                auto state = std::any_cast<json>(d);
+                std::cout << state << std::endl;
             } else if (d.type() == typeid(nullptr)) {
                 std::cout << "NULL" << std::endl;
             } else {
@@ -220,6 +248,8 @@ cmd::Shell::tokens(std::string in)
         c = cmd::Shell::Shell_cmd::get_projections;
     if (first == "delete_projection")
         c = cmd::Shell::Shell_cmd::delete_projection;
+    if (first == "play")
+        c = cmd::Shell::Shell_cmd::play;
     if (first == "quit")
         c = cmd::Shell::Shell_cmd::quit;
     return std::tuple<Shell_cmd, std::vector<std::string>>(c, argv);

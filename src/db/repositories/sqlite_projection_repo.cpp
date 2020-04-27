@@ -13,8 +13,8 @@ void Sqlite_projection_repo::create(Projection p)
     std::string sql = "INSERT INTO projections(type, data) VALUES(?, ?)";
     SQLite::Statement stmt(*db_, sql);
 
-    stmt.bind(1, p.data);
-    stmt.bind(2, p.type);
+    stmt.bind(1, p.type);
+    stmt.bind(2, p.data);
     stmt.exec();
 
     log::info("Projection created successfully");
@@ -45,7 +45,7 @@ Projection Sqlite_projection_repo::id(int id)
     SQLite::Statement stmt(*db_, sql);
 
     stmt.bind(1, id);
-    stmt.exec();
+    stmt.executeStep();
 
     std::string type = stmt.getColumn(0);
     std::string data = stmt.getColumn(1);

@@ -9,6 +9,7 @@
 #include "db/entities/stream.hpp"
 #include "db/repositories/projection_repo.hpp"
 #include "db/repositories/stream_repository.hpp"
+#include "ext/duk_context.hpp"
 #include "yess.pb.h"
 
 using nlohmann::json;
@@ -50,6 +51,16 @@ class Action_handler
     std::vector<db::Projection> get_all_projections() const;
     std::vector<db::Projection> get_projections_by_type(std::string type) const;
     void delete_projection(int id) const;
+    nlohmann::json
+    play_projection(int projection_id,
+                    const nlohmann::json& init,
+                    const std::string& type,
+                    const std::string& fn_name = "projection") const;
+    nlohmann::json
+    play_projection(int projection_id,
+                    const nlohmann::json& init,
+                    int stream_id,
+                    const std::string& fn_name = "projection") const;
 
     Action_handler& operator=(Action_handler&& a)
     {
@@ -60,5 +71,6 @@ class Action_handler
   private:
     std::unique_ptr<db::Stream_repository> stream_repo_;
     std::unique_ptr<db::Projection_repo> proj_repo_;
+    std::unique_ptr<ext::Duk_context> ctx_;
 };
 } // namespace yess
