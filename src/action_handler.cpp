@@ -212,7 +212,7 @@ Action_handler::get_streams_by_type(std::string type) const
     return stream_repo_->by_type(type);
 }
 
-db::Stream Action_handler::get_stream(int id) const
+std::optional<db::Stream> Action_handler::get_stream(int id) const
 {
     return stream_repo_->get(id);
 }

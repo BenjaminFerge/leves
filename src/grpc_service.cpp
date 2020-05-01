@@ -100,7 +100,14 @@ Status Grpc_service::GetStream(grpc::ServerContext* context,
                                const yess::GetStreamReq* request,
                                yess::GetStreamResp* reply)
 {
-    db::Stream stream = handler_->get_stream(request->id());
+    std::optional<db::Stream> maybe_stream = handler_->get_stream(request->id());
+    if (!maybe_stream.has_value()) {
+        auto status = new ResponseStatus();
+        status->set_msg("Stream not found");
+        reply->set_allocated_status(status);
+        return Status::OK;
+    }
+    db::Stream stream = maybe_stream.value();
     auto s = reply->mutable_stream();
     set_values(stream, s);
     return Status::OK;

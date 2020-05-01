@@ -19,7 +19,7 @@ class Sqlite_stream_repo : public Stream_repository, public Sqlite_repository
     // ~SqliteStreamRepo();
     std::vector<Stream> all() override;
     std::vector<Stream> by_type(std::string type) override;
-    Stream get(int id) override;
+    std::optional<Stream> get(int id) override;
     void create(Stream stream) override;
     void attachEvent(Event event) override;
     std::vector<Event> getEvents(int streamId) override;

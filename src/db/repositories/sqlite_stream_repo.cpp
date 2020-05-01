@@ -43,7 +43,7 @@ std::vector<Stream> Sqlite_stream_repo::all()
     return result;
 }
 
-Stream Sqlite_stream_repo::get(int id)
+std::optional<Stream> Sqlite_stream_repo::get(int id)
 {
 
     std::string sql = "SELECT type, version "
@@ -54,6 +54,9 @@ Stream Sqlite_stream_repo::get(int id)
 
     stmt.bind(1, id);
     stmt.executeStep();
+    if (!stmt.hasRow()) {
+        return std::nullopt;
+    }
 
     std::string type = stmt.getColumn(0);
     int version = stmt.getColumn(1);
