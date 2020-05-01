@@ -214,4 +214,32 @@ Grpc_service::GetProjections(::grpc::ServerContext* context,
     response->set_allocated_status(status);
     return Status::OK;
 }
+
+grpc::Status Grpc_service::Play(::grpc::ServerContext* context,
+                                const ::yess::PlayReq* request,
+                                ::yess::PlayResp* response)
+{
+    auto status = make_status();
+    json state;
+    const std::string& type = request->stream_type();
+    try {
+        if (type.empty()) {
+            state = handler_->play_projection(request->projection_id(),
+                                              request->initial_state(),
+                                              request->stream_id(),
+                                              "projection");
+        } else {
+            state = handler_->play_projection(request->projection_id(),
+                                              request->initial_state(),
+                                              request->stream_type(),
+                                              "projection");
+        }
+    } catch (const std::exception& ex) {
+        status->set_msg(ex.what());
+        status->set_status(1);
+    }
+    response->set_allocated_status(status);
+    response->set_state(state.dump());
+    return Status::OK;
+}
 } // namespace yess
