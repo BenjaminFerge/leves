@@ -69,6 +69,21 @@ Status Grpc_service::PushEvent(ServerContext* context,
     return Status::OK;
 }
 
+Status
+Grpc_service::CreateProjection(::grpc::ServerContext* context,
+                               const ::yess::CreateProjectionReq* request,
+                               ::yess::CreateProjectionResp* response)
+{
+    if (request->type().empty()) {
+        handler_->create_projection(request->data());
+    } else {
+        handler_->create_projection(request->data(), request->type());
+    }
+    auto status = make_status();
+    response->set_allocated_status(status);
+    return Status::OK;
+}
+
 void set_values(const db::Stream from, ::yess::Stream* to)
 {
     to->set_id(from.id);
@@ -179,6 +194,8 @@ Grpc_service::GetProjections(::grpc::ServerContext* context,
         auto p = response->add_projections();
         set_values(proj, p);
     }
+    auto status = make_status();
+    response->set_allocated_status(status);
     return Status::OK;
 }
 } // namespace yess
