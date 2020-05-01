@@ -85,6 +85,13 @@ void set_values(const db::Event from, ::yess::Event* to)
     to->set_version(from.version);
 }
 
+void set_values(const db::Projection from, ::yess::Projection* to)
+{
+    to->set_id(from.id);
+    to->set_type(from.type);
+    to->set_data(from.data);
+}
+
 Status Grpc_service::GetAllStreams(grpc::ServerContext* context,
                                    const yess::GetAllStreamsReq* request,
                                    yess::GetAllStreamsResp* reply)
@@ -152,6 +159,25 @@ grpc::Status Grpc_service::GetEventsByStreamType(
     for (const auto& event : events) {
         auto e = reply->add_events();
         set_values(event, e);
+    }
+    return Status::OK;
+}
+
+grpc::Status
+Grpc_service::GetProjections(::grpc::ServerContext* context,
+                             const ::yess::GetProjectionsReq* request,
+                             ::yess::GetProjectionsResp* response)
+{
+    std::vector<db::Projection> projections;
+    const std::string& type = request->type();
+    if (type.empty()) {
+        projections = handler_->get_all_projections();
+    } else {
+        projections = handler_->get_projections_by_type(type);
+    }
+    for (const auto& proj : projections) {
+        auto p = response->add_projections();
+        set_values(proj, p);
     }
     return Status::OK;
 }

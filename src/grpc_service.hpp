@@ -52,5 +52,9 @@ class Grpc_service : public YessService::Service
     GetEventsByStreamType(grpc::ServerContext* context,
                           const yess::GetEventsByStreamTypeReq* request,
                           yess::GetEventsByStreamTypeResp* reply) override;
+
+    grpc::Status GetProjections(grpc::ServerContext* context,
+                                const GetProjectionsReq* request,
+                                GetProjectionsResp* response) override;
 };
 } // namespace yess

@@ -19,6 +19,13 @@ message Stream
     repeated Event events = 4;
 }
 
+message Projection
+{
+    int32 id = 1;
+    string type = 2;
+    string data = 3;
+}
+
 message ResponseStatus
 {
     int32 status = 1;
@@ -47,6 +54,23 @@ message CreateProjectionReq
 message CreateProjectionResp
 {
     ResponseStatus status = 1;
+}
+message DeleteProjectionReq
+{
+    int32 id = 1;
+}
+message DeleteProjectionResp
+{
+    ResponseStatus status = 1;
+}
+message GetProjectionsReq
+{
+    string type = 1;
+}
+message GetProjectionsResp
+{
+    ResponseStatus status = 1;
+    repeated Projection projections = 2;
 }
 message PlayReq
 {
@@ -111,4 +135,6 @@ service YessService
         returns (CreateProjectionResp);
     rpc Play(PlayReq)
         returns (PlayResp);
+    rpc GetProjections(GetProjectionsReq) returns (GetProjectionsResp);
+    rpc DeleteProjection(DeleteProjectionReq) returns (DeleteProjectionResp);
 }
