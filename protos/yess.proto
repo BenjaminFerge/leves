@@ -39,6 +39,27 @@ message PushEventResp
     int32 stream_id = 2;
     Event event = 3;
 }
+message CreateProjectionReq
+{
+    string data = 1;
+    string type = 2;
+}
+message CreateProjectionResp
+{
+    ResponseStatus status = 1;
+}
+message PlayReq
+{
+    int32 projection_id = 1;
+    int32 stream_id = 2;
+    string stream_type = 3;
+    string initial_state = 4;
+}
+message PlayResp
+{
+    ResponseStatus status = 1;
+    string state = 2;
+}
 
 message GetAllStreamsReq {}
 message GetAllStreamsResp
@@ -86,4 +107,8 @@ service YessService
         returns (GetEventsByStreamIdResp);
     rpc GetEventsByStreamType(GetEventsByStreamTypeReq)
         returns (GetEventsByStreamTypeResp);
+    rpc CreateProjection(CreateProjectionReq)
+        returns (CreateProjectionResp);
+    rpc Play(PlayReq)
+        returns (PlayResp);
 }
