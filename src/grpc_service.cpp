@@ -58,8 +58,13 @@ Status Grpc_service::PushEvent(ServerContext* context,
         request->event().version(),
     };
 
-    handler_->push_event(request->stream_id(), event);
     auto status = make_status();
+    try {
+        handler_->push_event(request->stream_id(), event);
+    } catch (const std::exception& ex) {
+        status->set_msg(ex.what());
+        status->set_status(1);
+    }
     reply->set_allocated_status(status);
     return Status::OK;
 }
