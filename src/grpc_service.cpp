@@ -84,6 +84,22 @@ Grpc_service::CreateProjection(::grpc::ServerContext* context,
     return Status::OK;
 }
 
+Status
+Grpc_service::DeleteProjection(::grpc::ServerContext* context,
+                               const ::yess::DeleteProjectionReq* request,
+                               ::yess::DeleteProjectionResp* response)
+{
+    auto status = make_status();
+    try {
+        handler_->delete_projection(request->id());
+    } catch (const std::exception& ex) {
+        status->set_msg(ex.what());
+        status->set_status(1);
+    }
+    response->set_allocated_status(status);
+    return Status::OK;
+}
+
 void set_values(const db::Stream from, ::yess::Stream* to)
 {
     to->set_id(from.id);

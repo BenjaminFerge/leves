@@ -60,5 +60,9 @@ class Grpc_service : public YessService::Service
     grpc::Status CreateProjection(grpc::ServerContext* context,
                                   const CreateProjectionReq* request,
                                   CreateProjectionResp* response) override;
+
+    grpc::Status DeleteProjection(grpc::ServerContext* context,
+                                  const DeleteProjectionReq* request,
+                                  DeleteProjectionResp* response) override;
 };
 } // namespace yess
