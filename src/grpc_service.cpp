@@ -64,13 +64,21 @@ Status Grpc_service::PushEvent(ServerContext* context,
     return Status::OK;
 }
 
+void set_values(const db::Stream from, ::yess::Stream* to)
+{
+    to->set_id(from.id);
+    to->set_type(from.type);
+    to->set_version(from.version);
+}
+
 Status Grpc_service::GetAllStreams(grpc::ServerContext* context,
                                    const yess::GetAllStreamsReq* request,
                                    yess::GetAllStreamsResp* reply)
 {
     std::vector<db::Stream> streams = handler_->get_all_streams();
     for (const auto& stream : streams) {
-        // TODO: Add streams to reply
+        auto s = reply->add_streams();
+        set_values(stream, s);
     }
     return Status::OK;
 }
@@ -79,13 +87,12 @@ Status Grpc_service::GetStreamsByType(grpc::ServerContext* context,
                                       const yess::GetStreamsByTypeReq* request,
                                       yess::GetStreamsByTypeResp* reply)
 {
-    /*
     std::vector<db::Stream> streams =
         handler_->get_streams_by_type(request->type());
     for (const auto &stream : streams) {
-        // TODO: Add streams to reply
+        auto s = reply->add_streams();
+        set_values(stream, s);
     }
-     */
     return Status::OK;
 }
 
@@ -94,7 +101,8 @@ Status Grpc_service::GetStream(grpc::ServerContext* context,
                                yess::GetStreamResp* reply)
 {
     db::Stream stream = handler_->get_stream(request->id());
-    // TODO: Add stream to reply
+    auto s = reply->stream();
+    set_values(stream, &s);
     return Status::OK;
 }
 
