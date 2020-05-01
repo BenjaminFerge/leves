@@ -89,7 +89,7 @@ Status Grpc_service::GetStreamsByType(grpc::ServerContext* context,
 {
     std::vector<db::Stream> streams =
         handler_->get_streams_by_type(request->type());
-    for (const auto &stream : streams) {
+    for (const auto& stream : streams) {
         auto s = reply->add_streams();
         set_values(stream, s);
     }
@@ -101,8 +101,8 @@ Status Grpc_service::GetStream(grpc::ServerContext* context,
                                yess::GetStreamResp* reply)
 {
     db::Stream stream = handler_->get_stream(request->id());
-    auto s = reply->stream();
-    set_values(stream, &s);
+    auto s = reply->mutable_stream();
+    set_values(stream, s);
     return Status::OK;
 }
 

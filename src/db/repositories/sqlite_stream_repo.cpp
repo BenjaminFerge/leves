@@ -53,7 +53,7 @@ Stream Sqlite_stream_repo::get(int id)
     SQLite::Statement stmt(*db_, sql);
 
     stmt.bind(1, id);
-    stmt.exec();
+    stmt.executeStep();
 
     std::string type = stmt.getColumn(0);
     int version = stmt.getColumn(1);
