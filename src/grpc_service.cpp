@@ -76,6 +76,15 @@ void set_values(const db::Stream from, ::yess::Stream* to)
     to->set_version(from.version);
 }
 
+void set_values(const db::Event from, ::yess::Event* to)
+{
+    to->set_id(from.id);
+    to->set_stream_id(from.streamId);
+    to->set_type(from.type);
+    to->set_payload(from.payload);
+    to->set_version(from.version);
+}
+
 Status Grpc_service::GetAllStreams(grpc::ServerContext* context,
                                    const yess::GetAllStreamsReq* request,
                                    yess::GetAllStreamsResp* reply)
@@ -105,7 +114,8 @@ Status Grpc_service::GetStream(grpc::ServerContext* context,
                                const yess::GetStreamReq* request,
                                yess::GetStreamResp* reply)
 {
-    std::optional<db::Stream> maybe_stream = handler_->get_stream(request->id());
+    std::optional<db::Stream> maybe_stream =
+        handler_->get_stream(request->id());
     if (!maybe_stream.has_value()) {
         auto status = new ResponseStatus();
         status->set_msg("Stream not found");
@@ -126,7 +136,8 @@ Grpc_service::GetEventsByStreamId(grpc::ServerContext* context,
     std::vector<db::Event> events =
         handler_->get_events_by_stream_id(request->id());
     for (const auto& event : events) {
-        // TODO: Add events to reply
+        auto e = reply->add_events();
+        set_values(event, e);
     }
     return Status::OK;
 }
@@ -139,7 +150,8 @@ grpc::Status Grpc_service::GetEventsByStreamType(
     std::vector<db::Event> events =
         handler_->get_events_by_stream_type(request->type());
     for (const auto& event : events) {
-        // TODO: Add events to reply
+        auto e = reply->add_events();
+        set_values(event, e);
     }
     return Status::OK;
 }
