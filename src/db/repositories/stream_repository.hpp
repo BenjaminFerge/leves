@@ -18,6 +18,7 @@ class Stream_repository
     virtual std::vector<Stream> by_type(std::string type) = 0;
     virtual std::optional<Stream> get(int id) = 0;
     virtual void create(Stream stream) = 0;
+    virtual void remove(int id) = 0;
     virtual void attachEvent(Event event) = 0;
     virtual std::vector<Event> getEvents(int streamId) = 0;
     virtual std::vector<Event> getEvents(std::string streamType) = 0;

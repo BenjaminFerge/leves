@@ -30,6 +30,21 @@ class Create_stream : public Domain_command
   private:
     const Create_stream_req& request_;
 };
+struct Delete_stream_req {
+    explicit Delete_stream_req(int id);
+    int id;
+};
+
+class Delete_stream : public Domain_command
+{
+  public:
+    Delete_stream(const Action_handler& handler, const Delete_stream_req& req);
+    Command_result execute() override;
+    static std::string usage();
+
+  private:
+    const Delete_stream_req& request_;
+};
 struct Get_streams_req {
     std::string type = "";
 };

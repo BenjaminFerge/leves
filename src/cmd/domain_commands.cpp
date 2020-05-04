@@ -202,3 +202,25 @@ std::string Play::usage()
 {
     return std::string("play PID T/SID [I]");
 }
+Delete_stream_req::Delete_stream_req(int id) : id(id)
+{
+}
+Delete_stream::Delete_stream(const yess::Action_handler& handler,
+                             const Delete_stream_req& req)
+    : Domain_command(handler), request_(req)
+{
+}
+Command_result Delete_stream::execute()
+{
+    try {
+        handler_.delete_stream(request_.id);
+    } catch (const std::runtime_error& err) {
+        return Command_result(
+            Command_result::Status::error, err.what(), nullptr);
+    }
+    return Command_result(Command_result::Status::ok, "OK", nullptr);
+}
+std::string Delete_stream::usage()
+{
+    return std::string("delete_stream SID");
+}

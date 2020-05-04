@@ -283,4 +283,9 @@ json Action_handler::play_projection(const int projection_id,
     ctx_->read(proj.data);
     return ctx_->call_projection(fn_name, events, init);
 }
+
+void Action_handler::delete_stream(int id) const
+{
+    stream_repo_->remove(id);
+}
 } // namespace yess

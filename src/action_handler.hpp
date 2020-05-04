@@ -40,6 +40,7 @@ class Action_handler
     void save_stream(const db::Stream& stream) const;
 
     void create_stream(std::string type) const;
+    void delete_stream(int id) const;
     std::vector<db::Stream> get_all_streams() const;
     std::vector<db::Stream> get_streams_by_type(std::string type) const;
     std::optional<db::Stream> get_stream(int id) const;

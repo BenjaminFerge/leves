@@ -191,4 +191,23 @@ std::vector<Stream> Sqlite_stream_repo::by_type(std::string type)
     log::info("Retrieved streams by type '{}' successfully", type);
     return result;
 }
+
+void Sqlite_stream_repo::remove(int id)
+{
+    SQLite::Transaction transaction(*db_);
+    std::string sql = "DELETE FROM events WHERE stream_id=?";
+    SQLite::Statement stmt(*db_, sql);
+
+    stmt.bind(1, id);
+    stmt.exec();
+
+    sql = "DELETE FROM streams WHERE id=?";
+    SQLite::Statement stmt2(*db_, sql);
+
+    stmt2.bind(1, id);
+    stmt2.exec();
+    transaction.commit();
+
+    log::info("Delete stream '{}' successfully", id);
+}
 } // namespace yess::db

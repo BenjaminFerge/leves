@@ -16,6 +16,7 @@ class Shell
         quit,
         help,
         create_stream,
+        delete_stream,
         push,
         play,
         create_projection,
